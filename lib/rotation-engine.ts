@@ -9,7 +9,7 @@ export type RotationSequence = {
 };
 
 export function buildRotationSequences(length = 3): RotationSequence[] {
-  const candidates = cropProfiles.filter((crop) => crop.type === "Annual");
+  const candidates = cropProfiles.filter((crop) => crop.fieldManagementCycle === "Short-cycle");
   const sequences: RotationSequence[] = [];
 
   function visit(path: CropProfile[]) {
@@ -34,6 +34,6 @@ export function buildRotationSequences(length = 3): RotationSequence[] {
     }
   }
 
-  visit([]);
+  if (Number.isInteger(length) && length > 0 && length <= candidates.length) visit([]);
   return sequences.sort((a, b) => Number(a.repeatedAdjacentFamily) - Number(b.repeatedAdjacentFamily) || b.familyChanges - a.familyChanges);
 }
