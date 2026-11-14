@@ -59,7 +59,7 @@ export default function RotationPage() {
       </section>
       <section className="farm-list-section">
         <div className="section-heading"><div><span className="eyebrow">SEQUENCE EXPLORER</span><h2>Three-crop patterns</h2></div><span className="status-tag">{sequences.length} GENERATED</span></div>
-        <p className="section-copy">Sequences are generated from the annual crops currently in the starter catalogue. Each crop appears at most once per sequence. Perennial systems such as cassava and banana are excluded from this short-cycle preview.</p>
+        <p className="section-copy">Sequences are generated from crops marked as short-cycle in the starter catalogue. Each crop appears at most once per sequence. Sweet potato is included because it is commonly managed as a short-cycle field crop, while cassava and banana remain classified as long-term plantings.</p>
         <div className="rotation-grid">{sequences.map((sequence, index) => <article className="rotation-card" key={sequence.crops.map((crop) => crop.id).join("-")}>
           <div className="farm-card-top"><span className="eyebrow">PATTERN {String(index + 1).padStart(2, "0")}</span><span className={sequence.repeatedAdjacentFamily ? "rotation-flag" : "rotation-positive"}>{sequence.repeatedAdjacentFamily ? "FAMILY REPEAT" : "FAMILY CHANGE"}</span></div>
           <div className="rotation-flow">{sequence.crops.map((crop, cropIndex) => <div className="rotation-step" key={crop.id}><span>SEASON {cropIndex + 1}</span><strong>{crop.name}</strong><small>{crop.family}</small></div>)}</div>
