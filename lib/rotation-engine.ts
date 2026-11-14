@@ -1,4 +1,5 @@
-import { CropProfile, cropProfiles } from "@/lib/crops";
+import { cropProfiles } from "@/lib/crops";
+import type { CropProfile } from "@/lib/crops";
 
 export type RotationSequence = {
   crops: CropProfile[];
