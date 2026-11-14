@@ -1,0 +1,10 @@
+import Link from "next/link";
+import { redirect } from "next/navigation";
+import { createClient } from "@/lib/supabase/server";
+import { signOut } from "@/app/auth/actions";
+export default async function DashboardPage(){
+ const supabase=await createClient();const {data:{user}}=await supabase.auth.getUser();if(!user)redirect("/login");
+ const [{data:profile},{data:memberships}]=await Promise.all([supabase.from("profiles").select("display_name").eq("id",user.id).maybeSingle(),supabase.from("memberships").select("organization_id,role,organizations(name,slug)").eq("user_id",user.id).eq("status","active")]);
+ const name=profile?.display_name||user.user_metadata?.display_name||user.email?.split("@")[0]||"utilizador";
+ return <main className="shell"><header className="topbar"><Link className="brand" href="/"><span className="brand-mark">S</span><span>SPACEXPLORE <b>TCHIOWA</b></span></Link><form action={signOut}><button className="text-button">TERMINAR SESSÃO ↗</button></form></header><section className="farm-hero"><span className="eyebrow">PERSONAL WORKSPACE</span><h1>Welcome,<br/><em>{name}.</em></h1><p className="hero-copy">O seu espaço de trabalho agrícola está pronto para ser configurado.</p></section><section className="workspace"><div className="section-heading"><div><span className="eyebrow">YOUR ORGANIZATIONS</span><h2>Organizações</h2></div><span className="status-tag">ACCOUNT ACTIVE</span></div>{memberships?.length?<div className="farm-cards">{memberships.map(m=><article className="farm-card" key={m.organization_id}><span className="eyebrow">{m.role}</span><h3>{(m.organizations as {name:string}|null)?.name??"Organização"}</h3><p className="farm-location">Workspace</p><Link className="farm-climate-link" href="/farms">GERIR PROPRIEDADES ↗</Link></article>)}</div>:<div className="empty-state"><strong>Ainda não pertence a nenhuma organização.</strong><p>A criação do espaço de trabalho e a associação como proprietário serão ativadas na próxima etapa. A conta já está preparada para autenticação.</p></div>}<div className="notice">Os dados das propriedades só serão apresentados a membros autorizados.</div></section></main>;
+}
