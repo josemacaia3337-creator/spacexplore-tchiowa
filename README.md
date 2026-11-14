@@ -54,9 +54,19 @@ Technology choices remain replaceable; no provider-specific dependency should be
 
 ## Status
 
-**Stage:** project foundation and data validation.
+**Stage:** climate explorer and first farm-profile interface implemented; runtime validation remains pending.
 
-The next engineering milestone is a small, tested NASA POWER integration for a configurable point location, followed by a first climate dashboard.
+### Implemented prototype routes
+- `/` — NASA POWER climate explorer for a configurable point and date range.
+- `/farms` — farm profile registration with geographic coordinates and farmer-/lab-reported soil fields.
+
+Farm profiles currently use browser local storage on the device where they are created. They are not yet synchronized to a cloud database and should be treated as prototype data.
+
+### Next engineering milestones
+1. Run lint and production build; resolve any issues.
+2. Validate the live NASA POWER response and displayed units/metadata.
+3. Connect a selected farm profile to the climate explorer.
+4. Add crop profiles and a transparent, rule-based rotation comparison.
 
 ## Team
 
