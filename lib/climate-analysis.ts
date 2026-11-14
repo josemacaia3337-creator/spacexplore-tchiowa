@@ -72,7 +72,7 @@ export function assessFarmReadiness(farm: {
   currentCrop?: string | null;
 }): FarmReadinessItem[] {
   const provided = (value: unknown) => value !== null && value !== undefined &&
-    value !== "" && value !== "Not provided" && value !== "Unknown / not tested" &&
+    value !== "" && value !== "Not provided" && value !== "Unknown / not provided" && value !== "Unknown / not tested" &&
     value !== "Unknown / not assessed";
 
   return [
