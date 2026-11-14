@@ -174,7 +174,7 @@ export default function FarmsPage() {
               <div className="farm-card-top"><span className="eyebrow">FARM PROFILE</span><button className="delete-button" onClick={() => removeFarm(farm.id)} type="button" aria-label={`Delete ${farm.name}`}>REMOVE</button></div>
               <h3>{farm.name}</h3><p className="farm-location">{farm.location}</p>
               <div className="farm-facts"><span>LAT / LON<strong>{farm.latitude}, {farm.longitude}</strong></span><span>AREA<strong>{farm.areaHa === null ? "Not provided" : `${farm.areaHa} ha`}</strong></span><span>MAIN CROP<strong>{farm.currentCrop}</strong></span><span>SOIL TEXTURE<strong>{farm.soilTexture}</strong></span><span>SOIL pH<strong>{farm.soilPh === null ? "Not measured" : farm.soilPh}</strong></span><span>DRAINAGE<strong>{farm.drainage}</strong></span></div>
-              <p className="farm-disclaimer">Profile saved locally on this device. It is not yet synchronized to a cloud database.</p>
+              <Link className="farm-climate-link" href={`/?latitude=${farm.latitude}&longitude=${farm.longitude}&farm=${encodeURIComponent(farm.name)}`}>EXPLORE THIS FARM’S CLIMATE ↗</Link><p className="farm-disclaimer">Profile saved locally on this device. It is not yet synchronized to a cloud database.</p>
             </article>
           ))}</div>
         )}
