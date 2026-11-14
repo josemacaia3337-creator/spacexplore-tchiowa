@@ -4,7 +4,14 @@ const ALLOWED_PARAMETERS = ["T2M", "T2M_MAX", "T2M_MIN", "PRECTOTCORR", "RH2M"] 
 const DEFAULT_PARAMETERS = ALLOWED_PARAMETERS.join(",");
 
 function validDate(value: string): boolean {
-  return /^\d{8}$/.test(value) && !Number.isNaN(Date.parse(`${value.slice(0, 4)}-${value.slice(4, 6)}-${value.slice(6, 8)}T00:00:00Z`));
+  if (!/^\d{8}$/.test(value)) return false;
+  const year = Number(value.slice(0, 4));
+  const month = Number(value.slice(4, 6));
+  const day = Number(value.slice(6, 8));
+  const date = new Date(Date.UTC(year, month - 1, day));
+  return date.getUTCFullYear() === year &&
+    date.getUTCMonth() === month - 1 &&
+    date.getUTCDate() === day;
 }
 
 export async function GET(request: NextRequest) {
@@ -14,14 +21,16 @@ export async function GET(request: NextRequest) {
   const start = searchParams.get("start") ?? "20250101";
   const end = searchParams.get("end") ?? "20251231";
   const requested = (searchParams.get("parameters") ?? DEFAULT_PARAMETERS).split(",");
-  const parameters = requested.filter((item) => ALLOWED_PARAMETERS.includes(item as typeof ALLOWED_PARAMETERS[number]));
+  const parameters = requested.filter((item) =>
+    ALLOWED_PARAMETERS.includes(item as typeof ALLOWED_PARAMETERS[number])
+  );
 
   if (!Number.isFinite(latitude) || latitude < -90 || latitude > 90 ||
       !Number.isFinite(longitude) || longitude < -180 || longitude > 180) {
     return NextResponse.json({ error: "Latitude or longitude is outside the valid range." }, { status: 400 });
   }
   if (!validDate(start) || !validDate(end) || start > end) {
-    return NextResponse.json({ error: "Use valid YYYYMMDD dates and ensure start is not after end." }, { status: 400 });
+    return NextResponse.json({ error: "Use real calendar dates in YYYYMMDD format and ensure start is not after end." }, { status: 400 });
   }
   if (parameters.length === 0 || parameters.length !== requested.length) {
     return NextResponse.json({ error: "One or more requested parameters are not supported." }, { status: 400 });
@@ -35,22 +44,27 @@ export async function GET(request: NextRequest) {
     latitude: String(latitude),
     start,
     end,
-    format: "JSON"
+    format: "JSON",
+    "time-standard": "UTC"
   }).toString();
 
   try {
     const response = await fetch(url, { next: { revalidate: 3600 } });
     if (!response.ok) {
-      return NextResponse.json({ error: `NASA POWER returned HTTP ${response.status}.` }, { status: 502 });
+      return NextResponse.json({
+        error: `NASA POWER returned HTTP ${response.status}. Check the requested dates and parameters.`
+      }, { status: 502 });
     }
-    const payload: unknown = await response.json();
+    const payload = await response.json();
     return NextResponse.json({
       source: "NASA POWER Daily API",
       sourceUrl: "https://power.larc.nasa.gov/docs/services/api/temporal/daily/",
       retrievedAt: new Date().toISOString(),
       location: { latitude, longitude },
       requestedPeriod: { start, end },
-      parameters,
+      timeStandard: "UTC",
+      fillValue: payload?.header?.fill_value ?? -999,
+      parameters: payload?.parameters ?? {},
       data: payload
     });
   } catch {
