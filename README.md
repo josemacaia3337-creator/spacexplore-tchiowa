@@ -61,6 +61,7 @@ Technology choices remain replaceable; no provider-specific dependency should be
 - `/farms` — farm profile registration with geographic coordinates and farmer-/lab-reported soil fields. Each saved farm now links to the Climate Explorer with its coordinates prefilled.
 - `/crops` — searchable starter crop catalogue with scientific names, botanical families, rotation context and local-validation cautions.
 - `/rotation` — transparent three-crop sequence explorer using botanical-family changes as an explanatory pattern, not as a farm-specific recommendation.
+- `/insights` — farm-level agricultural intelligence dashboard combining NASA POWER climate summaries with a farm-profile completeness check. It distinguishes available observations from missing soil/field evidence and does not generate unsupported suitability scores.
 
 Farm profiles currently use browser local storage on the device where they are created. They are not yet synchronized to a cloud database and should be treated as prototype data.
 
