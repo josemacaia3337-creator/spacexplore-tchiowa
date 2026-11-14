@@ -29,7 +29,7 @@ export type Database = {
       };
     };
     Views: Record<string, never>;
-    Functions: Record<string, never>;
+    Functions: { create_organization_with_owner: { Args: { org_name: string; org_slug: string }; Returns: string } };
     Enums: Record<string, never>;
     CompositeTypes: Record<string, never>;
   };
