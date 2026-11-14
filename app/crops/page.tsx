@@ -11,7 +11,7 @@ export default function CropsPage() {
     const term = search.trim().toLowerCase();
     const matchesText = !term || [crop.name, crop.scientificName, crop.family, crop.role].some((value) => value.toLowerCase().includes(term));
     return matchesText && (cycle === "All" || crop.fieldManagementCycle === cycle);
-  }), [search, type]);
+  }), [search, cycle]);
 
   return (
     <main className="shell">
