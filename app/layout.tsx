@@ -3,7 +3,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "SpaceXplore Tchiowa | Agricultural Intelligence",
-  description: "Explore climate data and adaptive crop rotation scenarios powered by NASA Earth data."
+  description: "Explore NASA climate data, manage farm profiles and compare adaptive crop rotation scenarios."
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
