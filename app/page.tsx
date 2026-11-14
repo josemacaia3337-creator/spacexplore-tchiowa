@@ -75,7 +75,7 @@ export default function Home() {
           <span className="brand-mark">S</span>
           <span>SPACEXPLORE <b>TCHIOWA</b></span>
         </a>
-        <nav className="top-nav"><Link href="/farms">FARM MANAGEMENT ↗</Link><Link href="/crops">CROP INTELLIGENCE ↗</Link><Link href="/insights">AGRICULTURAL INTELLIGENCE ↗</Link><span className="top-label">NASA SPACE APPS · 2026</span></nav>
+        <nav className="top-nav"><Link href="/farms">FARM MANAGEMENT ↗</Link><Link href="/crops">CROP INTELLIGENCE ↗</Link><Link href="/insights">AGRICULTURAL INTELLIGENCE ↗</Link><Link href="/login">SIGN IN ↗</Link><Link href="/signup">CREATE ACCOUNT ↗</Link><span className="top-label">NASA SPACE APPS · 2026</span></nav>
       </header>
 
       <section className="hero">
