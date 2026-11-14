@@ -17,7 +17,7 @@ export default function CropsPage() {
     <main className="shell">
       <header className="topbar">
         <Link className="brand" href="/"><span className="brand-mark">S</span><span>SPACEXPLORE <b>TCHIOWA</b></span></Link>
-        <nav className="top-nav"><Link href="/farms">FARM MANAGEMENT ↗</Link><Link href="/">CLIMATE EXPLORER ↗</Link></nav>
+        <nav className="top-nav"><Link href="/farms">FARM MANAGEMENT ↗</Link><Link href="/">CLIMATE EXPLORER ↗</Link><Link href="/rotation">ROTATION ENGINE ↗</Link></nav>
       </header>
       <section className="farm-hero">
         <span className="eyebrow">03 / CROP INTELLIGENCE</span>
