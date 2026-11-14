@@ -72,3 +72,8 @@ footer{display:flex;justify-content:space-between;padding:0 0 30px;color:#879188
 .farm-facts strong{display:block;margin-top:5px;color:var(--ink);font:600 12px 'DM Sans',sans-serif;overflow-wrap:anywhere}
 .farm-disclaimer{border-top:1px solid var(--line);padding-top:12px;margin:18px 0 0;color:var(--muted);font-size:10px;line-height:1.5}
 @media(max-width:760px){.farm-hero{padding:52px 0 16px}.form-grid,.farm-cards{grid-template-columns:1fr}.form-section-title span{display:block;margin:6px 0 0}.farm-facts{gap:12px}}
+
+.farm-climate-link{display:inline-block;margin-top:18px;padding:12px 14px;background:var(--green);color:#fff;text-decoration:none;font:10px "DM Mono",monospace;letter-spacing:.07em}
+.top-nav{display:flex;align-items:center;gap:22px}
+.top-nav a{font:10px "DM Mono",monospace;letter-spacing:.06em;color:var(--green);text-decoration:none}
+@media(max-width:760px){.top-nav{gap:10px;flex-direction:column;align-items:flex-end}.top-nav a{font-size:8px}}
