@@ -123,7 +123,7 @@ export default function FarmsPage() {
     <main className="shell">
       <header className="topbar">
         <Link className="brand" href="/"><span className="brand-mark">S</span><span>SPACEXPLORE <b>TCHIOWA</b></span></Link>
-        <nav className="top-nav"><Link href="/crops">CROP INTELLIGENCE ↗</Link><Link href="/rotation">ROTATION ENGINE ↗</Link><Link className="back-link" href="/">← CLIMATE EXPLORER</Link></nav>
+        <nav className="top-nav"><Link href="/crops">CROP INTELLIGENCE ↗</Link><Link href="/rotation">ROTATION ENGINE ↗</Link><Link href="/insights">AGRICULTURAL INTELLIGENCE ↗</Link><Link className="back-link" href="/">← CLIMATE EXPLORER</Link></nav>
       </header>
 
       <section className="farm-hero">
