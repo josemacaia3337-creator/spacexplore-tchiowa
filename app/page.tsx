@@ -33,7 +33,18 @@ export default function Home() {
   const [start, setStart] = useState("20250101");
   const [end, setEnd] = useState("20251231");
   const [result, setResult] = useState<ClimateResult | null>(null);
-  const [loading, setLoading] = useState(false);\n  const [farmName, setFarmName] = useState("");\n\n  useEffect(() => {\n    const params = new URLSearchParams(window.location.search);\n    const farm = params.get("farm");\n    const lat = params.get("latitude");\n    const lon = params.get("longitude");\n    if (farm) setFarmName(farm);\n    if (lat && Number.isFinite(Number(lat)) && Number(lat) >= -90 && Number(lat) <= 90) setLatitude(lat);\n    if (lon && Number.isFinite(Number(lon)) && Number(lon) >= -180 && Number(lon) <= 180) setLongitude(lon);\n  }, []);
+  const [loading, setLoading] = useState(false);
+  const [farmName, setFarmName] = useState("");
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const farm = params.get("farm");
+    const lat = params.get("latitude");
+    const lon = params.get("longitude");
+    if (farm) setFarmName(farm);
+    if (lat && Number.isFinite(Number(lat)) && Number(lat) >= -90 && Number(lat) <= 90) setLatitude(lat);
+    if (lon && Number.isFinite(Number(lon)) && Number(lon) >= -180 && Number(lon) <= 180) setLongitude(lon);
+  }, []);
 
   async function loadClimate() {
     setLoading(true);
