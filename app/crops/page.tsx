@@ -6,11 +6,11 @@ import { cropProfiles } from "@/lib/crops";
 
 export default function CropsPage() {
   const [search, setSearch] = useState("");
-  const [type, setType] = useState("All");
+  const [cycle, setCycle] = useState("All");
   const filtered = useMemo(() => cropProfiles.filter((crop) => {
     const term = search.trim().toLowerCase();
     const matchesText = !term || [crop.name, crop.scientificName, crop.family, crop.role].some((value) => value.toLowerCase().includes(term));
-    return matchesText && (type === "All" || crop.type === type);
+    return matchesText && (cycle === "All" || crop.fieldManagementCycle === cycle);
   }), [search, type]);
 
   return (
@@ -29,13 +29,13 @@ export default function CropsPage() {
         <p className="section-copy">This first catalogue records crop identity and planning cautions. It intentionally does not assign unsupported yield, profitability, water-demand or planting-calendar scores.</p>
         <div className="crop-controls">
           <label>SEARCH<input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Crop, scientific name, family…" /></label>
-          <label>GROWTH TYPE<select value={type} onChange={(e) => setType(e.target.value)}><option>All</option><option>Annual</option><option>Perennial</option></select></label>
+          <label>FIELD CYCLE<select value={cycle} onChange={(e) => setCycle(e.target.value)}><option>All</option><option>Short-cycle</option><option>Long-term planting</option></select></label>
         </div>
         <div className="crop-grid">
           {filtered.map((crop) => <article className="crop-card" key={crop.id}>
-            <div className="crop-card-top"><span className="eyebrow">{crop.family}</span><span className="crop-type">{crop.type}</span></div>
+            <div className="crop-card-top"><span className="eyebrow">{crop.family}</span><span className="crop-type">{crop.fieldManagementCycle}</span></div>
             <h3>{crop.name}</h3><p className="crop-scientific">{crop.scientificName}</p>
-            <p className="crop-role">{crop.role}</p>
+            <p className="crop-role">{crop.role}</p><p className="crop-scientific">Biological lifecycle: {crop.biologicalLifecycle}</p>
             <div className="crop-note"><strong>ROTATION CONTEXT</strong><p>{crop.rotationNote}</p></div>
             <div className="crop-note"><strong>LOCAL VALIDATION</strong><p>{crop.localValidation}</p></div>
           </article>)}
