@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 
 type ClimateResult = {
@@ -33,7 +33,7 @@ export default function Home() {
   const [start, setStart] = useState("20250101");
   const [end, setEnd] = useState("20251231");
   const [result, setResult] = useState<ClimateResult | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);\n  const [farmName, setFarmName] = useState("");\n\n  useEffect(() => {\n    const params = new URLSearchParams(window.location.search);\n    const farm = params.get("farm");\n    const lat = params.get("latitude");\n    const lon = params.get("longitude");\n    if (farm) setFarmName(farm);\n    if (lat && Number.isFinite(Number(lat)) && Number(lat) >= -90 && Number(lat) <= 90) setLatitude(lat);\n    if (lon && Number.isFinite(Number(lon)) && Number(lon) >= -180 && Number(lon) <= 180) setLongitude(lon);\n  }, []);
 
   async function loadClimate() {
     setLoading(true);
@@ -79,7 +79,7 @@ export default function Home() {
           <div><span className="eyebrow">NASA EARTH DATA</span><h2>Climate explorer</h2></div>
           <span className="status-tag">NASA POWER · DAILY</span>
         </div>
-        <p className="section-copy">Retrieve daily climate indicators for a geographic point. The default coordinates are an illustrative Cabinda-area demo location, not a surveyed farm boundary.</p>
+        <p className="section-copy">{farmName ? `Climate lookup for ${farmName}. Coordinates were loaded from its farm profile.` : "Retrieve daily climate indicators for a geographic point. The default coordinates are an illustrative Cabinda-area demo location, not a surveyed farm boundary."}</p>
 
         <div className="query-panel">
           <label>LATITUDE<input value={latitude} onChange={(e) => setLatitude(e.target.value)} inputMode="decimal" /></label>
