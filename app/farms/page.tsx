@@ -45,7 +45,8 @@ export default async function FarmsPage({searchParams}:{searchParams:Promise<{sa
         <p className="section-copy">Os dados são guardados na base de dados e ficam disponíveis aos membros autorizados da organização. Informação do solo deve ser fornecida pelo agricultor, observação de campo ou laboratório — nunca inferida apenas pelas coordenadas.</p>
 
         {params.saved&&<p className="form-message" role="status">Exploração guardada com sucesso na nuvem.</p>}
-        {params.deleted&&<p className="form-message" role="status">Exploração removida.</p>}\n        {params.updated&&<p className="form-message" role="status">Exploração atualizada com sucesso.</p>}
+        {params.deleted&&<p className="form-message" role="status">Exploração removida.</p>}
+        {params.updated&&<p className="form-message" role="status">Exploração atualizada com sucesso.</p>}
         {params.error&&<p className="auth-error" role="alert">{params.error}</p>}
         {membershipError&&<p className="auth-error" role="alert">Não foi possível consultar as suas organizações.</p>}
 
