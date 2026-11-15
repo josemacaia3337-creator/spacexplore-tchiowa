@@ -20,13 +20,17 @@ const DEFAULT_CENTER: Position = [-5.55, 12.19];
 export default function BoundaryEditor({ farmId, latitude, longitude, initialGeometry, initialArea, canEdit }: Props) {
   const mapElement = useRef<HTMLDivElement>(null);
   const mapRef = useRef<import("leaflet").Map | null>(null);
+  const drawingRef = useRef(false);
   const layersRef = useRef<import("leaflet").LayerGroup | null>(null);
   const [points, setPoints] = useState<Position[]>(() => initialGeometry?.coordinates?.[0]?.slice(0, -1).map(([lng, lat]) => [lat, lng] as Position) ?? []);
   const [drawing, setDrawing] = useState(false);
+  const [mapReady, setMapReady] = useState(false);
   const [geometry, setGeometry] = useState<PolygonGeometry | null>(initialGeometry);
   const [area, setArea] = useState<number | null>(initialArea);
   
   const [error, setError] = useState("");
+
+  useEffect(() => { drawingRef.current = drawing; }, [drawing]);
 
   useEffect(() => {
     let disposed = false;
@@ -42,7 +46,7 @@ export default function BoundaryEditor({ farmId, latitude, longitude, initialGeo
       layersRef.current = L.layerGroup().addTo(map);
       mapRef.current = map;
       clickHandler = (event) => {
-        if (!drawing) return;
+        if (!drawingRef.current) return;
         setPoints((current) => [...current, [event.latlng.lat, event.latlng.lng]]);
         setError("");
       };
@@ -55,13 +59,14 @@ export default function BoundaryEditor({ farmId, latitude, longitude, initialGeo
       map?.remove();
       mapRef.current = null;
       layersRef.current = null;
+      setMapReady(false);
     };
-  }, [latitude, longitude, drawing]);
+  }, [latitude, longitude]);
 
   useEffect(() => {
     let disposed = false;
     import("leaflet").then((L) => {
-      if (disposed || !layersRef.current) return;
+      if (disposed || !mapReady || !layersRef.current) return;
       const layerGroup = layersRef.current;
       layerGroup.clearLayers();
       const latLngs = points.map(([lat, lng]) => L.latLng(lat, lng));
@@ -92,7 +97,7 @@ export default function BoundaryEditor({ farmId, latitude, longitude, initialGeo
       });
     });
     return () => { disposed = true; };
-  }, [points, geometry, drawing, canEdit]);
+  }, [points, geometry, drawing, canEdit, mapReady]);
 
   function beginDrawing() {
     setPoints([]);
