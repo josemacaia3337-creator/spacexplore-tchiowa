@@ -59,17 +59,19 @@ export default function DashboardNavigation({ displayName, avatarPath }: Props) 
   }, []);
 
   useEffect(() => {
-    if (!settingsOpen) return;
+    let active = true;
     const loadPreferences = async () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
       const { data } = await supabase.from("profiles").select("preferences").eq("id", user.id).maybeSingle();
+      if (!active) return;
       const preferences = (data?.preferences ?? {}) as { compact_dashboard?: boolean; show_field_hints?: boolean };
       setCompact(Boolean(preferences.compact_dashboard));
       setFieldHints(preferences.show_field_hints !== false);
     };
     void loadPreferences();
-  }, [settingsOpen, supabase]);
+    return () => { active = false; };
+  }, [supabase]);
 
   const closeDrawer = () => setMobileOpen(false);
   const saveProfile = async (event: FormEvent<HTMLFormElement>) => {
