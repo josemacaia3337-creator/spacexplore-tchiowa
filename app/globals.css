@@ -447,3 +447,27 @@ footer{display:flex;justify-content:space-between;padding:0 0 30px;color:#879188
  .footer-bottom{font-size:6px;gap:9px}
 }
 @media(prefers-reduced-motion:reduce){.public-site *, .public-site *:before,.public-site *:after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+
+
+/* Navigation and hero polish */
+.public-header{position:sticky;top:0;z-index:50;backdrop-filter:saturate(135%) blur(14px);background:#05080ff2}
+.public-menu-backdrop{z-index:49}
+.public-menu{z-index:51;top:calc(100% + 1px);max-height:calc(100svh - 105px);overflow-y:auto;overscroll-behavior:contain}
+.public-menu a:focus-visible,.menu-trigger:focus-visible,.hero-dots button:focus-visible{outline:2px solid #a6d9ff;outline-offset:4px}
+.menu-trigger{min-height:44px}
+.hero-dots button{min-width:22px;min-height:18px;position:relative;background:transparent}
+.hero-dots button:after{content:"";position:absolute;left:0;right:0;top:8px;height:3px;background:#ffffff55}
+.hero-dots button.active:after{background:#a6d9ff}
+.hero-dots button.active{width:38px}
+.hero-image{will-change:opacity,transform}
+.hero-side-note{pointer-events:none}
+@media(max-width:650px){
+ .public-menu{top:calc(100% + 1px);right:12px;max-height:calc(100svh - 90px)}
+ .public-menu-backdrop{inset:70px 0 0}
+ .space-hero{min-height:570px;height:calc(100svh - 70px)}
+ .hero-content{padding-top:clamp(72px,12vh,105px)}
+ .hero-bottom{min-height:30px}
+ .hero-dots button{min-height:24px}
+ .hero-dots button:after{top:10px}
+}
+@media(hover:none){.capability-card:hover{background:transparent;padding-top:30px}}
