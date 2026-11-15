@@ -1110,3 +1110,52 @@ html,body{background:#030712;color:#f8fafc}
 .climate-access-note{margin:16px 0 0;padding:13px 15px;background:rgba(15,35,58,.7);border-left:3px solid #2994ee;color:#cbd5e1;font-size:12px;line-height:1.7}
 @media(max-width:1050px){.nasa-metric-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media(max-width:700px){.nasa-power-workspace{padding:17px}.nasa-query-form{grid-template-columns:repeat(2,minmax(0,1fr));padding:13px}.nasa-metric-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.nasa-metric:last-child{grid-column:1/-1}.nasa-results-heading{align-items:flex-start;flex-direction:column}.nasa-results-heading span{line-height:1.5}}
+
+
+/* Phase 2 — NASA GPM public entry and authenticated IMERG workspace */
+.gpm-public-section{max-width:1180px;margin:0 auto;padding:clamp(34px,6vw,70px) 42px;border-top:1px solid rgba(255,255,255,.09)}
+.gpm-public-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:24px;margin-bottom:25px}
+.gpm-public-heading h2{margin:8px 0 10px;color:#f4f7f4;font-size:clamp(27px,4vw,42px);letter-spacing:-.045em}
+.gpm-public-heading p{max-width:680px;margin:0;color:#9eaaa3;font-size:14px;line-height:1.7}
+.gpm-public-form{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;padding:20px;background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.12)}
+.gpm-public-form label{display:flex;flex-direction:column;gap:9px;min-width:0;color:#9eaaa3;font:9px var(--font-dm-mono),monospace;letter-spacing:.1em}
+.gpm-public-form input{width:100%;min-width:0;min-height:43px;padding:10px 11px;background:#111d19;border:1px solid #39483f;border-radius:2px;color:#f4f7f4;color-scheme:dark;font:13px var(--font-dm-sans),sans-serif;outline:none}
+.gpm-public-form input:focus{border-color:#9abf6d}
+.gpm-public-form button{grid-column:1/-1;min-height:46px;margin-top:4px;padding:12px 16px;border:0;background:#284c38;color:#fff;cursor:pointer;font:600 9px var(--font-dm-mono),monospace;letter-spacing:.1em}
+.gpm-public-form button:hover{background:#376449}
+.gpm-public-note{max-width:900px;margin:15px 0 0;color:#9eaaa3;font-size:11px;line-height:1.75}
+.nasa-gpm-workspace{padding:clamp(20px,3vw,32px);background:linear-gradient(145deg,#102018,#0a1510);border:1px solid var(--sx-hairline);border-radius:14px}
+.nasa-gpm-workspace .dashboard-section-heading{align-items:flex-start}
+.nasa-gpm-workspace .dashboard-section-heading h2{margin-top:7px;color:#f8fafc;font-size:clamp(26px,3vw,36px)}
+.nasa-gpm-workspace .status-tag{white-space:nowrap;color:#c8e3a6;border-color:#405b43}
+.nasa-gpm-copy{max-width:780px;margin:0 0 22px;color:#afc0b1;font-size:13px;line-height:1.75}
+.nasa-gpm-context{margin:0 0 16px;color:#b8c9ba;font-size:12px;line-height:1.6}
+.nasa-gpm-form{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;padding:18px;background:#0b1710;border:1px solid #34503b;border-radius:10px}
+.nasa-gpm-form label{display:flex;flex-direction:column;gap:8px;min-width:0;color:#a8bca9;font:9px var(--font-dm-mono),monospace;letter-spacing:.1em}
+.nasa-gpm-form input{width:100%;min-width:0;min-height:43px;padding:10px 11px;background:#142319;border:1px solid #38513c;border-radius:6px;color:#f8fafc;color-scheme:dark;font:13px var(--font-dm-sans),sans-serif;outline:none}
+.nasa-gpm-form input:focus{border-color:#a4cb7b;box-shadow:0 0 0 2px #9abf6d22}
+.nasa-gpm-form button{grid-column:1/-1;min-height:46px;margin-top:4px;padding:12px 16px;border:1px solid #557a48;border-radius:7px;background:#2d5737;color:#fff;cursor:pointer;font:600 9px var(--font-dm-mono),monospace;letter-spacing:.1em}
+.nasa-gpm-form button:hover{background:#3b7048}
+.nasa-gpm-form button:disabled{opacity:.6;cursor:wait}
+.nasa-gpm-status,.nasa-gpm-error{margin:16px 0 0;padding:12px 14px;border-radius:7px;font-size:12px;line-height:1.6}
+.nasa-gpm-status{background:#14291a;color:#d4e9c9;border:1px solid #3c6042}
+.nasa-gpm-error{background:#321c22;color:#ffc5bb;border:1px solid #75433f}
+.nasa-gpm-result{margin-top:24px}
+.nasa-gpm-result-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}
+.nasa-gpm-result-head h3{margin:0;color:#f8fafc;font-size:20px}
+.nasa-gpm-result-head span{color:#a3b99f;font:8px var(--font-dm-mono),monospace;letter-spacing:.1em}
+.nasa-gpm-result-controls{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr);gap:14px;align-items:end;margin-bottom:15px}
+.nasa-gpm-result-controls label{display:flex;flex-direction:column;gap:7px;color:#a8bca9;font:9px var(--font-dm-mono),monospace;letter-spacing:.1em}
+.nasa-gpm-result-controls select{width:100%;min-height:42px;padding:9px 11px;background:#142319;border:1px solid #38513c;border-radius:6px;color:#f8fafc;color-scheme:dark;font:13px var(--font-dm-sans),sans-serif}
+.nasa-gpm-map{margin:0;padding:12px;background:#0b1710;border:1px solid #34503b;border-radius:9px}
+.nasa-gpm-map img{display:block;width:100%;height:auto;max-height:520px;object-fit:contain;background:#101b14}
+.nasa-gpm-map figcaption{margin-top:10px;color:#9eb29e;font-size:10px;line-height:1.6}
+.nasa-gpm-metadata{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin-top:13px}
+.nasa-gpm-meta-card{padding:13px;background:#0b1710;border:1px solid #34503b;border-radius:8px}
+.nasa-gpm-meta-card span{display:block;color:#9eb29e;font-size:10px;line-height:1.5}
+.nasa-gpm-meta-card strong{display:block;margin-top:7px;color:#f4f7f4;font-size:14px;line-height:1.5;overflow-wrap:anywhere}
+.nasa-gpm-provenance{margin:13px 0 0;color:#9eb29e;font-size:11px;line-height:1.7;overflow-wrap:anywhere}
+.nasa-gpm-science-note{margin:18px 0 0;padding:13px 15px;background:#0b1710;border-left:3px solid #8eae67;color:#afc0b1;font-size:11px;line-height:1.7}
+.nasa-gpm-empty{margin-top:15px;padding:14px;background:#0b1710;border:1px solid #34503b;border-radius:8px;color:#c2d2c1;font-size:12px;line-height:1.7}
+@media(max-width:850px){.gpm-public-section{padding-left:24px;padding-right:24px}.gpm-public-form,.nasa-gpm-form{grid-template-columns:repeat(2,minmax(0,1fr))}.nasa-gpm-metadata{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:700px){.gpm-public-section{padding:35px 18px}.gpm-public-heading{flex-direction:column}.gpm-public-form,.nasa-gpm-form{grid-template-columns:repeat(2,minmax(0,1fr));padding:13px}.nasa-gpm-workspace{padding:17px}.nasa-gpm-result-head{align-items:flex-start;flex-direction:column}.nasa-gpm-result-controls{grid-template-columns:1fr}.nasa-gpm-metadata{grid-template-columns:repeat(2,minmax(0,1fr))}}
