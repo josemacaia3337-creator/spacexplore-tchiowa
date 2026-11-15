@@ -27,8 +27,8 @@ export async function createFarmPlot(formData: FormData) {
   if(!geometry||typeof geometry!=="object"||(geometry as {type?:string}).type!=="Polygon") redirect(`/farms/${farmId}/plots?error=A%20delimitação%20deve%20ser%20um%20polígono.`);
   const {data,error}=await supabase.rpc("create_farm_plot",{
     p_farm_id:farmId,p_name:name,p_geojson:geometry as import("@/types/supabase").Json,
-    p_crop_name:cropName,p_variety:variety||null,p_planting_date:plantingDate||null,
-    p_expected_harvest_date:expectedHarvestDate||null,p_crop_status:cropStatus,p_notes:notes||null,
+    p_crop_name:cropName,p_variety:variety||undefined,p_planting_date:plantingDate||undefined,
+    p_expected_harvest_date:expectedHarvestDate||undefined,p_crop_status:cropStatus,p_notes:notes||undefined,
   });
   if(error||!data?.length) redirect(`/farms/${farmId}/plots?error=${encodeURIComponent(error?.message??"Não foi possível guardar o talhão.")}`);
   revalidatePath("/farms");revalidatePath(`/farms/${farmId}/plots`);revalidatePath(`/farms/${farmId}/records`);revalidatePath("/dashboard");

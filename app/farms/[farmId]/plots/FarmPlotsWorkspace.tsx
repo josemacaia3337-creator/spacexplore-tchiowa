@@ -48,7 +48,7 @@ export default function FarmPlotsWorkspace({farmId,farmName,latitude,longitude,f
  return <div className="farm-plots-workspace">
   <div className="section-heading"><div><span className="eyebrow">MAPA DE MANEIO</span><h2>Talhões da propriedade</h2></div><span className="status-tag">{plots.length} TALHÕES</span></div>
   <p className="section-copy">Cada talhão é uma unidade de gestão dentro da fazenda. Os limites são desenhados pelo utilizador, calculados no servidor e verificados para permanecer dentro da propriedade e não se sobreporem a outros talhões.</p>
-  <div className="farm-plots-map" ref={mapElement} aria-label="Mapa de talhões dentro da propriedade"/>
+  <div className="farm-plots-map" ref={mapElement} aria-label={`Mapa de talhões da propriedade ${farmName}`}/>
   {canEdit&&<div className="boundary-toolbar farm-plots-toolbar">{!drawing?<button className="primary" type="button" onClick={startDrawing}>DESENHAR NOVO TALHÃO</button>:<><button type="button" onClick={undoPoint} disabled={!points.length}>DESFAZER PONTO</button><button className="primary" type="button" onClick={closePolygon} disabled={points.length<3}>FECHAR POLÍGONO</button></>}<button type="button" onClick={clearPolygon} disabled={!points.length&&!geometry}>LIMPAR</button><span className="farm-map-point-count">{points.length} PONTOS MARCADOS</span></div>}
   {mapError&&<p className="auth-error" role="alert">{mapError}</p>}
   {canEdit&&<form className="farm-form farm-plot-form" action={createFarmPlot}>
