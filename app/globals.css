@@ -874,3 +874,11 @@ footer{border-color:var(--sx-hairline);color:#8195ab}
  .auth-shell{padding:18px}
  .auth-card{margin:7vh auto;padding:24px}
 }
+
+
+/* Shared logo lockup used by authenticated and account screens */
+.workspace-brand-image{display:block;width:188px;height:48px;object-fit:contain;object-position:left center}
+.topbar .brand-mark{width:150px;height:42px;flex:0 0 150px;background:transparent url('/spacexplore.png') left center/contain no-repeat;color:transparent;font-size:0;border-radius:0}
+.topbar .brand>span:last-child{display:none}
+.auth-brand img{display:block;width:205px;height:48px;object-fit:contain;object-position:left center}
+@media(max-width:650px){.workspace-brand-image{width:166px;height:42px}.topbar .brand-mark{width:142px;height:38px;flex-basis:142px}}
