@@ -40,8 +40,13 @@ export async function GET(request: NextRequest) {
   }
 
   const params = request.nextUrl.searchParams;
-  const latitude = Number(params.get("latitude"));
-  const longitude = Number(params.get("longitude"));
+  const latitudeRaw = params.get("latitude") ?? "";
+  const longitudeRaw = params.get("longitude") ?? "";
+  if (!latitudeRaw.trim() || !longitudeRaw.trim()) {
+    return NextResponse.json({ error: "Latitude e longitude são obrigatórias." }, { status: 400 });
+  }
+  const latitude = Number(latitudeRaw);
+  const longitude = Number(longitudeRaw);
   const start = params.get("start") ?? "";
   const end = params.get("end") ?? "";
 

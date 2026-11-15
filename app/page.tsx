@@ -55,9 +55,9 @@ export default function Home() {
    <div className="public-header-right"><button className={"menu-trigger "+(menuOpen?"is-open":"")} type="button" aria-label={menuOpen?"Fechar navegação":"Abrir navegação"} aria-expanded={menuOpen} aria-controls="public-menu" onClick={()=>setMenuOpen(!menuOpen)}><i aria-hidden="true"><b></b><b></b><b></b></i></button></div>
    {menuOpen&&<div className="public-menu-backdrop" onClick={closeMenu}/>}
    <nav id="public-menu" className={"public-menu "+(menuOpen?"is-open":"")} aria-label="Menu principal" aria-hidden={!menuOpen}>
-    <div className="public-menu-heading"><span>NAVEGAR NA PLATAFORMA</span><span>01 — 06</span></div>
+    <div className="public-menu-heading"><span>NAVEGAR NA PLATAFORMA</span><span>01 — 07</span></div>
     <a href="#plataforma" onClick={closeMenu}><small>01</small>A plataforma <b>↗</b></a><a href="#capacidades" onClick={closeMenu}><small>02</small>Capacidades <b>↗</b></a><a href="#clima" onClick={closeMenu}><small>03</small>NASA POWER <b>↗</b></a><a href="#gpm" onClick={closeMenu}><small>04</small>NASA GPM <b>↗</b></a>
-    <Link href="/farms" onClick={closeMenu}><small>04</small>Propriedades agrícolas <b>↗</b></Link><Link href="/monitoring" onClick={closeMenu}><small>05</small>Monitorização <b>↗</b></Link><Link href="/insights" onClick={closeMenu}><small>06</small>Inteligência agrícola <b>↗</b></Link>
+    <Link href="/farms" onClick={closeMenu}><small>05</small>Propriedades agrícolas <b>↗</b></Link><Link href="/monitoring" onClick={closeMenu}><small>06</small>Monitorização <b>↗</b></Link><Link href="/insights" onClick={closeMenu}><small>07</small>Inteligência agrícola <b>↗</b></Link>
     <div className="public-menu-account"><Link href="/login" onClick={closeMenu}>INICIAR SESSÃO</Link><Link href="/signup" onClick={closeMenu}>CRIAR CONTA ↗</Link></div>
    </nav>
   </header>
@@ -84,13 +84,13 @@ export default function Home() {
    <article className="capability-card"><span className="capability-number">03</span><div className="capability-icon" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M3 24c5-15 9 8 14-5s8-11 12-9M3 29h26"/></svg></div><h3>Monitorização</h3><p>Registe acontecimentos e observações de campo para construir um histórico agrícola rastreável.</p><span className="capability-tag">REGISTOS · ACOMPANHAMENTO</span></article>
    <article className="capability-card"><span className="capability-number">04</span><div className="capability-icon" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M11 3 8 29M24 3l-3 26M3 12h26M2 21h26"/></svg></div><h3>Análise e conhecimento</h3><p>Consulte indicadores e análises com distinção clara entre observações, cálculos, estimativas e informação em falta.</p><span className="capability-tag">ANÁLISE · EVIDÊNCIA</span></article>
   </div></section>
-  <section className="science-band"><div><span>03 / COMPROMISSO CIENTÍFICO</span><h2>Conhecimento com origem.<br/><em>Resultados com contexto.</em></h2></div><p>A confiança começa pela transparência. Identificamos fontes, períodos, unidades e limitações dos dados. Informação regional não é apresentada como medição de campo, e análises não substituem observações ou validação agronómica.</p><a href="#clima">CONSULTAR NASA POWER ↗</a><a href="#gpm">CONSULTAR NASA GPM ↗</a></section>
+  <section className="science-band"><div><span>03 / COMPROMISSO CIENTÍFICO</span><h2>Conhecimento com origem.<br/><em>Resultados com contexto.</em></h2></div><p>A confiança começa pela transparência. Identificamos fontes, períodos, unidades e limitações dos dados. Informação regional não é apresentada como medição de campo, e análises não substituem observações ou validação agronómica.</p><a href="#clima">CONSULTAR CAMADAS NASA ↗</a></section>
 
   <section className="account-cta"><div><span>05 / COMEÇAR</span><h2>O próximo passo<br/><em>começa com conhecimento.</em></h2><p>Crie a sua conta, organize as suas propriedades e comece a estruturar a informação da sua atividade agrícola.</p></div><div className="account-cta-actions"><Link href="/signup">CRIAR A MINHA CONTA ↗</Link><Link href="/login">JÁ TENHO UMA CONTA — INICIAR SESSÃO</Link></div></section>
   <footer className="public-footer">
    <div className="footer-compact-top">
     <div className="footer-compact-brand"><Link className="public-brand" href="/" aria-label="SpaceXplore Tchiowa — início"><Image src="/spacexplore-brand.svg" alt="SpaceXplore Tchiowa" width={230} height={54} className="brand-logo-image" priority/></Link><span>Observação da Terra &amp; Inteligência Agrícola</span></div>
-    <nav className="footer-compact-nav" aria-label="Navegação do rodapé"><a href="#plataforma">Plataforma</a><a href="#clima">Explorador Climático</a><Link href="/monitoring">Monitorização</Link><Link href="/login">Entrar</Link></nav>
+    <nav className="footer-compact-nav" aria-label="Navegação do rodapé"><a href="#plataforma">Plataforma</a><a href="#clima">NASA POWER</a><a href="#gpm">NASA GPM</a><Link href="/monitoring">Monitorização</Link><Link href="/login">Entrar</Link></nav>
    </div>
    <div className="footer-compact-bottom"><span>© 2026 SpaceXplore Tchiowa. Todos os direitos reservados.</span><span>Desenvolvido por <a href="https://www.jpmtechsolutions.com/" target="_blank" rel="noopener noreferrer">JPM Tech Solutions</a></span></div>
   </footer>
