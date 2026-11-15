@@ -102,7 +102,7 @@ export async function updateFarm(formData: FormData) {
   if (organicMatter !== null && (!Number.isFinite(organicMatter) || organicMatter < 0 || organicMatter > 100)) redirect("/farms?error=A%20matéria%20orgânica%20deve%20estar%20entre%200%20e%20100%25.");
   if (soilTexture && !soilTextures.includes(soilTexture)) redirect("/farms?error=Textura%20de%20solo%20inválida.");
   if (drainage && !drainageClasses.includes(drainage)) redirect("/farms?error=Classe%20de%20drenagem%20inválida.");
-  if (soilObservedAt && !/^\\d{4}-\\d{2}-\\d{2}$/.test(soilObservedAt)) redirect("/farms?error=Data%20de%20observação%20inválida.");
+  if (soilObservedAt && !/^\d{4}-\d{2}-\d{2}$/.test(soilObservedAt)) redirect("/farms?error=Data%20de%20observação%20inválida.");
 
   const { error } = await supabase.from("farms").update({
     name, location_label: location || null, latitude, longitude,
