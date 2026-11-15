@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { analyzeClimate, assessFarmReadiness } from "@/lib/climate-analysis";
+import ClimateCharts from "./ClimateCharts";
 
 type Farm = {
   id: string;
@@ -165,6 +166,7 @@ export default function InsightsPage() {
         <div className="section-heading"><div><span className="eyebrow">02 / ENVIRONMENTAL OBSERVATIONS</span><h2>Climate summary</h2></div><span className="status-tag">NASA POWER · DAILY</span></div>
         <p className="section-copy">Summary of valid daily values for 1 January–31 December 2025. Missing and fill values are excluded from calculations.</p>
         <div className="insight-metric-grid">{metrics.map((metric) => <article className="metric" key={metric.key}><span>{metric.label}</span><strong>{metric.key === "PRECTOTCORR" ? (metric.total === null ? "—" : metric.total.toFixed(1)) : (metric.mean === null ? "—" : metric.mean.toFixed(1))}<small> {metric.unit}</small></strong><small>{metric.validDays} / {metric.expectedDays} valid days · {metric.coveragePercent.toFixed(0)}% coverage</small><p>{metric.aggregation}</p></article>)}</div>
+        <ClimateCharts parameters={parameterData ?? {}} fillValue={climate?.fillValue ?? -999} />
         <div className="notice">Interpretation boundary: these are descriptive statistics for the requested grid point and period. They do not establish irrigation need, drought status, crop suitability, disease risk or future weather. Those analyses require additional validated methods and local evidence.</div>
       </section>}
 
