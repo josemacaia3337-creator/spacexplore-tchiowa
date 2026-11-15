@@ -31,11 +31,13 @@ const DEFAULT_START = "2025-01-01";
 const DEFAULT_END = "2025-12-31";
 const toApiDate = (value: string) => value.replaceAll("-", "");
 const expectedDays = (start: string, end: string) => Math.floor((new Date(end + "T00:00:00Z").getTime() - new Date(start + "T00:00:00Z").getTime()) / 86400000) + 1;
+const previousYearDate = (value: string) => { const parts = value.split("-").map(Number); const year = parts[0] - 1; const month = parts[1]; const day = parts[2]; const lastDay = new Date(Date.UTC(year, month, 0)).getUTCDate(); return year + "-" + String(month).padStart(2,"0") + "-" + String(Math.min(day,lastDay)).padStart(2,"0"); };
 
 export default function InsightsPage() {
   const [farms, setFarms] = useState<Farm[]>([]);
   const [farmId, setFarmId] = useState("");
   const [climate, setClimate] = useState<ClimateResponse | null>(null);
+  const [comparisonClimate, setComparisonClimate] = useState<ClimateResponse | null>(null);
   const [records, setRecords] = useState<AgriculturalRecord[]>([]);
   const [recordsLoading, setRecordsLoading] = useState(false);
   const [recordsError, setRecordsError] = useState("");
@@ -95,11 +97,14 @@ export default function InsightsPage() {
   const readiness = useMemo(() => farm ? assessFarmReadiness(farm) : [], [farm]);
   const parameterData = climate?.data?.properties?.parameter;
   const metrics = useMemo(() => parameterData ? analyzeClimate({
-    parameters: parameterData,
-    fillValue: climate?.fillValue,
-    start: toApiDate(periodStart),
-    end: toApiDate(periodEnd)
+    parameters: parameterData, fillValue: climate?.fillValue,
+    start: toApiDate(periodStart), end: toApiDate(periodEnd)
   }) : [], [parameterData, climate?.fillValue, periodStart, periodEnd]);
+  const comparisonMetrics = useMemo(() => {
+    const series = comparisonClimate?.data?.properties?.parameter;
+    return series ? analyzeClimate({ parameters: series, fillValue: comparisonClimate?.fillValue,
+      start: toApiDate(previousYearDate(periodStart)), end: toApiDate(previousYearDate(periodEnd)) }) : [];
+  }, [comparisonClimate, periodStart, periodEnd]);
 
   async function loadAnalysis() {
     if (!farm) return;
@@ -107,6 +112,7 @@ export default function InsightsPage() {
     setLoaded(false);
     setError("");
     setClimate(null);
+    setComparisonClimate(null);
     const startDate = new Date(periodStart + "T00:00:00Z");
     const endDate = new Date(periodEnd + "T00:00:00Z");
     const today = new Date(); today.setUTCHours(0, 0, 0, 0);
@@ -119,10 +125,15 @@ export default function InsightsPage() {
         start: toApiDate(periodStart),
         end: toApiDate(periodEnd)
       });
-      const response = await fetch(`/api/climate?${query.toString()}`);
-      const payload = await response.json();
+      const comparisonStart = previousYearDate(periodStart);
+      const comparisonEnd = previousYearDate(periodEnd);
+      const comparisonQuery = new URLSearchParams({ latitude: String(farm.latitude), longitude: String(farm.longitude), start: toApiDate(comparisonStart), end: toApiDate(comparisonEnd) });
+      const [response, comparisonResponse] = await Promise.all([fetch(`/api/climate?${query.toString()}`), fetch(`/api/climate?${comparisonQuery.toString()}`)]);
+      const [payload, comparisonPayload] = await Promise.all([response.json(), comparisonResponse.json()]);
       if (!response.ok) throw new Error(payload.error ?? "Climate data request failed.");
+      if (!comparisonResponse.ok) throw new Error(comparisonPayload.error ?? "Não foi possível carregar o período de comparação.");
       setClimate(payload);
+      setComparisonClimate(comparisonPayload);
       setLoaded(true);
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : "Could not load climate data.");
@@ -176,6 +187,25 @@ export default function InsightsPage() {
         <p className="section-copy">Valores diários válidos entre {periodStart} e {periodEnd}. Valores ausentes e códigos de preenchimento são excluídos. A agregação mensal reúne os anos selecionados por mês do calendário.</p>
         <div className="insight-metric-grid">{metrics.map((metric) => <article className="metric" key={metric.key}><span>{metric.label}</span><strong>{metric.key === "PRECTOTCORR" ? (metric.total === null ? "—" : metric.total.toFixed(1)) : (metric.mean === null ? "—" : metric.mean.toFixed(1))}<small> {metric.unit}</small></strong><small>{metric.validDays} / {metric.expectedDays} valid days · {metric.coveragePercent.toFixed(0)}% coverage</small><p>{metric.aggregation}</p></article>)}</div>
         <ClimateCharts parameters={parameterData ?? {}} fillValue={climate?.fillValue ?? -999} periodLabel={periodStart + " a " + periodEnd} />
+        <div className="climate-comparison">
+          <div className="section-heading"><div><span className="eyebrow">04 / YEAR-OVER-YEAR CONTEXT</span><h2>Comparação com o ano anterior</h2></div><span className="status-tag">{previousYearDate(periodStart)} — {previousYearDate(periodEnd)}</span></div>
+          <p className="section-copy">Comparação descritiva entre o intervalo selecionado e as mesmas datas do ano anterior. Os intervalos podem diferir em um dia quando há ajuste de 29 de fevereiro para um ano não bissexto.</p>
+          <div className="climate-comparison-grid">
+            {metrics.filter((item) => item.key === "T2M" || item.key === "PRECTOTCORR").map((current) => {
+              const previous = comparisonMetrics.find((item) => item.key === current.key);
+              const currentValue = current.key === "PRECTOTCORR" ? current.total : current.mean;
+              const previousValue = current.key === "PRECTOTCORR" ? previous?.total : previous?.mean;
+              const difference = currentValue != null && previousValue != null ? currentValue - previousValue : null;
+              const unit = current.key === "PRECTOTCORR" ? "mm" : "°C";
+              return <article className="climate-comparison-card" key={current.key}>
+                <span>{current.key === "T2M" ? "TEMPERATURA MÉDIA" : "PRECIPITAÇÃO ACUMULADA"}</span>
+                <strong>{difference === null ? "—" : (difference > 0 ? "+" : "") + difference.toFixed(1) + " " + unit}</strong>
+                <p>Atual: {currentValue == null ? "sem dados" : currentValue.toFixed(1) + " " + unit} · Anterior: {previousValue == null ? "sem dados" : previousValue.toFixed(1) + " " + unit}</p>
+                <small>Cobertura: {current.coveragePercent.toFixed(0)}% vs {previous ? previous.coveragePercent.toFixed(0) : "—"}%</small>
+              </article>;
+            })}
+          </div>
+        </div>
         <div className="notice">Interpretation boundary: these are descriptive statistics for the requested grid point and period. They do not establish irrigation need, drought status, crop suitability, disease risk or future weather. Those analyses require additional validated methods and local evidence.</div>
       </section>}
 
