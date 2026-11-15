@@ -536,3 +536,8 @@ footer{display:flex;justify-content:space-between;padding:0 0 30px;color:#879188
 @media(prefers-reduced-motion:reduce){
  .hero-image,.capability-card{transition:none!important;transform:none!important}
 }
+
+.brand-logo-slot{display:inline-flex;align-items:center;min-width:0}
+.brand-logo-fallback{display:flex;flex-direction:column;gap:2px;color:#f2f6fb;font:600 10px var(--font-dm-sans),sans-serif;letter-spacing:.16em;white-space:nowrap}
+.brand-logo-fallback b{color:#a6d9ff;font-weight:700}
+.brand-logo-fallback small{font:7px var(--font-dm-mono),monospace;letter-spacing:.17em;color:#91a2b7}
