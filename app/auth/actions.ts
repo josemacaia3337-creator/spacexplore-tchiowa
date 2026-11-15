@@ -49,11 +49,11 @@ export async function signUp(formData: FormData) {
 
 export async function requestPasswordReset(formData: FormData) {
   const email = String(formData.get("email") ?? "").trim().toLowerCase();
-  if (!email || !/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email)) {
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     redirect("/forgot-password?error=Introduza%20um%20endereço%20de%20email%20válido.");
   }
 
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim().replace(/\\/$/, "");
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim().replace(/\/$/, "");
   if (!siteUrl) {
     redirect("/forgot-password?error=O%20serviço%20está%20temporariamente%20indisponível.");
   }
