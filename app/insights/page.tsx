@@ -125,7 +125,7 @@ export default function InsightsPage() {
     <main className="shell">
       <header className="topbar">
         <Link className="brand" href="/"><span className="brand-mark">S</span><span>SPACEXPLORE <b>TCHIOWA</b></span></Link>
-        <nav className="top-nav"><Link href="/farms">GESTÃO DE EXPLORAÇÕES ↗</Link><Link href="/crops">INTELIGÊNCIA DE CULTURAS ↗</Link><Link href="/rotation">MOTOR DE ROTAÇÃO ↗</Link></nav>
+        <nav className="top-nav"><Link href="/farms">GESTÃO DE EXPLORAÇÕES ↗</Link><Link href="/crops">INTELIGÊNCIA DE CULTURAS ↗</Link><Link href="/rotation">MOTOR DE ROTAÇÃO ↗</Link><Link href="/monitoring">MONITORIZAÇÃO ↗</Link></nav>
       </header>
 
       <section className="farm-hero">
