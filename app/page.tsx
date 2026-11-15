@@ -12,7 +12,11 @@ type ClimateResult = {
 };
 const LABELS: Record<string,string> = {T2M:"Temperatura média",T2M_MAX:"Temperatura máxima",T2M_MIN:"Temperatura mínima",PRECTOTCORR:"Precipitação",RH2M:"Humidade relativa"};
 const slides = [
- {image:"/earth-observation.svg",eyebrow:"CONSULTOR CLIMÁTICO · INTELIGÊNCIA AMBIENTAL",title:<>Compreender a Terra.<br/><em>Interpretar o clima.</em></>,copy:"Explore dados climáticos e informação ambiental por localização e período, com fontes identificadas, contexto científico e uma experiência integrada de análise."}
+ {image:"https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=2400&q=90",eyebrow:"OBSERVAÇÃO DA TERRA",title:"A Terra vista com precisão estratégica.",copy:"Monitorização orbital e leitura territorial para decisões baseadas em evidências."},
+ {image:"https://images.unsplash.com/photo-1534088568595-a066f410bcda?auto=format&fit=crop&w=2400&q=90",eyebrow:"INTELIGÊNCIA CLIMÁTICA",title:"Interpretar o clima antes do impacto.",copy:"Dados meteorológicos, séries históricas e análise ambiental por localização e período."},
+ {image:"https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=2400&q=90",eyebrow:"AGRICULTURA DE PRECISÃO",title:"Ciência aplicada ao campo e à colheita.",copy:"Diagnóstico do solo, saúde da vegetação e produtividade agrícola orientada por dados."},
+ {image:"https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&w=2400&q=90",eyebrow:"MONITORIZAÇÃO AMBIENTAL",title:"Vigilância contínua dos recursos naturais.",copy:"Acompanhamento de bacias hídricas, uso da terra e indicadores ecológicos em tempo real."},
+ {image:"https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=2400&q=90&sat=-65",eyebrow:"ENGENHARIA DE DADOS",title:"Dados complexos. Decisões claras.",copy:"Tecnologia geoespacial e análise integrada para transformar telemetria em inteligência acionável."}
 ];
 
 export default function Home() {
@@ -25,7 +29,7 @@ export default function Home() {
   if(motion.matches)return;
   let timer:number|undefined;
   const stopRotation=()=>{if(timer){window.clearInterval(timer);timer=undefined}};
-  const startRotation=()=>{if(document.visibilityState==="visible"&&!timer&&!motion.matches)timer=window.setInterval(()=>setActiveSlide(c=>(c+1)%slides.length),7000)};
+  const startRotation=()=>{if(document.visibilityState==="visible"&&!timer&&!motion.matches)timer=window.setInterval(()=>setActiveSlide(c=>(c+1)%slides.length),5500)};
   const onVisibilityChange=()=>document.visibilityState==="visible"?startRotation():stopRotation();
   const onMotionChange=()=>motion.matches?stopRotation():startRotation();
   document.addEventListener("visibilitychange",onVisibilityChange);
@@ -45,7 +49,7 @@ export default function Home() {
  const observations=result?.data?.properties?.parameter,metadata=result?.parameters??{},closeMenu=()=>setMenuOpen(false);
  return <main className="public-site">
   <header className="public-header">
-   <Link className="public-brand" href="/" aria-label="SpaceXplore Tchiowa — página inicial"><span className="brand-logo-slot"><img src="/spacexplore.png" alt="SpaceXplore Tchiowa" width="220" height="64" className="brand-logo-image" onLoad={(event)=>{const fallback=event.currentTarget.nextElementSibling as HTMLElement|null;if(fallback)fallback.style.display="none"}} onError={(event)=>{event.currentTarget.style.display="none"}}/><span className="brand-logo-fallback">SPACEXPLORE <b>TCHIOWA</b><small>AGRICULTURAL INTELLIGENCE</small></span></span></Link>
+   <Link className="public-brand" href="/" aria-label="SpaceXplore Tchiowa — página inicial"><img src="/spacexplore-brand.svg" alt="SpaceXplore Tchiowa" width="230" height="54" className="brand-logo-image"/></Link>
    <div className="public-header-right"><button className={"menu-trigger "+(menuOpen?"is-open":"")} type="button" aria-label={menuOpen?"Fechar navegação":"Abrir navegação"} aria-expanded={menuOpen} aria-controls="public-menu" onClick={()=>setMenuOpen(!menuOpen)}><i aria-hidden="true"><b></b><b></b><b></b></i></button></div>
    {menuOpen&&<div className="public-menu-backdrop" onClick={closeMenu}/>}
    <nav id="public-menu" className={"public-menu "+(menuOpen?"is-open":"")} aria-label="Menu principal" aria-hidden={!menuOpen}>
@@ -56,13 +60,14 @@ export default function Home() {
    </nav>
   </header>
   <section className="space-hero" id="plataforma" aria-label="Apresentação SpaceXplore Tchiowa">
-   {slides.map((s,i)=><img key={s.eyebrow} className={"hero-image "+(i===activeSlide?"active":"")} src={s.image} alt="" aria-hidden="true" loading={i===0?"eager":"lazy"} fetchPriority={i===0?"high":"auto"}/>)}
-   <div className="hero-shade"/><div className="hero-grid-overlay" aria-hidden="true"/><div className="hero-telemetry" aria-hidden="true"><span>CLIMATE INTELLIGENCE</span><b>GLOBAL LOCATION · DAILY DATA</b><i>SCIENTIFIC DATA EXPLORATION</i></div><div className="hero-content">
+   <div className="hero-slides" aria-live="off">{slides.map((s,i)=><div key={s.eyebrow} className={"hero-slide "+(i===activeSlide?"active":"")} style={{backgroundImage:`url("${s.image}")`}} aria-hidden="true"/>)}</div>
+   <div className="hero-shade"/><div className="hero-content">
     <div className="hero-kicker"><span className="hero-kicker-dot"/>{slides[activeSlide].eyebrow}<span className="hero-kicker-line"/></div>
     <div className="hero-title" key={activeSlide}><h1>{slides[activeSlide].title}</h1><p>{slides[activeSlide].copy}</p></div>
-    <div className="hero-actions"><a className="hero-primary" href="#clima">EXPLORAR CONSULTOR CLIMÁTICO <span>↗</span></a><a className="hero-secondary" href="#capacidades">CONHECER A PLATAFORMA</a></div>
-    <div className="hero-bottom"><span>EARTH OBSERVATION · CLIMATE DATA · AGRICULTURE</span><span>SPACE XPLORE TCHIOWA</span></div>
-   </div><div className="hero-side-note">OBSERVAR&nbsp; / &nbsp;COMPREENDER&nbsp; / &nbsp;CONTEXTUALIZAR</div>
+    <div className="hero-actions"><a className="hero-primary" href="#clima">EXPLORAR CONSULTOR CLIMÁTICO ↗</a><a className="hero-secondary" href="#capacidades">CONHECER A PLATAFORMA</a></div>
+    <div className="hero-carousel-controls"><div className="hero-carousel-dots">{slides.map((slide,i)=><button key={slide.eyebrow} type="button" className={"hero-dot "+(i===activeSlide?"active":"")} aria-label={`Mostrar slide ${i+1}: ${slide.eyebrow}`} aria-current={i===activeSlide?"true":undefined} onClick={()=>setActiveSlide(i)}><span/></button>)}</div>
+     <div className="hero-carousel-arrows"><button type="button" aria-label="Slide anterior" onClick={()=>setActiveSlide(i=>(i+slides.length-1)%slides.length)}>←</button><button type="button" aria-label="Próximo slide" onClick={()=>setActiveSlide(i=>(i+1)%slides.length)}>→</button></div></div>
+   </div>
   </section>
   <section className="climate-section" id="clima"><div className="climate-heading"><div><span className="public-section-label">04 / EXPLORAÇÃO DE DADOS</span><h2>Explorador climático</h2><p>Consulte indicadores diários disponibilizados pelo NASA POWER para um ponto geográfico e período selecionados.</p></div><span className="data-source-badge">NASA POWER · DAILY</span></div>
    <div className="climate-form"><label>LATITUDE<input value={latitude} onChange={e=>setLatitude(e.target.value)} inputMode="decimal"/></label><label>LONGITUDE<input value={longitude} onChange={e=>setLongitude(e.target.value)} inputMode="decimal"/></label><label>DATA INICIAL<input value={start} onChange={e=>setStart(e.target.value)} inputMode="numeric"/></label><label>DATA FINAL<input value={end} onChange={e=>setEnd(e.target.value)} inputMode="numeric"/></label><button onClick={loadClimate} disabled={loading}>{loading?"A CARREGAR DADOS…":"CONSULTAR DADOS ↗"}</button></div>
@@ -81,20 +86,11 @@ export default function Home() {
 
   <section className="account-cta"><div><span>05 / COMEÇAR</span><h2>O próximo passo<br/><em>começa com conhecimento.</em></h2><p>Crie a sua conta, organize as suas propriedades e comece a estruturar a informação da sua atividade agrícola.</p></div><div className="account-cta-actions"><Link href="/signup">CRIAR A MINHA CONTA ↗</Link><Link href="/login">JÁ TENHO UMA CONTA — INICIAR SESSÃO</Link></div></section>
   <footer className="public-footer">
-   <div className="footer-orbit" aria-hidden="true"><span></span></div>
-   <div className="footer-main">
-    <div className="footer-brand">
-     <Link className="public-brand" href="/" aria-label="SpaceXplore Tchiowa — início"><img src="/spacexplore.png" alt="SpaceXplore Tchiowa" width="220" height="64" className="brand-logo-image" /></Link>
-     <p className="footer-manifesto">A Terra em perspectiva.<br/>A agricultura com mais contexto.</p>
-     <p>Ciência, observação da Terra e tecnologia reunidas para tornar a informação agrícola mais clara, estruturada e útil.</p>
-     <span className="footer-domain-note">EARTH OBSERVATION&nbsp; / &nbsp;AGRICULTURAL INTELLIGENCE</span>
-    </div>
-    <div className="footer-links"><span>EXPLORAR</span><a href="#plataforma">A plataforma <b>↗</b></a><a href="#capacidades">Capacidades <b>↗</b></a><a href="#clima">Explorador climático <b>↗</b></a></div>
-    <div className="footer-links"><span>ESPAÇO DE TRABALHO</span><Link href="/farms">Propriedades agrícolas</Link><Link href="/monitoring">Monitorização</Link><Link href="/insights">Inteligência agrícola</Link></div>
-    <div className="footer-links"><span>ACESSO</span><Link href="/login">Iniciar sessão</Link><Link href="/signup">Criar conta</Link><a href="#plataforma">Voltar ao início ↑</a></div>
-    <div className="footer-credit"><span>UMA PLATAFORMA DESENVOLVIDA POR</span><p className="footer-credit-line">Desenvolvido por <a href="https://www.jpmtechsolutions.com/" target="_blank" rel="noopener noreferrer" aria-label="JPM Tech Solutions — abrir website oficial">JPM Tech Solutions</a></p><p>Arquitetura tecnológica, engenharia de software e inovação aplicada.</p><span className="footer-credit-stamp">TECHNOLOGY · DATA · ENGINEERING</span></div>
+   <div className="footer-compact-top">
+    <div className="footer-compact-brand"><Link className="public-brand" href="/" aria-label="SpaceXplore Tchiowa — início"><img src="/spacexplore-brand.svg" alt="SpaceXplore Tchiowa" width="230" height="54" className="brand-logo-image"/></Link><span>Observação da Terra &amp; Inteligência Agrícola</span></div>
+    <nav className="footer-compact-nav" aria-label="Navegação do rodapé"><a href="#plataforma">Plataforma</a><a href="#clima">Explorador Climático</a><Link href="/monitoring">Monitorização</Link><Link href="/login">Entrar</Link></nav>
    </div>
-   <div className="footer-bottom"><span>© {new Date().getFullYear()} SPACEXPLORE TCHIOWA</span><span>CIÊNCIA · DADOS · AGRICULTURA</span><span>DESENVOLVIDO POR <b>JPM TECH SOLUTIONS</b></span></div>
+   <div className="footer-compact-bottom"><span>© 2026 SpaceXplore Tchiowa. Todos os direitos reservados.</span><span>Desenvolvido por <a href="https://www.jpmtechsolutions.com/" target="_blank" rel="noopener noreferrer">JPM Tech Solutions</a></span></div>
   </footer>
  </main>;
 }
