@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { createFarm, deleteFarm } from "./actions";
+import { createFarm, updateFarm, deleteFarm } from "./actions";
 
 const soilLabels: Record<string,string> = {
   sandy:"Arenoso", loamy_sand:"Franco-arenoso", loam:"Franco", silty:"Siltoso",
@@ -45,7 +45,7 @@ export default async function FarmsPage({searchParams}:{searchParams:Promise<{sa
         <p className="section-copy">Os dados são guardados na base de dados e ficam disponíveis aos membros autorizados da organização. Informação do solo deve ser fornecida pelo agricultor, observação de campo ou laboratório — nunca inferida apenas pelas coordenadas.</p>
 
         {params.saved&&<p className="form-message" role="status">Exploração guardada com sucesso na nuvem.</p>}
-        {params.deleted&&<p className="form-message" role="status">Exploração removida.</p>}
+        {params.deleted&&<p className="form-message" role="status">Exploração removida.</p>}\n        {params.updated&&<p className="form-message" role="status">Exploração atualizada com sucesso.</p>}
         {params.error&&<p className="auth-error" role="alert">{params.error}</p>}
         {membershipError&&<p className="auth-error" role="alert">Não foi possível consultar as suas organizações.</p>}
 
@@ -110,6 +110,29 @@ export default async function FarmsPage({searchParams}:{searchParams:Promise<{sa
                 <span>DRENAGEM<strong>{farm.drainage_class?drainageLabels[farm.drainage_class]??farm.drainage_class:"Não avaliada"}</strong></span>
                 <span>FONTE DO SOLO<strong>{farm.soil_data_source??"Não indicada"}</strong></span>
               </div>
+              
+              {["owner","admin","manager"].includes(role)&&<details className="farm-edit-panel">
+                <summary>EDITAR DADOS DA EXPLORAÇÃO</summary>
+                <form className="farm-form farm-edit-form" action={updateFarm}>
+                  <input type="hidden" name="farm_id" value={farm.id}/>
+                  <div className="form-grid">
+                    <label>NOME *<input name="name" required minLength={2} maxLength={120} defaultValue={farm.name}/></label>
+                    <label>LOCALIDADE<input name="location_label" defaultValue={farm.location_label??""}/></label>
+                    <label>LATITUDE *<input name="latitude" type="number" min="-90" max="90" step="any" required defaultValue={farm.latitude}/></label>
+                    <label>LONGITUDE *<input name="longitude" type="number" min="-180" max="180" step="any" required defaultValue={farm.longitude}/></label>
+                    <label>ÁREA (HECTARES)<input name="area_hectares" type="number" min="0.01" step="any" defaultValue={farm.area_hectares??""}/></label>
+                    <label>CULTURA ATUAL / PRINCIPAL<input name="current_crop" defaultValue={farm.current_crop??""}/></label>
+                    <label>TEXTURA DO SOLO<select name="soil_texture" defaultValue={farm.soil_texture??""}><option value="">Não informado</option><option value="sandy">Arenoso</option><option value="loamy_sand">Franco-arenoso</option><option value="loam">Franco</option><option value="silty">Siltoso</option><option value="clay_loam">Franco-argiloso</option><option value="clay">Argiloso</option><option value="unknown">Desconhecido</option></select></label>
+                    <label>pH DO SOLO<input name="soil_ph" type="number" min="0" max="14" step="0.1" defaultValue={farm.soil_ph??""}/></label>
+                    <label>MATÉRIA ORGÂNICA (%)<input name="organic_matter_pct" type="number" min="0" max="100" step="0.1" defaultValue={farm.organic_matter_pct??""}/></label>
+                    <label>DRENAGEM<select name="drainage_class" defaultValue={farm.drainage_class??""}><option value="">Não informado</option><option value="well_drained">Bem drenado</option><option value="moderate">Moderadamente drenado</option><option value="poor">Mal drenado</option><option value="unknown">Não avaliado</option></select></label>
+                    <label>FONTE DO SOLO<input name="soil_data_source" defaultValue={farm.soil_data_source??""}/></label>
+                    <label>DATA DA OBSERVAÇÃO<input name="soil_observed_at" type="date" defaultValue={farm.soil_observed_at??""}/></label>
+                  </div>
+                  <label className="full-label">NOTAS<textarea name="notes" rows={3} defaultValue={farm.notes??""}/></label>
+                  <button className="primary-button" type="submit">GUARDAR ALTERAÇÕES ↗</button>
+                </form>
+              </details>}
               <Link className="farm-climate-link" href={farm.latitude!==null&&farm.longitude!==null?`/?latitude=${farm.latitude}&longitude=${farm.longitude}&farm=${encodeURIComponent(farm.name)}`:"/"}>CONSULTAR CONTEXTO CLIMÁTICO ↗</Link>
               <p className="farm-disclaimer">Registo na nuvem. Os dados do solo são declarações ou medições fornecidas, não estimativas por satélite.</p>
             </article>;
