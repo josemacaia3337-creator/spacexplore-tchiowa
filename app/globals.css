@@ -731,3 +731,8 @@ footer{display:flex;justify-content:space-between;padding:0 0 30px;color:#879188
 .climate-month-values b,.climate-month-values small{font-size:.65rem;opacity:.65}
 @media(min-width:900px){.climate-charts{grid-template-columns:1fr 1fr}.climate-charts>.section-heading,.climate-charts>.section-copy{grid-column:1/-1}}
 @media(max-width:480px){.climate-month-values{grid-template-columns:repeat(4,minmax(0,1fr))}}
+
+.climate-period-controls{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem;margin:1rem 0}
+.climate-period-controls label{display:grid;gap:.45rem;font-size:.7rem;letter-spacing:.08em;opacity:.85}
+.climate-period-controls input{width:100%;min-height:46px;padding:.7rem .8rem;border:1px solid rgba(104,216,237,.25);border-radius:9px;background:rgba(8,24,35,.7);color:inherit;color-scheme:dark;font:inherit;letter-spacing:normal}
+@media(max-width:560px){.climate-period-controls{grid-template-columns:1fr}}
