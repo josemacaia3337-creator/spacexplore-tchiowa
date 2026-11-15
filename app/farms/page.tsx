@@ -12,7 +12,7 @@ const drainageLabels: Record<string,string> = {
   poor:"Mal drenado", unknown:"Não avaliado",
 };
 
-export default async function FarmsPage({searchParams}:{searchParams:Promise<{saved?:string;deleted?:string;error?:string}>}) {
+export default async function FarmsPage({searchParams}:{searchParams:Promise<{saved?:string;deleted?:string;updated?:string;error?:string}>}) {
   const params=await searchParams;
   const supabase=await createClient();
   const {data:{user}}=await supabase.auth.getUser();
