@@ -130,3 +130,43 @@ export async function deleteFarm(formData: FormData) {
   revalidatePath("/dashboard");
   redirect("/farms?deleted=1");
 }
+
+
+export async function saveFarmBoundary(formData: FormData) {
+  const farmId = value(formData, "farm_id");
+  const rawGeojson = value(formData, "boundary_geojson");
+  if (!farmId || !rawGeojson || rawGeojson.length > 200000) {
+    redirect("/farms?error=Delimitação%20inválida.");
+  }
+
+  let geometry: unknown;
+  try { geometry = JSON.parse(rawGeojson); } catch {
+    redirect("/farms?error=Os%20limites%20não%20estão%20num%20formato%20válido.");
+  }
+
+  if (!geometry || typeof geometry !== "object" ||
+      (geometry as { type?: string }).type !== "Polygon" ||
+      !Array.isArray((geometry as { coordinates?: unknown }).coordinates)) {
+    redirect("/farms?error=Desenhe%20um%20polígono%20fechado%20antes%20de%20guardar.");
+  }
+
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) redirect("/login");
+
+  const { error } = await supabase.rpc("save_farm_boundary", {
+    p_farm_id: farmId,
+    p_geojson: geometry as import("@/types/supabase").Json,
+  });
+  if (error) {
+    const message = encodeURIComponent(error.message.includes("polígono")
+      ? error.message
+      : "Não foi possível guardar os limites. Confirme as permissões e tente novamente.");
+    redirect(`/farms/${farmId}/boundary?error=${message}`);
+  }
+
+  revalidatePath("/farms");
+  revalidatePath(`/farms/${farmId}/boundary`);
+  revalidatePath("/insights");
+  redirect(`/farms/${farmId}/boundary?saved=1`);
+}
