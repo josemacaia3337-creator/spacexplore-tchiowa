@@ -40,8 +40,11 @@ function TrendChart({ title, unit, values, description }: {
     const y = item.value === null ? null : 150 - ((item.value - min) / span) * 112;
     return { ...item, x, y };
   });
-  const path = points.filter((point) => point.y !== null)
-    .map((point, index) => `${index ? "L" : "M"} ${point.x} ${point.y}`).join(" ");
+  const path = points.map((point, index) => {
+    if (point.y === null) return "";
+    const previousMissing = index === 0 || points[index - 1].y === null;
+    return `${previousMissing ? "M" : "L"} ${point.x} ${point.y}`;
+  }).filter(Boolean).join(" ");
   return <article className="climate-chart">
     <div className="climate-chart-heading"><h3>{title}</h3><span>{unit}</span></div>
     <svg viewBox="0 0 600 190" role="img" aria-label={`${title}, valores mensais`}>
