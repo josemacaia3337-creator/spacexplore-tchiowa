@@ -26,14 +26,14 @@ export default function Home() {
   const motion=window.matchMedia("(prefers-reduced-motion: reduce)");
   if(motion.matches)return;
   let timer:number|undefined;
-  const startRotation=()=>{if(document.visibilityState==="visible"&&!timer)timer=window.setInterval(()=>setActiveSlide(c=>(c+1)%slides.length),7000)};
   const stopRotation=()=>{if(timer){window.clearInterval(timer);timer=undefined}};
+  const startRotation=()=>{if(document.visibilityState==="visible"&&!timer&&!motion.matches)timer=window.setInterval(()=>setActiveSlide(c=>(c+1)%slides.length),7000)};
+  const onVisibilityChange=()=>document.visibilityState==="visible"?startRotation():stopRotation();
   const onMotionChange=()=>motion.matches?stopRotation():startRotation();
-  document.addEventListener("visibilitychange",startRotation);
-  document.addEventListener("visibilitychange",()=>{if(document.visibilityState!=="visible")stopRotation()});
-  motion.addEventListener?.("change",onMotionChange);
+  document.addEventListener("visibilitychange",onVisibilityChange);
+  motion.addEventListener("change",onMotionChange);
   startRotation();
-  return()=>{stopRotation();document.removeEventListener("visibilitychange",startRotation);motion.removeEventListener?.("change",onMotionChange)};
+  return()=>{stopRotation();document.removeEventListener("visibilitychange",onVisibilityChange);motion.removeEventListener("change",onMotionChange)};
  },[]);
  useEffect(()=>{
   if(!menuOpen)return;
