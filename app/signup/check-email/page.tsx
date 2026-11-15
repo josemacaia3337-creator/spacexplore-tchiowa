@@ -1,6 +1,8 @@
 import Link from "next/link";
 
-export default function CheckEmailPage() {
+export default async function CheckEmailPage({ searchParams }: { searchParams: Promise<{ next?: string }> }) {
+  const { next } = await searchParams;
+  const returnPath = next?.startsWith("/dashboard") && !next.startsWith("//") ? next : "/dashboard";
   return (
     <main className="auth-shell">
       <Link className="auth-brand" href="/">◉ SPACEXPLORE <b>TCHIOWA</b></Link>
@@ -16,7 +18,7 @@ export default function CheckEmailPage() {
           Já criou ou confirmou esta conta anteriormente? Não precisa de receber outro link:
           utilize o seu email e palavra-passe para iniciar sessão.
         </p>
-        <Link className="primary-button auth-button-link" href="/login">IR PARA INICIAR SESSÃO</Link>
+        <Link className="primary-button auth-button-link" href={`/login?next=${encodeURIComponent(returnPath)}`}>IR PARA INICIAR SESSÃO</Link>
         <p className="auth-foot">Ainda não tem conta? <Link href="/signup">Criar conta</Link></p>
       </section>
     </main>

@@ -1,22 +1,25 @@
 "use server";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { safeAuthReturnPath } from "@/lib/auth-redirect";
 
 export async function signIn(formData: FormData) {
   const email = String(formData.get("email") ?? "").trim().toLowerCase();
   const password = String(formData.get("password") ?? "");
+  const next = safeAuthReturnPath(formData.get("next"));
   if (!email || !password) redirect("/login?error=Preencha%20todos%20os%20campos.");
 
   const supabase = await createClient();
   const { error } = await supabase.auth.signInWithPassword({ email, password });
   if (error) redirect("/login?error=Não%20foi%20possível%20iniciar%20sessão.%20Verifique%20os%20dados.");
-  redirect("/dashboard");
+  redirect(next);
 }
 
 export async function signUp(formData: FormData) {
   const name = String(formData.get("name") ?? "").trim();
   const email = String(formData.get("email") ?? "").trim().toLowerCase();
   const password = String(formData.get("password") ?? "");
+  const next = safeAuthReturnPath(formData.get("next"));
 
   if (name.length < 2 || !email || password.length < 8) {
     redirect("/signup?error=Informe%20nome,%20email%20válido%20e%20palavra-passe%20com%208%20caracteres.");
@@ -36,14 +39,14 @@ export async function signUp(formData: FormData) {
     password,
     options: {
       data: { display_name: name },
-      emailRedirectTo: `${siteUrl}/auth/callback?next=/dashboard`,
+      emailRedirectTo: `${siteUrl}/auth/callback?next=${encodeURIComponent(next)}`,
     },
   });
 
   if (error) {
     redirect("/signup?error=Não%20foi%20possível%20criar%20a%20conta.%20Verifique%20o%20email%20ou%20tente%20novamente.");
   }
-  redirect("/signup/check-email");
+  redirect(`/signup/check-email?next=${encodeURIComponent(next)}`);
 }
 
 

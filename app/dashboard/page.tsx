@@ -3,9 +3,10 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { signOut } from "@/app/auth/actions";
 import { createOrganization } from "@/app/organizations/actions";
+import NasaPowerWorkspace from "@/app/dashboard/NasaPowerWorkspace";
 
 const navigation = [
-  { href: "/", label: "Explorador climático", code: "01" },
+  { href: "/dashboard#nasa-power", label: "NASA POWER", code: "01" },
   { href: "/farms", label: "Explorações", code: "02" },
   { href: "/crops", label: "Culturas", code: "03" },
   { href: "/rotation", label: "Rotação", code: "04" },
@@ -16,12 +17,20 @@ const navigation = [
 export default async function DashboardPage({
   searchParams,
 }: {
-  searchParams: Promise<{ error?: string; created?: string }>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
-  const { error, created } = await searchParams;
+  const query = await searchParams;
+  const error = typeof query.error === "string" ? query.error : undefined;
+  const created = typeof query.created === "string" ? query.created : undefined;
+  const returnParams = new URLSearchParams();
+  for (const key of ["climate", "latitude", "longitude", "start", "end", "farm"] as const) {
+    const value = query[key];
+    if (typeof value === "string") returnParams.set(key, value);
+  }
+  const returnPath = returnParams.size ? `/dashboard?${returnParams.toString()}` : "/dashboard";
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
-  if (!user) redirect("/login");
+  if (!user) redirect(`/login?next=${encodeURIComponent(returnPath)}`);
 
   const [{ data: profile }, { data: memberships }] = await Promise.all([
     supabase.from("profiles").select("display_name").eq("id", user.id).maybeSingle(),
@@ -92,6 +101,15 @@ export default async function DashboardPage({
             </article>
           ))}
         </section>
+
+        <NasaPowerWorkspace
+          autoRun={query.climate === "1"}
+          initialLatitude={typeof query.latitude === "string" ? query.latitude : "-5.55"}
+          initialLongitude={typeof query.longitude === "string" ? query.longitude : "12.19"}
+          initialStart={typeof query.start === "string" ? query.start : "20250101"}
+          initialEnd={typeof query.end === "string" ? query.end : "20251231"}
+          farmName={typeof query.farm === "string" ? query.farm : ""}
+        />
 
         <section className="dashboard-section">
           <div className="dashboard-section-heading">
