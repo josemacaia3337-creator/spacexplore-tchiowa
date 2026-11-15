@@ -81,15 +81,40 @@ export async function GET(request: NextRequest) {
     endTime: end,
   }).toString();
 
+  let response: Response;
   try {
-    const response = await fetch(upstreamUrl, {
+    response = await fetch(upstreamUrl, {
       headers: { Accept: "application/activity+json, application/json" },
-      next: { revalidate: 1800 },
+      cache: "no-store",
+      signal: AbortSignal.timeout(20000),
     });
-    if (!response.ok) {
-      return NextResponse.json({ error: `NASA GPM Publisher devolveu HTTP ${response.status}.` }, { status: 502 });
-    }
-    const payload = await response.json() as PmmResponse;
+  } catch (error) {
+    const detail = error instanceof Error ? { name: error.name, message: error.message } : { message: String(error) };
+    console.error("[NASA_GPM_UPSTREAM_FETCH_FAILED]", { endpoint: PMM_ENDPOINT, detail });
+    return NextResponse.json({
+      error: "A ligação ao serviço NASA GPM falhou ou excedeu o tempo limite. Tente novamente.",
+      diagnostic: "upstream_fetch_failed",
+    }, { status: 502 });
+  }
+
+  if (!response.ok) {
+    console.error("[NASA_GPM_UPSTREAM_HTTP_ERROR]", { status: response.status, statusText: response.statusText });
+    return NextResponse.json({ error: `NASA GPM Publisher devolveu HTTP ${response.status}.` }, { status: 502 });
+  }
+
+  let payload: PmmResponse;
+  try {
+    payload = await response.json() as PmmResponse;
+  } catch (error) {
+    const detail = error instanceof Error ? { name: error.name, message: error.message } : { message: String(error) };
+    console.error("[NASA_GPM_INVALID_UPSTREAM_JSON]", { contentType: response.headers.get("content-type"), detail });
+    return NextResponse.json({
+      error: "O serviço NASA GPM respondeu num formato inesperado. Tente novamente mais tarde.",
+      diagnostic: "invalid_upstream_response",
+    }, { status: 502 });
+  }
+
+  try {
     const items = (Array.isArray(payload.items) ? payload.items : []).map((item) => {
       const rawDate = propertyValue(item.properties?.date);
       const isoDate = /^[0-9]{8}$/.test(rawDate)
@@ -122,7 +147,9 @@ export async function GET(request: NextRequest) {
       requestedPeriod: { start, end },
       items,
     }, { headers: { "Cache-Control": "private, no-store" } });
-  } catch {
-    return NextResponse.json({ error: "Não foi possível contactar o serviço NASA GPM. Tente novamente mais tarde." }, { status: 502 });
+  } catch (error) {
+    const detail = error instanceof Error ? { name: error.name, message: error.message } : { message: String(error) };
+    console.error("[NASA_GPM_RESPONSE_PROCESSING_FAILED]", detail);
+    return NextResponse.json({ error: "Não foi possível processar a resposta do serviço NASA GPM." }, { status: 502 });
   }
 }
