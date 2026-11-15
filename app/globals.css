@@ -1170,3 +1170,35 @@ html,body{background:#030712;color:#f8fafc}
 .farm-registration-toolbar button:disabled{opacity:.45;cursor:not-allowed}
 .farm-map-point-count{margin-left:auto;color:var(--muted);font:9px var(--font-dm-mono),monospace;letter-spacing:.06em}
 @media(max-width:760px){.farm-registration-map{height:320px}.farm-registration-toolbar{align-items:stretch}.farm-registration-toolbar button{flex:1 1 42%}.farm-map-point-count{width:100%;margin:4px 0 0;text-align:right}}
+
+
+/* Stage 2 — geospatial farm plots and crop-cycle management. */
+.farm-plots-map{height:430px;width:100%;margin:18px 0 12px;border:1px solid var(--line);background:#e9eee6;z-index:0}
+.farm-plots-toolbar{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin:12px 0 20px}
+.farm-plots-toolbar button{border:1px solid var(--line);background:#fff;color:var(--green);padding:11px 13px;cursor:pointer;font:9px var(--font-dm-mono),monospace;letter-spacing:.06em}
+.farm-plots-toolbar button.primary{background:var(--green);border-color:var(--green);color:#fff}
+.farm-plots-toolbar button:disabled{opacity:.45;cursor:not-allowed}
+.farm-plot-form{margin-top:18px}
+.farm-plot-list{display:grid;gap:15px;margin-top:26px}
+.farm-plot-card{padding:22px;background:#fff;border:1px solid var(--line);border-radius:12px}
+.farm-plot-card h3{margin:8px 0 14px;color:var(--ink);font-size:23px}
+.farm-plot-current-crop{padding:16px;background:#f2f6ef;border:1px solid #dce7d7;border-radius:8px}
+.farm-plot-current-crop>span{display:block;color:var(--muted);font:9px var(--font-dm-mono),monospace;letter-spacing:.1em}
+.farm-plot-current-crop>strong{display:block;margin-top:5px;color:var(--green);font-size:20px}
+.farm-plot-current-crop>small{display:block;margin-top:4px;color:var(--muted);font-size:11px}
+.farm-plot-current-crop .farm-facts{margin-top:14px}
+.farm-plot-no-cycle{margin:12px 0;padding:15px}
+.farm-plot-history{margin-top:18px;padding-top:15px;border-top:1px solid var(--line)}
+.farm-cycle-row{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:12px 0;border-bottom:1px solid #e8ece6}
+.farm-cycle-row>div:first-child{display:flex;flex-direction:column;gap:5px}
+.farm-cycle-row strong{color:var(--ink);font-size:13px}
+.farm-cycle-row small{color:var(--muted);font-size:10px;line-height:1.5}
+.farm-cycle-row details summary,.farm-new-cycle summary{cursor:pointer;color:var(--green);font:9px var(--font-dm-mono),monospace;letter-spacing:.06em}
+.farm-cycle-update-form{display:grid;grid-template-columns:1fr 1fr;gap:9px;min-width:280px;padding:12px;background:#f6f8f4;border-radius:8px}
+.farm-cycle-update-form label{display:flex;flex-direction:column;gap:6px;color:var(--muted);font:9px var(--font-dm-mono),monospace}
+.farm-cycle-update-form select,.farm-cycle-update-form input{min-height:38px;padding:8px;border:1px solid var(--line);border-radius:5px;background:#fff;color:var(--ink);font:12px var(--font-dm-sans),sans-serif}
+.farm-cycle-update-form button{grid-column:1/-1}
+.farm-new-cycle{margin-top:15px;padding-top:13px;border-top:1px solid var(--line)}
+.farm-new-cycle .farm-form{margin-top:14px;padding:15px;background:#f7f9f5;border-radius:8px}
+.farm-map-instructions{color:var(--muted);font-size:11px;line-height:1.6}
+@media(max-width:760px){.farm-plots-map{height:330px}.farm-plots-toolbar{align-items:stretch}.farm-plots-toolbar button{flex:1 1 42%}.farm-cycle-row{align-items:flex-start;flex-direction:column}.farm-cycle-update-form{min-width:0;width:100%;grid-template-columns:1fr}.farm-cycle-update-form button{grid-column:auto}.farm-plot-card{padding:16px}}

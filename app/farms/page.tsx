@@ -106,7 +106,7 @@ export default async function FarmsPage({searchParams}:{searchParams:Promise<{sa
                   <button className="primary-button" type="submit">GUARDAR ALTERAÇÕES ↗</button>
                 </form>
               </details>}
-              <div className="farm-actions"><Link className="farm-climate-link" href={`/farms/${farm.id}/boundary`}>DELIMITAR NO MAPA ↗</Link><Link className="farm-climate-link" href={"/farms/"+farm.id+"/records"}>ABRIR HISTÓRICO AGRÍCOLA ↗</Link><Link className="farm-climate-link" href={farm.latitude!==null&&farm.longitude!==null?`/?latitude=${farm.latitude}&longitude=${farm.longitude}&farm=${encodeURIComponent(farm.name)}`:"/"}>CONSULTAR CONTEXTO CLIMÁTICO ↗</Link></div>
+              <div className="farm-actions"><Link className="farm-climate-link" href={`/farms/${farm.id}/plots`}>GERIR TALHÕES E CULTURAS ↗</Link><Link className="farm-climate-link" href={`/farms/${farm.id}/boundary`}>DELIMITAR NO MAPA ↗</Link><Link className="farm-climate-link" href={"/farms/"+farm.id+"/records"}>ABRIR HISTÓRICO AGRÍCOLA ↗</Link><Link className="farm-climate-link" href={farm.latitude!==null&&farm.longitude!==null?`/?latitude=${farm.latitude}&longitude=${farm.longitude}&farm=${encodeURIComponent(farm.name)}`:"/"}>CONSULTAR CONTEXTO CLIMÁTICO ↗</Link></div>
               <p className="farm-disclaimer">Registo na nuvem. Os dados do solo são declarações ou medições fornecidas, não estimativas por satélite.</p>
             </article>;
           })}</div>

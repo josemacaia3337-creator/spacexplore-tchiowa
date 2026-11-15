@@ -27,6 +27,18 @@ export type Database = {
         Update: { id?: string; farm_id?: string; organization_id?: string; record_type?: string; title?: string; description?: string | null; occurred_at?: string; crop?: string | null; observation_status?: string | null; input_name?: string | null; input_quantity?: number | null; input_unit?: string | null; yield_quantity?: number | null; yield_unit?: string | null; source?: string; created_by?: string; created_at?: string; updated_at?: string };
         Relationships: [{ foreignKeyName: "agricultural_records_farm_org_fk"; columns: ["farm_id", "organization_id"]; isOneToOne: false; referencedRelation: "farms"; referencedColumns: ["id", "organization_id"] }];
       };
+      farm_crop_cycles: {
+        Row: { id:string; plot_id:string; farm_id:string; organization_id:string; crop_name:string; variety:string|null; planting_date:string|null; expected_harvest_date:string|null; actual_harvest_date:string|null; status:string; source:string; notes:string|null; created_by:string; created_at:string; updated_at:string };
+        Insert: { id?:string; plot_id:string; farm_id:string; organization_id:string; crop_name:string; variety?:string|null; planting_date?:string|null; expected_harvest_date?:string|null; actual_harvest_date?:string|null; status?:string; source?:string; notes?:string|null; created_by:string; created_at?:string; updated_at?:string };
+        Update: { id?:string; plot_id?:string; farm_id?:string; organization_id?:string; crop_name?:string; variety?:string|null; planting_date?:string|null; expected_harvest_date?:string|null; actual_harvest_date?:string|null; status?:string; source?:string; notes?:string|null; created_by?:string; created_at?:string; updated_at?:string };
+        Relationships: [{ foreignKeyName:"farm_crop_cycles_plot_farm_org_fk"; columns:["plot_id","farm_id","organization_id"]; isOneToOne:false; referencedRelation:"farm_plots"; referencedColumns:["id","farm_id","organization_id"] }];
+      };
+      farm_plots: {
+        Row: { id:string; farm_id:string; organization_id:string; name:string; boundary:unknown; area_hectares:number; notes:string|null; created_by:string; created_at:string; updated_at:string };
+        Insert: { id?:string; farm_id:string; organization_id:string; name:string; boundary:unknown; area_hectares:number; notes?:string|null; created_by:string; created_at?:string; updated_at?:string };
+        Update: { id?:string; farm_id?:string; organization_id?:string; name?:string; boundary?:unknown; area_hectares?:number; notes?:string|null; created_by?:string; created_at?:string; updated_at?:string };
+        Relationships: [{ foreignKeyName:"farm_plots_farm_org_fk"; columns:["farm_id","organization_id"]; isOneToOne:false; referencedRelation:"farms"; referencedColumns:["id","organization_id"] }];
+      };
       farms: {
         Row: { id: string; organization_id: string; name: string; location_label: string | null; latitude: number | null; longitude: number | null; area_hectares: number | null; boundary_area_hectares: number | null; soil_texture: string | null; soil_ph: number | null; organic_matter_pct: number | null; drainage_class: string | null; current_crop: string | null; soil_data_source: string | null; soil_observed_at: string | null; notes: string | null; created_by: string; created_at: string; updated_at: string };
         Insert: { id?: string; organization_id: string; name: string; location_label?: string | null; latitude?: number | null; longitude?: number | null; area_hectares?: number | null; boundary_area_hectares?: number | null; soil_texture?: string | null; soil_ph?: number | null; organic_matter_pct?: number | null; drainage_class?: string | null; current_crop?: string | null; soil_data_source?: string | null; soil_observed_at?: string | null; notes?: string | null; created_by: string; created_at?: string; updated_at?: string };
@@ -35,7 +47,7 @@ export type Database = {
       };
     };
     Views: Record<string, never>;
-    Functions: { create_organization_with_owner: { Args: { org_name: string; org_slug: string }; Returns: string }; save_farm_boundary: { Args: { p_farm_id: string; p_geojson: Json }; Returns: { boundary_geojson: Json; boundary_area_hectares: number }[] }; get_farm_boundary: { Args: { p_farm_id: string }; Returns: { boundary_geojson: Json | null; boundary_area_hectares: number | null }[] } };
+    Functions: { create_farm_plot: { Args: { p_farm_id:string; p_name:string; p_geojson:Json; p_crop_name:string; p_variety?:string|null; p_planting_date?:string|null; p_expected_harvest_date?:string|null; p_crop_status?:string; p_notes?:string|null }; Returns: { plot_id:string; area_hectares:number; crop_cycle_id:string }[] }; get_farm_plots: { Args: { p_farm_id:string }; Returns: { id:string; name:string; area_hectares:number; notes:string|null; boundary_geojson:Json; created_at:string }[] }; create_organization_with_owner: { Args: { org_name: string; org_slug: string }; Returns: string }; save_farm_boundary: { Args: { p_farm_id: string; p_geojson: Json }; Returns: { boundary_geojson: Json; boundary_area_hectares: number }[] }; get_farm_boundary: { Args: { p_farm_id: string }; Returns: { boundary_geojson: Json | null; boundary_area_hectares: number | null }[] } };
     Enums: Record<string, never>;
     CompositeTypes: Record<string, never>;
   };
