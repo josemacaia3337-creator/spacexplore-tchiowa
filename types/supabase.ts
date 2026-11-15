@@ -28,14 +28,14 @@ export type Database = {
         Relationships: [{ foreignKeyName: "agricultural_records_farm_org_fk"; columns: ["farm_id", "organization_id"]; isOneToOne: false; referencedRelation: "farms"; referencedColumns: ["id", "organization_id"] }];
       };
       farms: {
-        Row: { id: string; organization_id: string; name: string; location_label: string | null; latitude: number | null; longitude: number | null; area_hectares: number | null; soil_texture: string | null; soil_ph: number | null; organic_matter_pct: number | null; drainage_class: string | null; current_crop: string | null; soil_data_source: string | null; soil_observed_at: string | null; notes: string | null; created_by: string; created_at: string; updated_at: string };
+        Row: { id: string; organization_id: string; name: string; location_label: string | null; latitude: number | null; longitude: number | null; area_hectares: number | null; boundary_area_hectares: number | null; soil_texture: string | null; soil_ph: number | null; organic_matter_pct: number | null; drainage_class: string | null; current_crop: string | null; soil_data_source: string | null; soil_observed_at: string | null; notes: string | null; created_by: string; created_at: string; updated_at: string };
         Insert: { id?: string; organization_id: string; name: string; location_label?: string | null; latitude?: number | null; longitude?: number | null; area_hectares?: number | null; soil_texture?: string | null; soil_ph?: number | null; organic_matter_pct?: number | null; drainage_class?: string | null; current_crop?: string | null; soil_data_source?: string | null; soil_observed_at?: string | null; notes?: string | null; created_by: string; created_at?: string; updated_at?: string };
         Update: { id?: string; organization_id?: string; name?: string; location_label?: string | null; latitude?: number | null; longitude?: number | null; area_hectares?: number | null; soil_texture?: string | null; soil_ph?: number | null; organic_matter_pct?: number | null; drainage_class?: string | null; current_crop?: string | null; soil_data_source?: string | null; soil_observed_at?: string | null; notes?: string | null; created_by?: string; created_at?: string; updated_at?: string };
         Relationships: [{ foreignKeyName: "farms_organization_id_fkey"; columns: ["organization_id"]; isOneToOne: false; referencedRelation: "organizations"; referencedColumns: ["id"] }];
       };
     };
     Views: Record<string, never>;
-    Functions: { create_organization_with_owner: { Args: { org_name: string; org_slug: string }; Returns: string } };
+    Functions: { create_organization_with_owner: { Args: { org_name: string; org_slug: string }; Returns: string }; save_farm_boundary: { Args: { p_farm_id: string; p_geojson: Json }; Returns: { boundary_geojson: Json; boundary_area_hectares: number }[] }; get_farm_boundary: { Args: { p_farm_id: string }; Returns: { boundary_geojson: Json | null; boundary_area_hectares: number | null }[] } };
     Enums: Record<string, never>;
     CompositeTypes: Record<string, never>;
   };
