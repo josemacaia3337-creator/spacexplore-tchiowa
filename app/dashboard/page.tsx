@@ -10,6 +10,7 @@ const navigation = [
   { href: "/crops", label: "Culturas", code: "03" },
   { href: "/rotation", label: "Rotação", code: "04" },
   { href: "/insights", label: "Análises", code: "05" },
+  { href: "/monitoring", label: "Monitorização", code: "06" },
 ];
 
 export default async function DashboardPage({
