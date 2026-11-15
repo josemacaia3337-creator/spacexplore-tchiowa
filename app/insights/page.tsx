@@ -17,7 +17,9 @@ type Farm = {
   currentCrop: string;
 };
 
-type AgriculturalRecord = { id:string; record_type:string; title:string; description:string|null; occurred_at:string; crop:string|null; observation_status:string|null; input_name:string|null; input_quantity:number|null; input_unit:string|null; yield_quantity:number|null; yield_unit:string|null; source:string; };\n\ntype ClimateResponse = {
+type AgriculturalRecord = { id:string; record_type:string; title:string; description:string|null; occurred_at:string; crop:string|null; observation_status:string|null; input_name:string|null; input_quantity:number|null; input_unit:string|null; yield_quantity:number|null; yield_unit:string|null; source:string; };
+
+type ClimateResponse = {
   fillValue?: number;
   parameters?: Record<string, { units?: string }>;
   data?: { properties?: { parameter?: Record<string, Record<string, number>> } };
@@ -30,7 +32,10 @@ const END = "20251231";
 export default function InsightsPage() {
   const [farms, setFarms] = useState<Farm[]>([]);
   const [farmId, setFarmId] = useState("");
-  const [climate, setClimate] = useState<ClimateResponse | null>(null);\n  const [records, setRecords] = useState<AgriculturalRecord[]>([]);\n  const [recordsLoading, setRecordsLoading] = useState(false);\n  const [recordsError, setRecordsError] = useState("");
+  const [climate, setClimate] = useState<ClimateResponse | null>(null);
+  const [records, setRecords] = useState<AgriculturalRecord[]>([]);
+  const [recordsLoading, setRecordsLoading] = useState(false);
+  const [recordsError, setRecordsError] = useState("");
   const [loading, setLoading] = useState(false);
   const [loaded, setLoaded] = useState(false);
   const [error, setError] = useState("");
@@ -63,7 +68,25 @@ export default function InsightsPage() {
     return () => { active = false; };
   }, []);
 
-  const farm = farms.find((item) => item.id === farmId);\n\n  useEffect(() => {\n    if (!farmId) { setRecords([]); return; }\n    let active = true;\n    async function loadRecords() {\n      setRecordsLoading(true); setRecordsError("");\n      try {\n        const response = await fetch(`/api/farms/${farmId}/records`, { cache: "no-store" });\n        const payload = await response.json();\n        if (!response.ok) throw new Error(payload.error ?? "Não foi possível carregar o histórico.");\n        if (active) setRecords(payload.records ?? []);\n      } catch (caught) {\n        if (active) setRecordsError(caught instanceof Error ? caught.message : "Erro ao carregar histórico.");\n      } finally { if (active) setRecordsLoading(false); }\n    }\n    loadRecords();\n    return () => { active = false; };\n  }, [farmId]);
+  const farm = farms.find((item) => item.id === farmId);
+
+  useEffect(() => {
+    if (!farmId) { setRecords([]); return; }
+    let active = true;
+    async function loadRecords() {
+      setRecordsLoading(true); setRecordsError("");
+      try {
+        const response = await fetch(`/api/farms/${farmId}/records`, { cache: "no-store" });
+        const payload = await response.json();
+        if (!response.ok) throw new Error(payload.error ?? "Não foi possível carregar o histórico.");
+        if (active) setRecords(payload.records ?? []);
+      } catch (caught) {
+        if (active) setRecordsError(caught instanceof Error ? caught.message : "Erro ao carregar histórico.");
+      } finally { if (active) setRecordsLoading(false); }
+    }
+    loadRecords();
+    return () => { active = false; };
+  }, [farmId]);
   const readiness = useMemo(() => farm ? assessFarmReadiness(farm) : [], [farm]);
   const parameterData = climate?.data?.properties?.parameter;
   const metrics = useMemo(() => parameterData ? analyzeClimate({
