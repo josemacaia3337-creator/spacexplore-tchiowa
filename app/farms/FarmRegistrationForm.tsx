@@ -60,7 +60,7 @@ export default function FarmRegistrationForm({
   useEffect(() => {
     const lat = Number(latitude), lng = Number(longitude);
     const map = mapRef.current;
-    if (map && Number.isFinite(lat) && Number.isFinite(lng) && Math.abs(lat) <= 90 && Math.abs(lng) <= 180) {
+    if (map && latitude.trim() !== "" && longitude.trim() !== "" && Number.isFinite(lat) && Number.isFinite(lng) && Math.abs(lat) <= 90 && Math.abs(lng) <= 180) {
       map.setView([lat, lng], Math.max(map.getZoom(), 14));
     }
   }, [latitude, longitude]);
@@ -102,6 +102,11 @@ export default function FarmRegistrationForm({
     }
     const ring = points.map(([lat, lng]) => [lng, lat]);
     ring.push([...ring[0]]);
+    const mapCenter = mapRef.current?.getCenter();
+    if (mapCenter) {
+      setLatitude(mapCenter.lat.toFixed(6));
+      setLongitude(mapCenter.lng.toFixed(6));
+    }
     setGeometry({ type: "Polygon", coordinates: [ring] });
     setDrawing(false);
     setMapError("");
@@ -145,7 +150,7 @@ export default function FarmRegistrationForm({
       </div>
 
       <div className="form-section-title">DELIMITAÇÃO GEOGRÁFICA <span>RECOMENDADO · PODE SER CONCLUÍDO DEPOIS</span></div>
-      <p className="section-copy farm-map-instructions">Aproxime o mapa, inicie o desenho e marque os vértices que contornam a fazenda. O polígono será validado e a área geodésica será calculada pelo PostGIS quando guardar o registo.</p>
+      <p className="section-copy farm-map-instructions">Aproxime o mapa, centre a vista na fazenda, inicie o desenho e marque os vértices que contornam a propriedade. Ao fechar o polígono, o centro visível do mapa será guardado como coordenada de referência. O PostGIS validará os limites e calculará a área geodésica.</p>
       <div className="farm-registration-map" ref={mapElement} aria-label="Mapa interativo para delimitar a fazenda" />
       <div className="boundary-toolbar farm-registration-toolbar">
         {!drawing
