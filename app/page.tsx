@@ -22,7 +22,27 @@ export default function Home() {
  const [result,setResult]=useState<ClimateResult|null>(null),[loading,setLoading]=useState(false),[farmName,setFarmName]=useState("");
  const [menuOpen,setMenuOpen]=useState(false),[activeSlide,setActiveSlide]=useState(0);
  useEffect(()=>{const p=new URLSearchParams(window.location.search),farm=p.get("farm"),lat=p.get("latitude"),lon=p.get("longitude");if(farm)setFarmName(farm);if(lat&&Number.isFinite(Number(lat))&&Number(lat)>=-90&&Number(lat)<=90)setLatitude(lat);if(lon&&Number.isFinite(Number(lon))&&Number(lon)>=-180&&Number(lon)<=180)setLongitude(lon)},[]);
- useEffect(()=>{const timer=window.setInterval(()=>setActiveSlide(c=>(c+1)%slides.length),6500);return()=>window.clearInterval(timer)},[]);
+ useEffect(()=>{
+  const motion=window.matchMedia("(prefers-reduced-motion: reduce)");
+  if(motion.matches)return;
+  let timer:number|undefined;
+  const startRotation=()=>{if(document.visibilityState==="visible"&&!timer)timer=window.setInterval(()=>setActiveSlide(c=>(c+1)%slides.length),7000)};
+  const stopRotation=()=>{if(timer){window.clearInterval(timer);timer=undefined}};
+  const onMotionChange=()=>motion.matches?stopRotation():startRotation();
+  document.addEventListener("visibilitychange",startRotation);
+  document.addEventListener("visibilitychange",()=>{if(document.visibilityState!=="visible")stopRotation()});
+  motion.addEventListener?.("change",onMotionChange);
+  startRotation();
+  return()=>{stopRotation();document.removeEventListener("visibilitychange",startRotation);motion.removeEventListener?.("change",onMotionChange)};
+ },[]);
+ useEffect(()=>{
+  if(!menuOpen)return;
+  const onKeyDown=(event:KeyboardEvent)=>{if(event.key==="Escape")setMenuOpen(false)};
+  const previous=document.body.style.overflow;
+  document.body.style.overflow="hidden";
+  window.addEventListener("keydown",onKeyDown);
+  return()=>{document.body.style.overflow=previous;window.removeEventListener("keydown",onKeyDown)};
+ },[menuOpen]);
  async function loadClimate(){setLoading(true);setResult(null);try{const q=new URLSearchParams({latitude,longitude,start,end}),r=await fetch("/api/climate?"+q.toString()),p=await r.json();setResult(r.ok?p:{error:p.error??"Pedido não concluído (HTTP "+r.status+")."})}catch{setResult({error:"Não foi possível carregar os dados climáticos. Verifica a ligação e tenta novamente."})}finally{setLoading(false)}}
  const observations=result?.data?.properties?.parameter,metadata=result?.parameters??{},closeMenu=()=>setMenuOpen(false);
  return <main className="public-site">
