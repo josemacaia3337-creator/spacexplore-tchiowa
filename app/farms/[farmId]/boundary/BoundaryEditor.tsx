@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { saveFarmBoundary } from "../actions";
+import { saveFarmBoundary } from "../../actions";
 
 type Position = [number, number];
 type PolygonGeometry = { type: "Polygon"; coordinates: number[][][] };
