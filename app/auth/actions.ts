@@ -47,6 +47,49 @@ export async function signUp(formData: FormData) {
 }
 
 
+export async function requestPasswordReset(formData: FormData) {
+  const email = String(formData.get("email") ?? "").trim().toLowerCase();
+  if (!email || !/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email)) {
+    redirect("/forgot-password?error=Introduza%20um%20endereço%20de%20email%20válido.");
+  }
+
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim().replace(/\\/$/, "");
+  if (!siteUrl) {
+    redirect("/forgot-password?error=O%20serviço%20está%20temporariamente%20indisponível.");
+  }
+
+  const supabase = await createClient();
+  // Deliberately return the same confirmation for existing and unknown accounts.
+  await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: `${siteUrl}/auth/callback?next=/reset-password`,
+  });
+  redirect("/forgot-password?sent=1");
+}
+
+export async function updatePassword(formData: FormData) {
+  const password = String(formData.get("password") ?? "");
+  const confirmation = String(formData.get("confirmation") ?? "");
+  if (password.length < 8 || password.length > 128) {
+    redirect("/reset-password?error=A%20palavra-passe%20deve%20ter%20entre%208%20e%20128%20caracteres.");
+  }
+  if (password !== confirmation) {
+    redirect("/reset-password?error=As%20palavras-passe%20não%20coincidem.");
+  }
+
+  const supabase = await createClient();
+  const { data: { user }, error: userError } = await supabase.auth.getUser();
+  if (userError || !user) {
+    redirect("/login?error=O%20link%20de%20recuperação%20é%20inválido%20ou%20expirou.");
+  }
+
+  const { error } = await supabase.auth.updateUser({ password });
+  if (error) {
+    redirect("/reset-password?error=Não%20foi%20possível%20actualizar%20a%20palavra-passe.%20Solicite%20um%20novo%20link.");
+  }
+  redirect("/login?updated=1");
+}
+
+
 export async function confirmEmail(formData: FormData) {
   const tokenHash = String(formData.get("token_hash") ?? "").trim();
   if (!tokenHash || tokenHash.length > 512) {
