@@ -548,3 +548,102 @@ footer{display:flex;justify-content:space-between;padding:0 0 30px;color:#879188
 .footer-credit-line a:focus-visible{outline:2px solid #a6d9ff;outline-offset:4px}
 
 .auth-success{padding:12px;background:#eef6ec;border-left:3px solid #66834e;color:#365c35;font-size:12px;line-height:1.6}
+
+
+/* SPACE-XPLORE / NASA-INSPIRED VISUAL SYSTEM — 2026 */
+:root{
+ --sx-void:#030914;--sx-navy:#07172b;--sx-blue:#54b8ff;--sx-cyan:#7ce5f2;
+ --sx-white:#f5f8fc;--sx-muted:#a9bacd;--sx-hairline:rgba(166,205,238,.2);
+}
+.public-site{background:#030914;color:#f5f8fc;font-family:var(--font-dm-sans),Arial,sans-serif}
+.public-header{height:82px;padding:0 clamp(24px,5.4vw,88px);background:rgba(3,9,20,.94);border-bottom:1px solid rgba(151,193,229,.18)}
+.public-header .brand-logo-image{width:clamp(190px,19vw,248px);height:48px}
+.public-brand-name{font-size:11px;letter-spacing:.19em}
+.public-brand-name small{font-size:7px;letter-spacing:.25em;color:#9cb2ca}
+.menu-trigger{border:1px solid rgba(124,229,242,.38);padding:0 18px;min-width:112px;color:#e8f5ff;background:#0a1c31;font:500 9px var(--font-dm-mono),monospace;letter-spacing:.18em}
+.menu-trigger:hover,.menu-trigger.is-open{background:#102c49;border-color:#54b8ff}
+.space-hero{height:min(850px,calc(100svh - 82px));min-height:650px;position:relative;background:#061426}
+.space-hero .hero-image{position:absolute;inset:0;width:100%;height:100%;display:block;object-fit:cover;object-position:center 48%;opacity:0;transform:scale(1.045);transition:opacity 1.1s ease,transform 9s linear;filter:saturate(.9) contrast(1.08)}
+.space-hero .hero-image.active{opacity:1;transform:scale(1)}
+.space-hero:after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(90deg,rgba(2,8,18,.94) 0%,rgba(2,8,18,.78) 36%,rgba(2,8,18,.2) 76%,rgba(2,8,18,.08) 100%),linear-gradient(0deg,rgba(2,8,18,.88),transparent 40%,rgba(2,8,18,.2))}
+.hero-shade{z-index:2;background:radial-gradient(ellipse at 74% 42%,transparent 0%,rgba(3,9,20,.1) 54%,rgba(3,9,20,.36) 100%)}
+.hero-grid-overlay{position:absolute;z-index:2;inset:0;pointer-events:none;opacity:.16;background-image:linear-gradient(rgba(160,204,239,.22) 1px,transparent 1px),linear-gradient(90deg,rgba(160,204,239,.22) 1px,transparent 1px);background-size:90px 90px;mask-image:linear-gradient(90deg,#000,transparent 88%)}
+.hero-content{z-index:3;max-width:1440px;margin:0 auto;padding:clamp(100px,13vh,170px) clamp(28px,8vw,130px) 34px}
+.hero-kicker{display:flex;align-items:center;gap:13px;color:#8fdcff;font:500 10px var(--font-dm-mono),monospace;letter-spacing:.24em}
+.hero-kicker-dot{width:7px;height:7px;background:#63d6e8;box-shadow:0 0 0 5px #63d6e822,0 0 18px #63d6e8;border-radius:50%}
+.hero-kicker-line{height:1px;width:58px;background:linear-gradient(90deg,#63d6e8,transparent)}
+.hero-title{max-width:1050px}
+.hero-title h1{font-family:var(--font-dm-sans),Arial,sans-serif;font-size:clamp(58px,8.4vw,116px);font-weight:600;line-height:.94;letter-spacing:-.078em;max-width:1000px;margin:34px 0 24px;color:#fff;text-shadow:0 8px 48px #0008}
+.hero-title h1 em{font-family:var(--font-playfair),Georgia,serif;font-weight:500;font-style:italic;color:#8bdcff;letter-spacing:-.065em}
+.hero-title p{font-size:clamp(14px,1.25vw,17px);line-height:1.85;max-width:560px;color:#d1deeb;text-shadow:0 2px 22px #000}
+.hero-actions{margin-top:36px;gap:14px}
+.hero-actions a{min-height:54px;padding:0 23px;display:inline-flex;align-items:center;justify-content:center;gap:22px;font:500 9px var(--font-dm-mono),monospace;letter-spacing:.13em}
+.hero-primary{background:#76d8ed;color:#04101d;border:1px solid #76d8ed}
+.hero-secondary{background:rgba(5,17,32,.35);border:1px solid rgba(218,237,255,.5);color:#f2f8ff}
+.hero-bottom{margin-top:clamp(70px,12vh,145px);padding-top:18px;border-top:1px solid rgba(202,226,248,.24);color:#b4c8dc;font:8px var(--font-dm-mono),monospace;letter-spacing:.16em}
+.hero-dots button:after{background:#ffffff66;height:2px}
+.hero-dots button.active:after{background:#7ce5f2}
+.hero-side-note{right:clamp(22px,4vw,60px);top:50%;font:8px var(--font-dm-mono),monospace;letter-spacing:.22em;color:#c6d9eb;writing-mode:vertical-rl}
+.hero-telemetry{position:absolute;z-index:4;right:clamp(26px,6vw,90px);top:clamp(110px,15vh,170px);display:flex;flex-direction:column;gap:9px;padding:17px 19px;border-left:1px solid #7ce5f2;background:linear-gradient(100deg,rgba(3,12,25,.62),rgba(3,12,25,.12));backdrop-filter:blur(5px);font:8px var(--font-dm-mono),monospace;letter-spacing:.14em;color:#9fb6cc}
+.hero-telemetry b{font-size:10px;font-weight:500;color:#eaf6ff}
+.hero-telemetry i{font-style:normal;color:#7ce5f2;font-size:7px}
+.public-intro,.capability-section,.climate-section{max-width:1500px;margin:0 auto;padding-left:clamp(28px,7vw,110px);padding-right:clamp(28px,7vw,110px)}
+.intro-label,.capability-heading>span,.science-band>div>span,.account-cta>div>span,.public-section-label{font:9px var(--font-dm-mono),monospace;letter-spacing:.2em;color:#76c9f5}
+.intro-grid h2,.science-band h2,.account-cta h2{font-size:clamp(43px,5.5vw,72px);line-height:1.02;letter-spacing:-.065em;font-weight:600}
+.intro-grid h2 em,.science-band h2 em,.account-cta h2 em{color:#75c9f4}
+.intro-grid p,.science-band>p{font-size:14px;line-height:2;color:#b3c3d4}
+.capability-section{padding-top:20px;padding-bottom:115px}
+.capability-grid{border-top:1px solid rgba(145,193,232,.24);border-bottom:1px solid rgba(145,193,232,.24)}
+.capability-card{padding:32px 24px 30px 0;min-height:320px;border-color:rgba(145,193,232,.2)}
+.capability-card h3{font-size:21px;font-weight:600;letter-spacing:-.04em}
+.capability-card p{font-size:13px;line-height:1.85;color:#b6c5d5}
+.capability-number,.capability-tag{color:#7db8df;font-size:8px;letter-spacing:.16em}
+.capability-icon{color:#77d7ed}
+.science-band{padding-left:clamp(28px,7vw,110px);padding-right:clamp(28px,7vw,110px);background:linear-gradient(115deg,#081b31,#071221 70%);border-color:#193653}
+.science-band>a{color:#7ce5f2;font:9px var(--font-dm-mono),monospace;letter-spacing:.15em}
+.climate-section{padding-top:115px;padding-bottom:120px}
+.climate-heading h2{font-size:clamp(42px,5vw,66px);font-weight:600;letter-spacing:-.07em}
+.climate-heading p{font-size:14px;line-height:1.85;color:#b6c5d5}
+.data-source-badge{padding:12px 15px;border-color:#36769a;background:#0a1c30;color:#7ce5f2;font:9px var(--font-dm-mono),monospace;letter-spacing:.14em}
+.climate-form{padding:25px;background:#071426;border-color:#24415d;gap:14px}
+.climate-form label{font:8px var(--font-dm-mono),monospace;letter-spacing:.16em;color:#94b2cc}
+.climate-form input{background:#030c18;border-color:#294660;min-height:52px;padding:14px;color:#f3f8ff;font-size:14px}
+.climate-form input:focus{border-color:#65d4ed;box-shadow:0 0 0 3px #65d4ed1a}
+.climate-form button{min-height:54px;background:#71d8ed;color:#03101c;font:500 9px var(--font-dm-mono),monospace;letter-spacing:.17em}
+.climate-results-head h3{font-size:23px;font-weight:600}
+.climate-metric{background:linear-gradient(145deg,#0d2035,#081526);border-color:#1d3b57;min-height:145px;padding:20px}
+.climate-metric>span{font-size:10px;color:#b1c4d7}
+.climate-metric strong{font-size:30px;font-weight:600;color:#f6fbff}
+.climate-metric strong small{color:#7ce5f2}
+.climate-metric>small{color:#8fa9c1}
+.climate-disclaimer{background:#09192b;border-left:3px solid #6fd7ed;color:#b4c4d5;font-size:11px}
+.account-cta{padding-left:clamp(28px,7vw,110px);padding-right:clamp(28px,7vw,110px);background:radial-gradient(ellipse at 80% 50%,#123354,#09172a 55%,#07111f);border-color:#21415e}
+.account-cta-actions a:first-child{background:#75d9ed;border-color:#75d9ed;color:#04111e}
+.public-footer{background:#020710;border-color:#1c3550}
+.footer-links>span,.footer-credit>span{color:#78c9f0}
+.footer-credit{background:linear-gradient(145deg,#0d2035,#081322);border-color:#31516d}
+.footer-credit-line a{color:#8bdcff}
+@media(max-width:760px){
+ .public-header{height:70px;padding:0 18px}
+ .public-header .brand-logo-image{width:clamp(150px,49vw,190px);height:39px}
+ .space-hero{height:auto;min-height:720px;min-height:calc(100svh - 70px);padding-bottom:20px}
+ .hero-content{min-height:calc(100svh - 70px);padding:clamp(105px,17vh,150px) 24px 24px}
+ .hero-title h1{font-size:clamp(48px,12.8vw,72px);line-height:.98;letter-spacing:-.075em;margin:26px 0 20px}
+ .hero-title p{font-size:13px;max-width:94%;line-height:1.8}
+ .hero-telemetry{display:none}
+ .hero-actions{max-width:340px;width:100%;margin-top:28px}
+ .hero-actions a{min-height:50px;width:100%;font-size:8px}
+ .hero-bottom{margin-top:clamp(70px,13vh,110px);font-size:6px;letter-spacing:.07em}
+ .hero-bottom>span:first-child{max-width:120px}
+ .hero-side-note{display:none}
+ .hero-grid-overlay{background-size:54px 54px;opacity:.12}
+ .public-intro,.capability-section,.climate-section{padding-left:23px;padding-right:23px}
+ .intro-grid h2,.science-band h2,.account-cta h2{font-size:clamp(39px,10vw,49px)}
+ .capability-card{min-height:0}
+ .climate-heading h2{font-size:42px}
+ .climate-form{padding:14px}
+ .climate-metric{min-height:122px;padding:14px}
+ .climate-metric strong{font-size:25px}
+ .account-cta{padding-left:23px;padding-right:23px}
+}
+@media(prefers-reduced-motion:reduce){.space-hero .hero-image{transition:none;transform:none}}
