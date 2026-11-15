@@ -6,6 +6,7 @@ import { createClient } from "@/lib/supabase/server";
 
 const recordTypes = ["planting","harvest","field_observation","pest_disease","fertilizer","treatment","yield","other"];
 const statuses = ["observed","suspected","confirmed","not_applicable"];
+const sources = ["farmer_report","field_observation","agronomist_report","laboratory"];
 const get = (data:FormData,key:string) => String(data.get(key)??"").trim();
 const numberOrNull = (raw:string) => raw==="" ? null : (Number.isFinite(Number(raw)) ? Number(raw) : NaN);
 
@@ -29,6 +30,7 @@ export async function createAgriculturalRecord(formData:FormData) {
 
   if(!farmId || !recordTypes.includes(type) || title.length<2 || title.length>160) redirect("/farms?error=Verifique%20o%20tipo%20e%20o%20título%20do%20registo.");
   if(status && !statuses.includes(status)) redirect("/farms?error=Estado%20de%20observação%20inválido.");
+  if(!sources.includes(source)) redirect("/farms?error=Origem%20da%20informação%20inválida.");
   if((inputQuantity!==null && (!Number.isFinite(inputQuantity)||inputQuantity<0)) || (yieldQuantity!==null && (!Number.isFinite(yieldQuantity)||yieldQuantity<0))) redirect("/farms?error=As%20quantidades%20devem%20ser%20positivas.");
   if(date && !/^\d{4}-\d{2}-\d{2}$/.test(date)) redirect("/farms?error=Data%20inválida.");
 
