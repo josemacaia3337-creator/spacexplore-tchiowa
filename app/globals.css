@@ -697,3 +697,20 @@ footer{display:flex;justify-content:space-between;padding:0 0 30px;color:#879188
  .climate-heading h2{font-size:clamp(38px,10vw,48px)}
  .climate-form{grid-template-columns:repeat(2,minmax(0,1fr));padding:14px}
 }
+
+
+/* Farm boundary editor */
+.boundary-workspace{display:grid;gap:18px}
+.boundary-map{width:100%;height:clamp(390px,58vh,680px);min-height:390px;border:1px solid #31516d;background:#0b1725;z-index:0}
+.boundary-map .leaflet-control-attribution{font-size:10px}
+.boundary-toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.boundary-toolbar button,.boundary-save-button{min-height:44px;padding:0 16px;border:1px solid #31516d;background:#102238;color:#eaf6ff;font:500 9px var(--font-dm-mono),monospace;letter-spacing:.1em;cursor:pointer}
+.boundary-toolbar button.primary,.boundary-save-button{background:#71d8ed;color:#03101c;border-color:#71d8ed}
+.boundary-toolbar button:disabled,.boundary-save-button:disabled{opacity:.45;cursor:not-allowed}
+.boundary-stats{display:flex;flex-wrap:wrap;gap:12px}
+.boundary-stat{padding:14px 18px;background:#0b2037;border:1px solid #24415d;min-width:170px}
+.boundary-stat span{display:block;color:#94b2cc;font:8px var(--font-dm-mono),monospace;letter-spacing:.12em}
+.boundary-stat strong{display:block;margin-top:8px;color:#f5f8fc;font-size:20px}
+.boundary-help{padding:14px 16px;background:#09192b;border-left:3px solid #71d8ed;color:#b7c8d9;font-size:12px;line-height:1.8}
+.boundary-save-form{display:grid;gap:12px}
+@media(max-width:650px){.boundary-map{height:440px}.boundary-toolbar button{flex:1 1 42%}.boundary-stat{flex:1}}
