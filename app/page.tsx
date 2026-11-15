@@ -27,7 +27,7 @@ export default function Home() {
  const observations=result?.data?.properties?.parameter,metadata=result?.parameters??{},closeMenu=()=>setMenuOpen(false);
  return <main className="public-site">
   <header className="public-header">
-   <Link className="public-brand" href="/" aria-label="SpaceXplore Tchiowa — página inicial"><span className="public-brand-symbol">S</span><span className="public-brand-name">SPACEXPLORE <b>TCHIOWA</b><small>AGRICULTURAL INTELLIGENCE</small></span></Link>
+   <Link className="public-brand" href="/" aria-label="SpaceXplore Tchiowa — página inicial"><span className="public-brand-symbol" aria-hidden="true"><svg viewBox="0 0 48 48" fill="none"><circle cx="24" cy="24" r="17.5" stroke="currentColor" strokeWidth="1"/><ellipse cx="24" cy="24" rx="22" ry="8.5" transform="rotate(-34 24 24)" stroke="currentColor" strokeWidth="1"/><circle cx="35.5" cy="12.2" r="2.3" fill="#b8e4ff"/><path d="M18 29.5 28.5 18M18 18h10.5v11.5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/></svg></span><span className="public-brand-name">SPACEXPLORE <b>TCHIOWA</b><small>AGRICULTURAL INTELLIGENCE</small></span></Link>
    <div className="public-header-right"><span className="public-edition">EARTH · DATA · AGRICULTURE</span><button className={"menu-trigger "+(menuOpen?"is-open":"")} type="button" aria-expanded={menuOpen} aria-controls="public-menu" onClick={()=>setMenuOpen(!menuOpen)}><span>{menuOpen?"FECHAR":"MENU"}</span><i aria-hidden="true"><b></b><b></b></i></button></div>
    {menuOpen&&<div className="public-menu-backdrop" onClick={closeMenu}/>}
    <nav id="public-menu" className={"public-menu "+(menuOpen?"is-open":"")} aria-label="Menu principal" aria-hidden={!menuOpen}>
@@ -61,6 +61,21 @@ export default function Home() {
    <p className="climate-disclaimer">Nota científica: o NASA POWER disponibiliza dados ambientais em grelha para contexto regional, não medições diretas nos limites de uma propriedade. Dados históricos não constituem previsões. O pH, a textura e os nutrientes do solo exigem medições ou fontes validadas específicas.</p>
   </section>
   <section className="account-cta"><div><span>05 / COMEÇAR</span><h2>O próximo passo<br/><em>começa com conhecimento.</em></h2><p>Crie a sua conta, organize as suas propriedades e comece a estruturar a informação da sua atividade agrícola.</p></div><div className="account-cta-actions"><Link href="/signup">CRIAR A MINHA CONTA ↗</Link><Link href="/login">JÁ TENHO UMA CONTA — INICIAR SESSÃO</Link></div></section>
-  <footer className="public-footer"><div className="footer-main"><div className="footer-brand"><Link className="public-brand" href="/"><span className="public-brand-symbol">S</span><span className="public-brand-name">SPACEXPLORE <b>TCHIOWA</b><small>AGRICULTURAL INTELLIGENCE</small></span></Link><p>Ciência, dados e tecnologia ao serviço de uma compreensão mais inteligente da agricultura.</p></div><div className="footer-links"><span>PLATAFORMA</span><a href="#capacidades">Capacidades</a><a href="#clima">Explorador climático</a><Link href="/farms">Propriedades</Link><Link href="/insights">Inteligência agrícola</Link></div><div className="footer-links"><span>CONTA</span><Link href="/login">Iniciar sessão</Link><Link href="/signup">Criar conta</Link><a href="#plataforma">Voltar ao início ↑</a></div><div className="footer-credit"><span>TECNOLOGIA E DESENVOLVIMENTO</span><strong>JPM Tech Solutions</strong><p>Desenvolvido com visão tecnológica, rigor e compromisso com a inovação.</p></div></div><div className="footer-bottom"><span>© {new Date().getFullYear()} SPACEXPLORE TCHIOWA. TODOS OS DIREITOS RESERVADOS.</span><span>DESENVOLVIDO POR <b>JPM TECH SOLUTIONS</b></span><span>EARTH · DATA · AGRICULTURE</span></div></footer>
+  <footer className="public-footer">
+   <div className="footer-orbit" aria-hidden="true"><span></span></div>
+   <div className="footer-main">
+    <div className="footer-brand">
+     <Link className="public-brand" href="/" aria-label="SpaceXplore Tchiowa — início"><span className="public-brand-symbol" aria-hidden="true"><svg viewBox="0 0 48 48" fill="none"><circle cx="24" cy="24" r="17.5" stroke="currentColor" strokeWidth="1"/><ellipse cx="24" cy="24" rx="22" ry="8.5" transform="rotate(-34 24 24)" stroke="currentColor" strokeWidth="1"/><circle cx="35.5" cy="12.2" r="2.3" fill="#b8e4ff"/><path d="M18 29.5 28.5 18M18 18h10.5v11.5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/></svg></span><span className="public-brand-name">SPACEXPLORE <b>TCHIOWA</b><small>AGRICULTURAL INTELLIGENCE</small></span></Link>
+     <p className="footer-manifesto">A Terra em perspectiva.<br/>A agricultura com mais contexto.</p>
+     <p>Ciência, observação da Terra e tecnologia reunidas para tornar a informação agrícola mais clara, estruturada e útil.</p>
+     <span className="footer-domain-note">EARTH OBSERVATION&nbsp; / &nbsp;AGRICULTURAL INTELLIGENCE</span>
+    </div>
+    <div className="footer-links"><span>EXPLORAR</span><a href="#plataforma">A plataforma <b>↗</b></a><a href="#capacidades">Capacidades <b>↗</b></a><a href="#clima">Explorador climático <b>↗</b></a></div>
+    <div className="footer-links"><span>ESPAÇO DE TRABALHO</span><Link href="/farms">Propriedades agrícolas</Link><Link href="/monitoring">Monitorização</Link><Link href="/insights">Inteligência agrícola</Link></div>
+    <div className="footer-links"><span>ACESSO</span><Link href="/login">Iniciar sessão</Link><Link href="/signup">Criar conta</Link><a href="#plataforma">Voltar ao início ↑</a></div>
+    <div className="footer-credit"><span>UMA PLATAFORMA DESENVOLVIDA POR</span><strong>JPM <i>Tech Solutions</i></strong><p>Arquitetura tecnológica, engenharia de software e inovação aplicada.</p><span className="footer-credit-stamp">TECHNOLOGY · DATA · ENGINEERING</span></div>
+   </div>
+   <div className="footer-bottom"><span>© {new Date().getFullYear()} SPACEXPLORE TCHIOWA</span><span>CIÊNCIA · DADOS · AGRICULTURA</span><span>DESENVOLVIDO POR <b>JPM TECH SOLUTIONS</b></span></div>
+  </footer>
  </main>;
 }
