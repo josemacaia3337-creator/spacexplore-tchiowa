@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type FormEvent } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { signOut } from "@/app/auth/actions";
@@ -39,6 +39,10 @@ export default function DashboardNavigation({ displayName, avatarPath }: Props) 
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+  const previewUrl = useMemo(() => file ? URL.createObjectURL(file) : null, [file]);
+
+  useEffect(() => () => { if (previewUrl) URL.revokeObjectURL(previewUrl); }, [previewUrl]);
+  useEffect(() => { document.documentElement.dataset.dashboardDensity = compact ? "compact" : "comfortable"; }, [compact]);
 
   const supabase = useMemo(() => createClient(), []);
   useEffect(() => {
@@ -68,7 +72,7 @@ export default function DashboardNavigation({ displayName, avatarPath }: Props) 
   }, [settingsOpen, supabase]);
 
   const closeDrawer = () => setMobileOpen(false);
-  const saveProfile = async (event: React.FormEvent<HTMLFormElement>) => {
+  const saveProfile = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setSaving(true); setMessage(""); setError("");
     try {
@@ -147,7 +151,7 @@ export default function DashboardNavigation({ displayName, avatarPath }: Props) 
             <div className="profile-modal-heading"><div><span className="eyebrow">CONTA & SISTEMA</span><h2 id="profile-modal-title">Perfil e preferências</h2></div><button type="button" className="profile-modal-close" aria-label="Fechar" onClick={() => setSettingsOpen(false)}><Icon name="close" /></button></div>
             <form onSubmit={saveProfile} className="profile-settings-form">
               <div className="profile-avatar-editor">
-                <div className="profile-avatar-preview">{file ? <img src={URL.createObjectURL(file)} alt="Pré-visualização do avatar" /> : avatar ? <img src={avatar} alt="Avatar atual" /> : <span>{name.trim().slice(0,1).toUpperCase() || "U"}</span>}</div>
+                <div className="profile-avatar-preview">{previewUrl ? <img src={previewUrl} alt="Pré-visualização do avatar" /> : avatar ? <img src={avatar} alt="Avatar atual" /> : <span>{name.trim().slice(0,1).toUpperCase() || "U"}</span>}</div>
                 <label className="avatar-upload-button">ALTERAR FOTOGRAFIA<input type="file" accept="image/png,image/jpeg,image/webp" onChange={(event) => setFile(event.target.files?.[0] ?? null)} /></label>
                 <small>JPG, PNG ou WebP · máximo 2 MB</small>
               </div>
