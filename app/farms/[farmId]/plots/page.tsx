@@ -16,7 +16,7 @@ export default async function FarmPlotsPage({params,searchParams}:{params:Promis
   supabase.from("farm_crop_cycles").select("id,plot_id,crop_name,variety,planting_date,expected_harvest_date,actual_harvest_date,status,source,notes").eq("farm_id",farmId).order("created_at",{ascending:false})
  ]);
  const farmBoundary=boundaryRows?.[0]?.boundary_geojson as PolygonGeometry|null|undefined;
- const plots=(plotRows??[]).map(plot=>({id:plot.id,name:plot.name,area_hectares:Number(plot.area_hectares),notes:plot.notes,boundary_geojson:plot.boundary_geojson as PolygonGeometry,cycles:(cycles??[]).filter(cycle=>cycle.plot_id===plot.id)}));
+ const plots=(plotRows??[]).map((plot:{id:string;name:string;area_hectares:number;notes:string|null;boundary_geojson:import("@/types/supabase").Json})=>({id:plot.id,name:plot.name,area_hectares:Number(plot.area_hectares),notes:plot.notes,boundary_geojson:plot.boundary_geojson as PolygonGeometry,cycles:(cycles??[]).filter(cycle=>cycle.plot_id===plot.id)}));
  const canEdit=["owner","admin","manager","agronomist","field_operator"].includes(membership.role);
  return <main className="shell">
   <header className="topbar"><Link className="brand" href="/farms"><span className="brand-mark">S</span><span>SPACEXPLORE <b>TCHIOWA</b></span></Link><nav className="top-nav"><Link href="/farms">EXPLORAÇÕES ↗</Link><Link href={`/farms/${farmId}/boundary`}>LIMITES DA FAZENDA ↗</Link><Link href={`/farms/${farmId}/records`}>HISTÓRICO AGRÍCOLA ↗</Link></nav></header>
