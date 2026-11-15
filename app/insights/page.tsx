@@ -27,8 +27,10 @@ type ClimateResponse = {
   error?: string;
 };
 
-const START = "20250101";
-const END = "20251231";
+const DEFAULT_START = "2025-01-01";
+const DEFAULT_END = "2025-12-31";
+const toApiDate = (value: string) => value.replaceAll("-", "");
+const expectedDays = (start: string, end: string) => Math.floor((new Date(end + "T00:00:00Z").getTime() - new Date(start + "T00:00:00Z").getTime()) / 86400000) + 1;
 
 export default function InsightsPage() {
   const [farms, setFarms] = useState<Farm[]>([]);
@@ -40,6 +42,8 @@ export default function InsightsPage() {
   const [loading, setLoading] = useState(false);
   const [loaded, setLoaded] = useState(false);
   const [error, setError] = useState("");
+  const [periodStart, setPeriodStart] = useState(DEFAULT_START);
+  const [periodEnd, setPeriodEnd] = useState(DEFAULT_END);
 
   useEffect(() => {
     let active = true;
@@ -93,9 +97,9 @@ export default function InsightsPage() {
   const metrics = useMemo(() => parameterData ? analyzeClimate({
     parameters: parameterData,
     fillValue: climate?.fillValue,
-    start: START,
-    end: END
-  }) : [], [parameterData, climate?.fillValue]);
+    start: toApiDate(periodStart),
+    end: toApiDate(periodEnd)
+  }) : [], [parameterData, climate?.fillValue, periodStart, periodEnd]);
 
   async function loadAnalysis() {
     if (!farm) return;
@@ -103,12 +107,17 @@ export default function InsightsPage() {
     setLoaded(false);
     setError("");
     setClimate(null);
+    const startDate = new Date(periodStart + "T00:00:00Z");
+    const endDate = new Date(periodEnd + "T00:00:00Z");
+    const today = new Date(); today.setUTCHours(0, 0, 0, 0);
+    if (!/^\\d{4}-\\d{2}-\\d{2}$/.test(periodStart) || !/^\\d{4}-\\d{2}-\\d{2}$/.test(periodEnd) || Number.isNaN(startDate.getTime()) || Number.isNaN(endDate.getTime()) || startDate.toISOString().slice(0,10) !== periodStart || endDate.toISOString().slice(0,10) !== periodEnd || startDate > endDate || endDate >= today) { setError("Indique um intervalo válido, com início anterior ao fim e data final anterior a hoje."); setLoading(false); return; }
+    if (expectedDays(periodStart, periodEnd) > 3660) { setError("Selecione um período máximo de 10 anos para manter a consulta responsiva."); setLoading(false); return; }
     try {
       const query = new URLSearchParams({
         latitude: String(farm.latitude),
         longitude: String(farm.longitude),
-        start: START,
-        end: END
+        start: toApiDate(periodStart),
+        end: toApiDate(periodEnd)
       });
       const response = await fetch(`/api/climate?${query.toString()}`);
       const payload = await response.json();
@@ -143,7 +152,7 @@ export default function InsightsPage() {
               {farms.map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}
             </select>
           </label>
-          {farm && <div className="rotation-context"><strong>{farm.name}</strong><span>Coordenadas: {farm.latitude}, {farm.longitude}</span><span>Período: Ano civil de 2025</span><p>NASA POWER provides gridded regional context, not measurements taken directly inside this farm.</p></div>}
+          {farm && <><div className="climate-period-controls"><label>DATA INICIAL<input type="date" value={periodStart} max={periodEnd} onChange={(event) => { setPeriodStart(event.target.value); setClimate(null); setLoaded(false); }} /></label><label>DATA FINAL<input type="date" value={periodEnd} min={periodStart} max={new Date(Date.now() - 86400000).toISOString().slice(0,10)} onChange={(event) => { setPeriodEnd(event.target.value); setClimate(null); setLoaded(false); }} /></label></div><div className="rotation-context"><strong>{farm.name}</strong><span>Coordenadas: {farm.latitude}, {farm.longitude}</span><span>Período: {periodStart} a {periodEnd}</span><p>NASA POWER provides gridded regional context, not measurements taken directly inside this farm.</p></div></>}
           <button className="primary-button" onClick={loadAnalysis} disabled={!farm || loading}>{loading ? "A ANALISAR DADOS CLIMÁTICOS…" : "CARREGAR ANÁLISE DA EXPLORAÇÃO ↗"}</button>
         </> : <div className="empty-state"><strong>Nenhuma exploração disponível.</strong><p>Registe uma exploração antes de solicitar uma análise integrada.</p><Link href="/farms">ABRIR GESTÃO DE EXPLORAÇÕES ↗</Link></div>}
         {error && <div className="notice error" role="alert">{error}</div>}
@@ -164,9 +173,9 @@ export default function InsightsPage() {
 
       {loaded && <section className="workspace">
         <div className="section-heading"><div><span className="eyebrow">02 / ENVIRONMENTAL OBSERVATIONS</span><h2>Climate summary</h2></div><span className="status-tag">NASA POWER · DAILY</span></div>
-        <p className="section-copy">Summary of valid daily values for 1 January–31 December 2025. Missing and fill values are excluded from calculations.</p>
+        <p className="section-copy">Valores diários válidos entre {periodStart} e {periodEnd}. Valores ausentes e códigos de preenchimento são excluídos. A agregação mensal reúne os anos selecionados por mês do calendário.</p>
         <div className="insight-metric-grid">{metrics.map((metric) => <article className="metric" key={metric.key}><span>{metric.label}</span><strong>{metric.key === "PRECTOTCORR" ? (metric.total === null ? "—" : metric.total.toFixed(1)) : (metric.mean === null ? "—" : metric.mean.toFixed(1))}<small> {metric.unit}</small></strong><small>{metric.validDays} / {metric.expectedDays} valid days · {metric.coveragePercent.toFixed(0)}% coverage</small><p>{metric.aggregation}</p></article>)}</div>
-        <ClimateCharts parameters={parameterData ?? {}} fillValue={climate?.fillValue ?? -999} />
+        <ClimateCharts parameters={parameterData ?? {}} fillValue={climate?.fillValue ?? -999} periodLabel={periodStart + " a " + periodEnd} />
         <div className="notice">Interpretation boundary: these are descriptive statistics for the requested grid point and period. They do not establish irrigation need, drought status, crop suitability, disease risk or future weather. Those analyses require additional validated methods and local evidence.</div>
       </section>}
 
