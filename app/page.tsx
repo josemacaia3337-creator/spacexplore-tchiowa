@@ -47,7 +47,7 @@ export default function Home() {
  const observations=result?.data?.properties?.parameter,metadata=result?.parameters??{},closeMenu=()=>setMenuOpen(false);
  return <main className="public-site">
   <header className="public-header">
-   <Link className="public-brand" href="/" aria-label="SpaceXplore Tchiowa — página inicial"><img src="/spacexplore.png" alt="SpaceXplore Tchiowa" width="220" height="64" className="brand-logo-image" /></Link>
+   <Link className="public-brand" href="/" aria-label="SpaceXplore Tchiowa — página inicial"><span className="brand-logo-slot"><img src="/spacexplore.png" alt="SpaceXplore Tchiowa" width="220" height="64" className="brand-logo-image" onError={(event)=>{event.currentTarget.style.display="none"}}/><span className="brand-logo-fallback">SPACEXPLORE <b>TCHIOWA</b><small>AGRICULTURAL INTELLIGENCE</small></span></span></Link>
    <div className="public-header-right"><span className="public-edition">EARTH · DATA · AGRICULTURE</span><button className={"menu-trigger "+(menuOpen?"is-open":"")} type="button" aria-expanded={menuOpen} aria-controls="public-menu" onClick={()=>setMenuOpen(!menuOpen)}><span>{menuOpen?"FECHAR":"MENU"}</span><i aria-hidden="true"><b></b><b></b></i></button></div>
    {menuOpen&&<div className="public-menu-backdrop" onClick={closeMenu}/>}
    <nav id="public-menu" className={"public-menu "+(menuOpen?"is-open":"")} aria-label="Menu principal" aria-hidden={!menuOpen}>
@@ -93,7 +93,7 @@ export default function Home() {
     <div className="footer-links"><span>EXPLORAR</span><a href="#plataforma">A plataforma <b>↗</b></a><a href="#capacidades">Capacidades <b>↗</b></a><a href="#clima">Explorador climático <b>↗</b></a></div>
     <div className="footer-links"><span>ESPAÇO DE TRABALHO</span><Link href="/farms">Propriedades agrícolas</Link><Link href="/monitoring">Monitorização</Link><Link href="/insights">Inteligência agrícola</Link></div>
     <div className="footer-links"><span>ACESSO</span><Link href="/login">Iniciar sessão</Link><Link href="/signup">Criar conta</Link><a href="#plataforma">Voltar ao início ↑</a></div>
-    <div className="footer-credit"><span>UMA PLATAFORMA DESENVOLVIDA POR</span><strong>JPM <i>Tech Solutions</i></strong><p>Arquitetura tecnológica, engenharia de software e inovação aplicada.</p><a className="footer-company-link" href="#" aria-label="Website oficial da JPM Tech Solutions">VISITAR WEBSITE ↗</a><span className="footer-credit-stamp">TECHNOLOGY · DATA · ENGINEERING</span></div>
+    <div className="footer-credit"><span>UMA PLATAFORMA DESENVOLVIDA POR</span><strong>JPM <i>Tech Solutions</i></strong><p>Arquitetura tecnológica, engenharia de software e inovação aplicada.</p><span className="footer-company-link">WEBSITE OFICIAL JPM ↗</span><span className="footer-credit-stamp">TECHNOLOGY · DATA · ENGINEERING</span></div>
    </div>
    <div className="footer-bottom"><span>© {new Date().getFullYear()} SPACEXPLORE TCHIOWA</span><span>CIÊNCIA · DADOS · AGRICULTURA</span><span>DESENVOLVIDO POR <b>JPM TECH SOLUTIONS</b></span></div>
   </footer>
