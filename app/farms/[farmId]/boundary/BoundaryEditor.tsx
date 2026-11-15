@@ -19,7 +19,6 @@ const DEFAULT_CENTER: Position = [-5.55, 12.19];
 
 export default function BoundaryEditor({ farmId, latitude, longitude, initialGeometry, initialArea, canEdit }: Props) {
   const mapElement = useRef<HTMLDivElement>(null);
-  const mapRef = useRef<import("leaflet").Map | null>(null);
   const drawingRef = useRef(false);
   const layersRef = useRef<import("leaflet").LayerGroup | null>(null);
   const [points, setPoints] = useState<Position[]>(() => initialGeometry?.coordinates?.[0]?.slice(0, -1).map(([lng, lat]) => [lat, lng] as Position) ?? []);
@@ -44,7 +43,6 @@ export default function BoundaryEditor({ farmId, latitude, longitude, initialGeo
       const attribution = process.env.NEXT_PUBLIC_MAP_ATTRIBUTION || '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>';
       L.tileLayer(tileUrl, { maxZoom: 19, attribution }).addTo(map);
       layersRef.current = L.layerGroup().addTo(map);
-      mapRef.current = map;
       clickHandler = (event) => {
         if (!drawingRef.current) return;
         setPoints((current) => [...current, [event.latlng.lat, event.latlng.lng]]);
@@ -58,7 +56,6 @@ export default function BoundaryEditor({ farmId, latitude, longitude, initialGeo
       disposed = true;
       if (map && clickHandler) map.off("click", clickHandler);
       map?.remove();
-      mapRef.current = null;
       layersRef.current = null;
       setMapReady(false);
     };
@@ -74,10 +71,7 @@ export default function BoundaryEditor({ farmId, latitude, longitude, initialGeo
       if (latLngs.length >= 2) {
         L.polyline(latLngs, { color: "#68d8ed", weight: 3, dashArray: "7 6" }).addTo(layerGroup);
       }
-      if (latLngs.length >= 3 && geometry) {
-        L.polygon(latLngs, { color: "#68d8ed", fillColor: "#2d9ec1", fillOpacity: 0.2, weight: 3 }).addTo(layerGroup);
-      }
-      if (latLngs.length >= 3 && !drawing) {
+      if (latLngs.length >= 3) {
         L.polygon(latLngs, { color: "#68d8ed", fillColor: "#2d9ec1", fillOpacity: 0.2, weight: 3 }).addTo(layerGroup);
       }
       latLngs.forEach((latLng, index) => {
