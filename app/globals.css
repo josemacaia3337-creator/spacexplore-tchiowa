@@ -1041,3 +1041,37 @@ html,body{background:#030712;color:#f8fafc}
  .footer-compact-bottom{flex-direction:column;justify-content:center;text-align:center;gap:7px;padding-top:14px;font-size:10px}
 }
 @media(prefers-reduced-motion:reduce){.hero-slide,.hero-title{transition:none;animation:none}.hero-dot.active span{animation:none;transform:scaleX(1)}}
+
+
+/* Surgical refinement: clean automatic hero and scientific metric typography */
+.hero-carousel-controls,.hero-carousel-dots,.hero-carousel-arrows,.hero-dot{display:none!important}
+.climate-metric>span,
+.climate-metric>small,
+.climate-provenance,
+.climate-context,
+.rotation-context>span,
+.rotation-context>p,
+.rotation-context small,
+.insight-metric-grid .metric>small,
+.insight-metric-grid .metric>p{
+  font-family:var(--font-dm-sans),ui-sans-serif,system-ui,sans-serif;
+  font-weight:400;
+  letter-spacing:.005em;
+  color:#94a3b8;
+  text-transform:none;
+}
+.climate-metric>span{font-size:12px;line-height:1.55;color:#cbd5e1;font-weight:500}
+.climate-metric>small{font-size:11px;line-height:1.6;color:#94a3b8}
+.climate-metric strong{font-family:var(--font-dm-sans),ui-sans-serif,system-ui,sans-serif;font-weight:600;letter-spacing:-.045em;color:#f8fafc}
+.climate-metric strong small{font-size:12px;font-weight:400;color:#94a3b8;letter-spacing:0}
+.climate-provenance{font-size:12px;line-height:1.75;color:#94a3b8}
+.climate-context{font-size:12px;line-height:1.7;letter-spacing:0}
+.insight-metric-grid .metric>span{font-family:var(--font-dm-sans),ui-sans-serif,system-ui,sans-serif;font-size:12px;font-weight:500;letter-spacing:.01em;color:#cbd5e1;text-transform:none}
+.insight-metric-grid .metric>small{font-size:11px;line-height:1.6;letter-spacing:0;color:#94a3b8}
+.insight-metric-grid .metric>p{font-size:12px;line-height:1.65;letter-spacing:0;color:#94a3b8}
+.rotation-context>span,.rotation-context>p{font-size:12px;line-height:1.7;letter-spacing:0;color:#94a3b8}
+@media(max-width:650px){
+ .climate-metric>span,.insight-metric-grid .metric>span{font-size:12px}
+ .climate-metric>small,.insight-metric-grid .metric>small{font-size:11px}
+ .climate-provenance{font-size:11px;overflow-wrap:anywhere}
+}
