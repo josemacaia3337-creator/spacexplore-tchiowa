@@ -23,7 +23,7 @@ export default async function FarmsPage({searchParams}:{searchParams:Promise<{sa
     .eq("user_id",user.id).eq("status","active");
   const organizationIds=(memberships??[]).map(m=>m.organization_id);
   const {data: farms,error:farmError}=organizationIds.length
-    ? await supabase.from("farms").select("id,organization_id,name,location_label,latitude,longitude,area_hectares,soil_texture,soil_ph,organic_matter_pct,drainage_class,current_crop,soil_data_source,soil_observed_at,notes,created_at").in("organization_id",organizationIds).order("created_at",{ascending:false})
+    ? await supabase.from("farms").select("id,organization_id,name,location_label,latitude,longitude,area_hectares,boundary_area_hectares,soil_texture,soil_ph,organic_matter_pct,drainage_class,current_crop,soil_data_source,soil_observed_at,notes,created_at").in("organization_id",organizationIds).order("created_at",{ascending:false})
     : {data:[],error:null};
   const canManage=(memberships??[]).some(m=>["owner","admin","manager"].includes(m.role));
 
@@ -103,7 +103,8 @@ export default async function FarmsPage({searchParams}:{searchParams:Promise<{sa
               <h3>{farm.name}</h3><p className="farm-location">{farm.location_label??"Localização não indicada"}</p>
               <div className="farm-facts">
                 <span>LATITUDE / LONGITUDE<strong>{farm.latitude}, {farm.longitude}</strong></span>
-                <span>ÁREA<strong>{farm.area_hectares===null?"Não informada":`${farm.area_hectares} ha`}</strong></span>
+                <span>ÁREA DECLARADA<strong>{farm.area_hectares===null?"Não informada":`${farm.area_hectares} ha`}</strong></span>
+                <span>ÁREA DELIMITADA<strong>{farm.boundary_area_hectares===null?"Ainda não delimitada":`${farm.boundary_area_hectares} ha`}</strong></span>
                 <span>CULTURA PRINCIPAL<strong>{farm.current_crop??"Não informada"}</strong></span>
                 <span>TEXTURA DO SOLO<strong>{farm.soil_texture?soilLabels[farm.soil_texture]??farm.soil_texture:"Não analisada"}</strong></span>
                 <span>pH DO SOLO<strong>{farm.soil_ph??"Não medido"}</strong></span>
@@ -134,7 +135,7 @@ export default async function FarmsPage({searchParams}:{searchParams:Promise<{sa
                   <button className="primary-button" type="submit">GUARDAR ALTERAÇÕES ↗</button>
                 </form>
               </details>}
-              <div className="farm-actions"><Link className="farm-climate-link" href={"/farms/"+farm.id+"/records"}>ABRIR HISTÓRICO AGRÍCOLA ↗</Link><Link className="farm-climate-link" href={farm.latitude!==null&&farm.longitude!==null?`/?latitude=${farm.latitude}&longitude=${farm.longitude}&farm=${encodeURIComponent(farm.name)}`:"/"}>CONSULTAR CONTEXTO CLIMÁTICO ↗</Link></div>
+              <div className="farm-actions"><Link className="farm-climate-link" href={`/farms/${farm.id}/boundary`}>DELIMITAR NO MAPA ↗</Link><Link className="farm-climate-link" href={"/farms/"+farm.id+"/records"}>ABRIR HISTÓRICO AGRÍCOLA ↗</Link><Link className="farm-climate-link" href={farm.latitude!==null&&farm.longitude!==null?`/?latitude=${farm.latitude}&longitude=${farm.longitude}&farm=${encodeURIComponent(farm.name)}`:"/"}>CONSULTAR CONTEXTO CLIMÁTICO ↗</Link></div>
               <p className="farm-disclaimer">Registo na nuvem. Os dados do solo são declarações ou medições fornecidas, não estimativas por satélite.</p>
             </article>;
           })}</div>
