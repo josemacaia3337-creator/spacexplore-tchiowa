@@ -67,8 +67,7 @@ export default function Home() {
     <div className="hero-kicker"><span className="hero-kicker-dot"/>{slides[activeSlide].eyebrow}<span className="hero-kicker-line"/></div>
     <div className="hero-title" key={activeSlide}><h1>{slides[activeSlide].title}</h1><p>{slides[activeSlide].copy}</p></div>
     <div className="hero-actions"><a className="hero-primary" href="#clima">EXPLORAR CONSULTOR CLIMÁTICO ↗</a><a className="hero-secondary" href="#capacidades">CONHECER A PLATAFORMA</a></div>
-    <div className="hero-carousel-controls"><div className="hero-carousel-dots">{slides.map((slide,i)=><button key={slide.eyebrow} type="button" className={"hero-dot "+(i===activeSlide?"active":"")} aria-label={`Mostrar slide ${i+1}: ${slide.eyebrow}`} aria-current={i===activeSlide?"true":undefined} onClick={()=>setActiveSlide(i)}><span/></button>)}</div>
-     <div className="hero-carousel-arrows"><button type="button" aria-label="Slide anterior" onClick={()=>setActiveSlide(i=>(i+slides.length-1)%slides.length)}>←</button><button type="button" aria-label="Próximo slide" onClick={()=>setActiveSlide(i=>(i+1)%slides.length)}>→</button></div></div>
+
    </div>
   </section>
   <section className="climate-section" id="clima"><div className="climate-heading"><div><span className="public-section-label">04 / EXPLORAÇÃO DE DADOS</span><h2>Explorador climático</h2><p>Consulte indicadores diários disponibilizados pelo NASA POWER para um ponto geográfico e período selecionados.</p></div><span className="data-source-badge">NASA POWER · DAILY</span></div>
