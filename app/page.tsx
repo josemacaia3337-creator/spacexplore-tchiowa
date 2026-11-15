@@ -31,7 +31,7 @@ export default function Home() {
   if(motion.matches)return;
   let timer:number|undefined;
   const stopRotation=()=>{if(timer){window.clearInterval(timer);timer=undefined}};
-  const startRotation=()=>{if(document.visibilityState==="visible"&&!timer&&!motion.matches)timer=window.setInterval(()=>setActiveSlide(c=>(c+1)%slides.length),5500)};
+  const startRotation=()=>{if(document.visibilityState==="visible"&&!timer&&!motion.matches)timer=window.setInterval(()=>setActiveSlide(c=>(c+1)%slides.length),5000)};
   const onVisibilityChange=()=>document.visibilityState==="visible"?startRotation():stopRotation();
   const onMotionChange=()=>motion.matches?stopRotation():startRotation();
   document.addEventListener("visibilitychange",onVisibilityChange);
@@ -62,7 +62,7 @@ export default function Home() {
    </nav>
   </header>
   <section className="space-hero" id="plataforma" aria-label="Apresentação SpaceXplore Tchiowa">
-   <div className="hero-slides" aria-live="off">{slides.map((s,i)=><div key={s.eyebrow} className={"hero-slide "+(i===activeSlide?"active":"")} style={{backgroundImage:`url("${s.image}")`}} aria-hidden="true"/>)}</div>
+   <div className="hero-slides" aria-live="off">{slides.map((s,i)=><div key={s.eyebrow} className={"hero-slide "+(i===activeSlide?"active":"")} style={{backgroundImage:`linear-gradient(135deg,rgba(3,7,18,.18),rgba(3,7,18,.32)),url("${s.image}")`}} aria-hidden="true"/>)}</div>
    <div className="hero-shade"/><div className="hero-content">
     <div className="hero-kicker"><span className="hero-kicker-dot"/>{slides[activeSlide].eyebrow}<span className="hero-kicker-line"/></div>
     <div className="hero-title" key={activeSlide}><h1>{slides[activeSlide].title}</h1><p>{slides[activeSlide].copy}</p></div>
