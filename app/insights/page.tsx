@@ -116,7 +116,7 @@ export default function InsightsPage() {
     const startDate = new Date(periodStart + "T00:00:00Z");
     const endDate = new Date(periodEnd + "T00:00:00Z");
     const today = new Date(); today.setUTCHours(0, 0, 0, 0);
-    if (!/^\\d{4}-\\d{2}-\\d{2}$/.test(periodStart) || !/^\\d{4}-\\d{2}-\\d{2}$/.test(periodEnd) || Number.isNaN(startDate.getTime()) || Number.isNaN(endDate.getTime()) || startDate.toISOString().slice(0,10) !== periodStart || endDate.toISOString().slice(0,10) !== periodEnd || startDate > endDate || endDate >= today) { setError("Indique um intervalo válido, com início anterior ao fim e data final anterior a hoje."); setLoading(false); return; }
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(periodStart) || !/^\d{4}-\d{2}-\d{2}$/.test(periodEnd) || Number.isNaN(startDate.getTime()) || Number.isNaN(endDate.getTime()) || startDate.toISOString().slice(0,10) !== periodStart || endDate.toISOString().slice(0,10) !== periodEnd || startDate > endDate || endDate >= today) { setError("Indique um intervalo válido, com início anterior ao fim e data final anterior a hoje."); setLoading(false); return; }
     if (expectedDays(periodStart, periodEnd) > 3660) { setError("Selecione um período máximo de 10 anos para manter a consulta responsiva."); setLoading(false); return; }
     try {
       const query = new URLSearchParams({
