@@ -1,6 +1,5 @@
 "use server";
 import { redirect } from "next/navigation";
-import { headers } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
 
 export async function signIn(formData: FormData) {
@@ -45,6 +44,25 @@ export async function signUp(formData: FormData) {
     redirect("/signup?error=Não%20foi%20possível%20criar%20a%20conta.%20Verifique%20o%20email%20ou%20tente%20novamente.");
   }
   redirect("/signup/check-email");
+}
+
+
+export async function confirmEmail(formData: FormData) {
+  const tokenHash = String(formData.get("token_hash") ?? "").trim();
+  if (!tokenHash || tokenHash.length > 512) {
+    redirect("/login?error=Link%20de%20confirmação%20inválido.%20Solicite%20um%20novo.");
+  }
+
+  const supabase = await createClient();
+  const { error } = await supabase.auth.verifyOtp({
+    token_hash: tokenHash,
+    type: "email",
+  });
+
+  if (error) {
+    redirect("/login?error=Este%20link%20já%20foi%20utilizado%20ou%20expirou.%20Tente%20iniciar%20sessão.");
+  }
+  redirect("/dashboard");
 }
 
 export async function signOut() {
