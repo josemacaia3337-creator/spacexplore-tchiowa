@@ -93,7 +93,7 @@ export default function Home() {
     <div className="footer-links"><span>EXPLORAR</span><a href="#plataforma">A plataforma <b>↗</b></a><a href="#capacidades">Capacidades <b>↗</b></a><a href="#clima">Explorador climático <b>↗</b></a></div>
     <div className="footer-links"><span>ESPAÇO DE TRABALHO</span><Link href="/farms">Propriedades agrícolas</Link><Link href="/monitoring">Monitorização</Link><Link href="/insights">Inteligência agrícola</Link></div>
     <div className="footer-links"><span>ACESSO</span><Link href="/login">Iniciar sessão</Link><Link href="/signup">Criar conta</Link><a href="#plataforma">Voltar ao início ↑</a></div>
-    <div className="footer-credit"><span>UMA PLATAFORMA DESENVOLVIDA POR</span><strong>JPM <i>Tech Solutions</i></strong><p>Arquitetura tecnológica, engenharia de software e inovação aplicada.</p><span className="footer-company-link">WEBSITE OFICIAL JPM ↗</span><span className="footer-credit-stamp">TECHNOLOGY · DATA · ENGINEERING</span></div>
+    <div className="footer-credit"><span>UMA PLATAFORMA DESENVOLVIDA POR</span><p className="footer-credit-line">Desenvolvido por <a href="https://www.jpmtechsolutions.com/" target="_blank" rel="noopener noreferrer" aria-label="JPM Tech Solutions — abrir website oficial">JPM Tech Solutions</a></p><p>Arquitetura tecnológica, engenharia de software e inovação aplicada.</p><span className="footer-credit-stamp">TECHNOLOGY · DATA · ENGINEERING</span></div>
    </div>
    <div className="footer-bottom"><span>© {new Date().getFullYear()} SPACEXPLORE TCHIOWA</span><span>CIÊNCIA · DADOS · AGRICULTURA</span><span>DESENVOLVIDO POR <b>JPM TECH SOLUTIONS</b></span></div>
   </footer>
