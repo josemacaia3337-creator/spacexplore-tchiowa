@@ -882,3 +882,13 @@ footer{border-color:var(--sx-hairline);color:#8195ab}
 .topbar .brand>span:last-child{display:none}
 .auth-brand img{display:block;width:205px;height:48px;object-fit:contain;object-position:left center}
 @media(max-width:650px){.workspace-brand-image{width:166px;height:42px}.topbar .brand-mark{width:142px;height:38px;flex-basis:142px}}
+
+
+.climate-comparison{margin-top:2rem;padding-top:1.5rem;border-top:1px solid var(--sx-hairline)}
+.climate-comparison-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem;margin-top:1rem}
+.climate-comparison-card{min-width:0;padding:1.4rem 1.5rem;background:linear-gradient(145deg,#101c2b,#0a121d);border:1px solid var(--sx-hairline);border-radius:12px}
+.climate-comparison-card>span{display:block;color:#9cb3ca;font:9px var(--font-dm-mono),monospace;letter-spacing:.14em}
+.climate-comparison-card strong{display:block;margin:1rem 0 .55rem;color:#a8d8ff;font-size:clamp(26px,3vw,38px);font-weight:600;letter-spacing:-.04em}
+.climate-comparison-card p{margin:.35rem 0;color:#c0ccda;font-size:12px;line-height:1.7}
+.climate-comparison-card small{color:#829ab2;font-size:10px}
+@media(max-width:650px){.climate-comparison-grid{grid-template-columns:1fr}.climate-comparison-card{padding:1.1rem}}
