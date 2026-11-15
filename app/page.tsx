@@ -58,13 +58,13 @@ export default function Home() {
    </nav>
   </header>
   <section className="space-hero" id="plataforma" aria-label="Apresentação SpaceXplore Tchiowa">
-   {slides.map((s,i)=><div key={s.eyebrow} className={"hero-image "+(i===activeSlide?"active":"")} style={{backgroundImage:'url("'+s.image+'")'}} aria-hidden="true"/>)}
-   <div className="hero-shade"/><div className="hero-content">
+   {slides.map((s,i)=><img key={s.eyebrow} className={"hero-image "+(i===activeSlide?"active":"")} src={s.image} alt="" aria-hidden="true" loading={i===0?"eager":"lazy"} fetchPriority={i===0?"high":"auto"}/>)}
+   <div className="hero-shade"/><div className="hero-grid-overlay" aria-hidden="true"/><div className="hero-telemetry" aria-hidden="true"><span>EARTH OBSERVATION</span><b>ANGOLA · 05°33′S / 12°12′E</b><i>DATA SYSTEMS ONLINE</i></div><div className="hero-content">
     <div className="hero-kicker"><span className="hero-kicker-dot"/>{slides[activeSlide].eyebrow}<span className="hero-kicker-line"/></div>
     <div className="hero-title" key={activeSlide}><h1>{slides[activeSlide].title}</h1><p>{slides[activeSlide].copy}</p></div>
     <div className="hero-actions"><a className="hero-primary" href="#capacidades">EXPLORAR A PLATAFORMA <span>↗</span></a><Link className="hero-secondary" href="/signup">CRIAR A MINHA CONTA</Link></div>
     <div className="hero-bottom"><span>SPACE-BASED INSIGHT · EARTH-FOCUSED IMPACT</span><div className="hero-dots">{slides.map((s,i)=><button key={s.eyebrow} type="button" className={i===activeSlide?"active":""} aria-label={"Mostrar imagem "+(i+1)} aria-pressed={i===activeSlide} onClick={()=>setActiveSlide(i)}/>)}</div><span>0{activeSlide+1} / 0{slides.length}</span></div>
-   </div><div className="hero-side-note">OBSERVAR · COMPREENDER · CULTIVAR</div>
+   </div><div className="hero-side-note">OBSERVAR&nbsp; / &nbsp;COMPREENDER&nbsp; / &nbsp;CULTIVAR</div>
   </section>
   <section className="public-intro" id="capacidades"><div className="intro-label"><span>01 / A NOSSA VISÃO</span><span>CIÊNCIA APLICADA À AGRICULTURA</span></div><div className="intro-grid"><h2>Dados que revelam.<br/><em>Conhecimento que orienta.</em></h2><p>O SpaceXplore Tchiowa é uma plataforma de inteligência agrícola que aproxima dados ambientais, observação da Terra e informação de campo. O nosso propósito é tornar informação complexa mais acessível, organizada e útil para compreender os contextos agrícolas e apoiar decisões fundamentadas.</p></div></section>
   <section className="capability-section"><div className="capability-heading"><span>02 / CAPACIDADES</span><p>Uma visão integrada do território, dos dados e da atividade agrícola.</p></div><div className="capability-grid">
