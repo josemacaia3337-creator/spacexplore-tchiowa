@@ -235,3 +235,121 @@ footer{display:flex;justify-content:space-between;padding:0 0 30px;color:#879188
 .dashboard-footer{display:flex;justify-content:space-between;gap:12px;padding:20px 0 28px;border-top:1px solid var(--line);color:#89958b;font:8px "DM Mono",monospace;letter-spacing:.08em}
 @media(max-width:980px){.dashboard-shell{grid-template-columns:210px minmax(0,1fr)}.dashboard-sidebar{padding-left:14px;padding-right:14px}.dashboard-main{padding:0 24px}.dashboard-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:700px){.dashboard-shell{display:block}.dashboard-sidebar{position:relative;height:auto;min-height:0;padding:14px 18px;border-right:0;border-bottom:1px solid var(--line)}.dashboard-sidebar>.sidebar-caption{margin:16px 0 8px}.dashboard-nav{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px}.nav-group-label{grid-column:1/-1;margin:9px 0 2px}.nav-group-spaced{margin-top:9px}.dashboard-nav a{min-height:38px;padding:8px;font-size:11px}.sidebar-bottom{margin-top:12px}.sidebar-bottom .sidebar-caption{display:none}.sidebar-signout{padding:10px}.dashboard-main{padding:0 18px}.dashboard-topline{height:58px;font-size:8px}.dashboard-welcome{padding:38px 0 26px}.dashboard-welcome h1{font-size:clamp(34px,9vw,48px);line-height:1.12}.dashboard-welcome>p{font-size:13px}.dashboard-metrics{gap:8px;margin-bottom:36px}.dashboard-metric{padding:13px;gap:8px}.dashboard-metric strong{font-size:25px}.dashboard-metric>span{font-size:8px}.dashboard-metric small{font-size:9px}.organization-empty{grid-template-columns:1fr;padding:19px}.organization-create-form{grid-column:1;grid-template-columns:1fr}.organization-create-form .primary-button{max-width:none}.organization-grid{grid-template-columns:1fr}.analytics-placeholder{grid-template-columns:1fr;padding:18px}.analytics-placeholder>a{grid-column:1}.dashboard-footer{font-size:7px;flex-wrap:wrap}}
+
+
+/* Public SpaceXplore identity — deep-space editorial landing */
+.public-site{--space:#05080f;--space-panel:#0b111d;--space-line:#202a3a;--space-muted:#9aa8ba;--space-blue:#83c8ff;background:var(--space);color:#f4f7fb;min-height:100vh;overflow:hidden}
+.public-site a{color:inherit}
+.public-header{height:82px;max-width:1440px;margin:0 auto;padding:0 5.2%;display:flex;align-items:center;justify-content:space-between;position:relative;z-index:30;border-bottom:1px solid #ffffff12;background:#05080f}
+.public-brand{display:inline-flex;align-items:center;gap:12px;text-decoration:none;color:#f5f8fc}
+.public-brand-symbol{width:38px;height:38px;display:grid;place-items:center;border:1px solid #7bc5fa88;border-radius:50%;color:#9bd6ff;font:italic 25px "Playfair Display",serif;box-shadow:0 0 24px #5cbaff20}
+.public-brand-name{font:600 11px "DM Mono",monospace;letter-spacing:.14em;line-height:1.5}
+.public-brand-name b{color:#9bd6ff;font-weight:500}
+.public-brand-name small{display:block;color:#8292a8;font-size:8px;letter-spacing:.2em}
+.public-header-right{display:flex;align-items:center;gap:28px}
+.public-edition,.public-menu-heading,.public-menu>a small,.public-menu-account,.hero-kicker,.hero-bottom,.hero-side-note,.intro-label,.capability-heading>span,.capability-tag,.science-band>div>span,.science-band>a,.public-section-label,.data-source-badge,.climate-form label,.climate-form button,.climate-results-head>span,.climate-metric>span,.climate-metric>small,.climate-provenance,.climate-disclaimer,.account-cta>div>span,.account-cta-actions,.footer-links>span,.footer-credit>span,.footer-bottom{font-family:"DM Mono",monospace;letter-spacing:.09em}
+.public-edition{font-size:9px;color:#75869c}
+.menu-trigger{display:flex;align-items:center;gap:14px;padding:12px 0 12px 16px;border:0;background:transparent;color:#f5f8fc;cursor:pointer;font:10px "DM Mono",monospace;letter-spacing:.15em}
+.menu-trigger i{width:26px;height:18px;display:flex;flex-direction:column;justify-content:center;gap:6px}
+.menu-trigger i b{height:1px;width:25px;background:#a8d9ff;display:block;transition:transform .2s}
+.menu-trigger.is-open i b:first-child{transform:translateY(3.5px) rotate(45deg)}
+.menu-trigger.is-open i b:last-child{transform:translateY(-3.5px) rotate(-45deg)}
+.public-menu-backdrop{position:fixed;inset:82px 0 0;background:#0009;backdrop-filter:blur(4px);z-index:29}
+.public-menu{position:absolute;right:5.2%;top:72px;width:min(440px,calc(100vw - 36px));padding:26px;background:#0b1320;border:1px solid #304158;box-shadow:0 25px 80px #000b;z-index:31;opacity:0;visibility:hidden;transform:translateY(-8px);transition:opacity .2s,transform .2s,visibility .2s}
+.public-menu.is-open{opacity:1;visibility:visible;transform:translateY(0)}
+.public-menu-heading{display:flex;justify-content:space-between;color:#7890a9;font-size:8px;padding-bottom:18px;border-bottom:1px solid #ffffff18}
+.public-menu>a{min-height:49px;display:flex;align-items:center;gap:16px;text-decoration:none;border-bottom:1px solid #ffffff12;color:#e7edf5;font-size:13px;transition:color .2s,padding .2s}
+.public-menu>a:hover{color:#9bd6ff;padding-left:5px}
+.public-menu>a small{font-size:9px;color:#6884a2}
+.public-menu>a b{margin-left:auto;color:#7ebde9;font-weight:400}
+.public-menu-account{display:flex;gap:10px;padding-top:20px;font-size:9px}
+.public-menu-account a{padding:13px 15px;text-decoration:none;border:1px solid #ffffff30}
+.public-menu-account a:last-child{background:#a6d9ff;color:#06101c;border-color:#a6d9ff}
+.space-hero{height:min(760px,calc(100svh - 82px));min-height:590px;position:relative;isolation:isolate;background:#07101d;overflow:hidden}
+.hero-image{position:absolute;inset:0;background-size:cover;background-position:center;opacity:0;transform:scale(1.035);transition:opacity 1.3s ease,transform 7s ease;z-index:-2}
+.hero-image.active{opacity:1;transform:scale(1)}
+.hero-shade{position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,#03070ef2 0%,#050b16d9 43%,#050b1666 75%,#050b1640 100%),linear-gradient(0deg,#05080f 0%,transparent 28%,#05080f24 100%)}
+.hero-content{max-width:1440px;height:100%;margin:0 auto;padding:clamp(90px,13vh,150px) 8.2% 30px;display:flex;flex-direction:column;align-items:flex-start}
+.hero-kicker{display:flex;align-items:center;gap:12px;color:#a8d8ff;font-size:9px;letter-spacing:.18em}
+.hero-kicker-dot{width:7px;height:7px;border-radius:50%;background:#9bd6ff;box-shadow:0 0 14px #7bc5ff}
+.hero-kicker-line{width:46px;height:1px;background:#8ccfff66}
+.hero-title{animation:heroRise .65s ease both}
+@keyframes heroRise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.hero-title h1{max-width:900px;margin:30px 0 22px;font-size:clamp(48px,7.2vw,92px);line-height:1.02;letter-spacing:-.065em;font-weight:500;color:#f5f8fc}
+.hero-title h1 em,.intro-grid h2 em,.science-band h2 em,.account-cta h2 em{font-family:"Playfair Display",serif;font-weight:500;color:#9bd6ff}
+.hero-title p{max-width:590px;margin:0;color:#c0ccda;font-size:16px;line-height:1.8}
+.hero-actions{display:flex;align-items:center;gap:22px;margin-top:35px}
+.hero-primary,.hero-secondary{display:inline-flex;align-items:center;gap:28px;min-height:49px;padding:0 19px;text-decoration:none;font:9px "DM Mono",monospace;letter-spacing:.09em}
+.hero-primary{background:#a6d9ff;color:#06101c!important;border:1px solid #a6d9ff}
+.hero-primary span{font-size:15px}
+.hero-secondary{border:1px solid #ffffff5c;color:#f4f7fb}
+.hero-bottom{margin-top:auto;width:100%;display:flex;align-items:center;justify-content:space-between;color:#93a6ba;font-size:8px;letter-spacing:.12em;border-top:1px solid #ffffff36;padding-top:17px}
+.hero-dots{display:flex;gap:8px}
+.hero-dots button{width:22px;height:3px;padding:0;border:0;background:#ffffff55;cursor:pointer}
+.hero-dots button.active{background:#a6d9ff;width:38px}
+.hero-side-note{position:absolute;right:24px;top:50%;writing-mode:vertical-rl;color:#d2e8fa8a;font-size:8px;letter-spacing:.22em}
+.public-intro,.capability-section,.climate-section{max-width:1240px;margin:0 auto;padding-left:6%;padding-right:6%}
+.public-intro{padding-top:105px;padding-bottom:100px}
+.intro-label{display:flex;justify-content:space-between;padding-bottom:17px;border-bottom:1px solid var(--space-line);font-size:8px;color:#8092a8}
+.intro-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:9%;padding-top:42px;align-items:center}
+.intro-grid h2,.science-band h2,.account-cta h2{font-size:clamp(35px,4.5vw,57px);line-height:1.12;letter-spacing:-.055em;font-weight:500;margin:0}
+.intro-grid p,.science-band>p{font-size:14px;line-height:1.9;color:#aab7c8;margin:0}
+.capability-section{padding-top:35px;padding-bottom:110px}
+.capability-heading{display:flex;justify-content:space-between;align-items:end;gap:25px;margin-bottom:25px}
+.capability-heading>span,.science-band>div>span,.account-cta>div>span{font-size:9px;color:#8fcaff}
+.capability-heading p{max-width:420px;margin:0;color:#8e9eb1;font-size:12px;line-height:1.6}
+.capability-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:1px solid var(--space-line);border-bottom:1px solid var(--space-line)}
+.capability-card{position:relative;min-height:285px;padding:25px 22px 23px 0;border-right:1px solid var(--space-line)}
+.capability-card:not(:first-child){padding-left:22px}
+.capability-card:last-child{border-right:0}
+.capability-number{font:9px "DM Mono",monospace;color:#70839b}
+.capability-icon{margin-top:30px;color:#a6d9ff;font-size:27px}
+.capability-card h3{font-size:18px;font-weight:500;margin:18px 0 10px;color:#f2f6fb}
+.capability-card p{font-size:11px;line-height:1.8;color:#9baabd;min-height:80px;margin:0}
+.capability-tag{display:block;margin-top:18px;color:#6f91b0;font-size:7px;letter-spacing:.1em}
+.science-band{padding:74px max(calc((100vw - 1240px)/2 + 6%),6%);background:linear-gradient(110deg,#0b1726,#0a111c);border-top:1px solid #1c2d40;border-bottom:1px solid #1c2d40;display:grid;grid-template-columns:1fr .75fr;gap:22px 8%;align-items:center}
+.science-band h2{margin-top:18px}
+.science-band>a{grid-column:2;justify-self:start;color:#a6d9ff;text-decoration:none;font-size:9px;border-bottom:1px solid #a6d9ff66;padding-bottom:8px}
+.climate-section{padding-top:105px;padding-bottom:100px}
+.climate-heading{display:flex;align-items:flex-end;justify-content:space-between;gap:25px;margin-bottom:28px}
+.public-section-label{color:#8fcaff;font-size:9px}
+.climate-heading h2{font-size:clamp(34px,4vw,48px);font-weight:500;letter-spacing:-.05em;margin:12px 0}
+.climate-heading p{max-width:600px;margin:0;color:#9baabd;font-size:13px;line-height:1.7}
+.data-source-badge{font-size:8px;color:#a6d9ff;border:1px solid #3a5a78;padding:10px 12px;white-space:nowrap}
+.climate-form{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;padding:22px;background:#0a111d;border:1px solid #26364a}
+.climate-form label{display:flex;flex-direction:column;gap:9px;color:#8498af;font-size:8px}
+.climate-form input{width:100%;padding:13px;background:#070c14;border:1px solid #29384b;color:#f2f6fb;font:13px "DM Sans",sans-serif;outline:none}
+.climate-form input:focus{border-color:#8fcaff}
+.climate-form button{grid-column:1/-1;padding:15px;background:#a6d9ff;border:0;color:#07111c;cursor:pointer;font-size:9px}
+.climate-form button:disabled{opacity:.55;cursor:wait}
+.climate-context,.climate-provenance{color:#8fa0b4;font-size:10px;line-height:1.7}
+.climate-error{padding:13px;background:#301b20;border-left:3px solid #d77c78;color:#ffc3bd;font-size:12px;margin-top:18px}
+.climate-results{margin-top:28px}
+.climate-results-head{display:flex;justify-content:space-between;align-items:center}
+.climate-results-head h3{font-size:20px;font-weight:500}
+.climate-results-head>span{font-size:8px;color:#8fcaff}
+.climate-metrics{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
+.climate-metric{padding:16px;background:#0b121e;border:1px solid #243348;display:flex;flex-direction:column;gap:12px;min-width:0}
+.climate-metric>span,.climate-metric>small{font-size:9px;color:#91a2b7;line-height:1.5}
+.climate-metric strong{font-size:24px;font-weight:500;letter-spacing:-.04em}
+.climate-metric strong small{font-size:10px;color:#9aaabe}
+.climate-disclaimer{margin-top:24px;padding:16px 18px;background:#0b121e;border-left:2px solid #78b8e7;color:#9baabd;font:10px/1.8 "DM Sans",sans-serif;letter-spacing:0}
+.account-cta{padding:80px max(calc((100vw - 1240px)/2 + 6%),6%);background:#0c1725;display:flex;justify-content:space-between;align-items:center;gap:35px;border-top:1px solid #20334a}
+.account-cta h2{margin:17px 0}
+.account-cta>div>p{max-width:530px;color:#9baabd;font-size:13px;line-height:1.8}
+.account-cta-actions{display:flex;flex-direction:column;gap:14px;min-width:240px;font-size:8px}
+.account-cta-actions a{padding:16px 18px;text-align:center;text-decoration:none;border:1px solid #ffffff38}
+.account-cta-actions a:first-child{background:#a6d9ff;color:#06101c;border-color:#a6d9ff}
+.public-footer{background:#04070c;padding:55px 6% 22px;border-top:1px solid #1e2a39}
+.footer-main{max-width:1240px;margin:0 auto;display:grid;grid-template-columns:1.5fr .8fr .7fr 1fr;gap:35px;padding-bottom:45px}
+.footer-brand>p,.footer-credit>p{max-width:280px;color:#8493a7;font-size:11px;line-height:1.8;margin-top:18px}
+.footer-links{display:flex;flex-direction:column;align-items:flex-start;gap:13px}
+.footer-links>span,.footer-credit>span{font-size:8px;color:#7190ad;margin-bottom:5px}
+.footer-links a{font-size:11px;color:#aab7c7;text-decoration:none}
+.footer-links a:hover{color:#a6d9ff}
+.footer-credit strong{display:block;margin-top:12px;font-size:17px;font-weight:500;color:#e8f2fc}
+.footer-credit>p{margin-top:9px}
+.footer-bottom{max-width:1240px;margin:0 auto;padding-top:18px;border-top:1px solid #ffffff1a;display:flex;justify-content:space-between;gap:15px;color:#65758a;font-size:7px;line-height:1.7}
+.footer-bottom b{color:#a6d9ff;font-weight:500}
+@media(max-width:900px){.capability-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.capability-card:nth-child(2){border-right:0}.capability-card:nth-child(3){padding-left:0;border-top:1px solid var(--space-line)}.capability-card:nth-child(4){border-top:1px solid var(--space-line)}.climate-metrics{grid-template-columns:repeat(3,minmax(0,1fr))}.footer-main{grid-template-columns:1.2fr 1fr 1fr}.footer-credit{grid-column:1/-1}}
+@media(max-width:650px){.public-header{height:70px;padding:0 18px}.public-header-right{gap:0}.public-edition{display:none}.public-menu{top:62px;right:12px;padding:20px;width:calc(100vw - 24px)}.public-menu-backdrop{inset:70px 0 0}.space-hero{height:calc(100svh - 70px);min-height:620px}.hero-content{padding:100px 23px 22px}.hero-title h1{font-size:clamp(43px,12vw,62px);margin:25px 0 18px}.hero-title p{font-size:13px;line-height:1.75}.hero-actions{align-items:stretch;flex-direction:column;gap:10px;width:100%;max-width:300px;margin-top:26px}.hero-actions a{justify-content:space-between;min-height:46px}.hero-bottom{font-size:6px;letter-spacing:.06em;gap:8px}.hero-bottom>span:first-child{max-width:135px}.hero-side-note{right:8px;font-size:6px}.public-intro,.capability-section,.climate-section{padding-left:22px;padding-right:22px}.public-intro{padding-top:70px;padding-bottom:70px}.intro-label{font-size:6px;gap:10px}.intro-grid{grid-template-columns:1fr;gap:20px;padding-top:30px}.intro-grid h2,.science-band h2,.account-cta h2{font-size:39px}.intro-grid p{font-size:12px}.capability-section{padding-top:15px;padding-bottom:70px}.capability-heading{align-items:flex-start;flex-direction:column;gap:10px}.capability-heading p{font-size:11px}.capability-grid{grid-template-columns:1fr}.capability-card,.capability-card:not(:first-child),.capability-card:nth-child(3){padding:22px 0;border-right:0;border-top:1px solid var(--space-line);min-height:0}.capability-card:first-child{border-top:0}.capability-icon{margin-top:20px}.capability-card p{min-height:0}.science-band{padding:55px 23px;grid-template-columns:1fr;gap:22px}.science-band>p{font-size:12px}.science-band>a{grid-column:1}.climate-section{padding-top:70px;padding-bottom:70px}.climate-heading{align-items:flex-start;flex-direction:column}.climate-heading h2{font-size:38px}.data-source-badge{font-size:7px}.climate-form{grid-template-columns:repeat(2,minmax(0,1fr));padding:14px;gap:10px}.climate-form input{padding:11px;font-size:12px}.climate-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.climate-metric:last-child{grid-column:1/-1}.climate-results-head{align-items:flex-start;gap:10px;flex-direction:column}.account-cta{padding:55px 23px;align-items:stretch;flex-direction:column}.account-cta-actions{min-width:0}.footer-main{grid-template-columns:repeat(2,minmax(0,1fr));gap:30px 18px}.footer-brand{grid-column:1/-1}.footer-credit{grid-column:1/-1}.footer-bottom{flex-direction:column;gap:8px;font-size:6px}.public-footer{padding:40px 22px 20px}}
