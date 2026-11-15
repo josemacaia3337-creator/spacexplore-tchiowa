@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 
 type ClimateResult = {
   source?: string; retrievedAt?: string; timeStandard?: string; fillValue?: number;
@@ -49,7 +50,7 @@ export default function Home() {
  const observations=result?.data?.properties?.parameter,metadata=result?.parameters??{},closeMenu=()=>setMenuOpen(false);
  return <main className="public-site">
   <header className="public-header">
-   <Link className="public-brand" href="/" aria-label="SpaceXplore Tchiowa — página inicial"><img src="/spacexplore-brand.svg" alt="SpaceXplore Tchiowa" width="230" height="54" className="brand-logo-image"/></Link>
+   <Link className="public-brand" href="/" aria-label="SpaceXplore Tchiowa — página inicial"><Image src="/spacexplore-brand.svg" alt="SpaceXplore Tchiowa" width={230} height={54} className="brand-logo-image" priority/></Link>
    <div className="public-header-right"><button className={"menu-trigger "+(menuOpen?"is-open":"")} type="button" aria-label={menuOpen?"Fechar navegação":"Abrir navegação"} aria-expanded={menuOpen} aria-controls="public-menu" onClick={()=>setMenuOpen(!menuOpen)}><i aria-hidden="true"><b></b><b></b><b></b></i></button></div>
    {menuOpen&&<div className="public-menu-backdrop" onClick={closeMenu}/>}
    <nav id="public-menu" className={"public-menu "+(menuOpen?"is-open":"")} aria-label="Menu principal" aria-hidden={!menuOpen}>
@@ -87,7 +88,7 @@ export default function Home() {
   <section className="account-cta"><div><span>05 / COMEÇAR</span><h2>O próximo passo<br/><em>começa com conhecimento.</em></h2><p>Crie a sua conta, organize as suas propriedades e comece a estruturar a informação da sua atividade agrícola.</p></div><div className="account-cta-actions"><Link href="/signup">CRIAR A MINHA CONTA ↗</Link><Link href="/login">JÁ TENHO UMA CONTA — INICIAR SESSÃO</Link></div></section>
   <footer className="public-footer">
    <div className="footer-compact-top">
-    <div className="footer-compact-brand"><Link className="public-brand" href="/" aria-label="SpaceXplore Tchiowa — início"><img src="/spacexplore-brand.svg" alt="SpaceXplore Tchiowa" width="230" height="54" className="brand-logo-image"/></Link><span>Observação da Terra &amp; Inteligência Agrícola</span></div>
+    <div className="footer-compact-brand"><Link className="public-brand" href="/" aria-label="SpaceXplore Tchiowa — início"><Image src="/spacexplore-brand.svg" alt="SpaceXplore Tchiowa" width={230} height={54} className="brand-logo-image" priority/></Link><span>Observação da Terra &amp; Inteligência Agrícola</span></div>
     <nav className="footer-compact-nav" aria-label="Navegação do rodapé"><a href="#plataforma">Plataforma</a><a href="#clima">Explorador Climático</a><Link href="/monitoring">Monitorização</Link><Link href="/login">Entrar</Link></nav>
    </div>
    <div className="footer-compact-bottom"><span>© 2026 SpaceXplore Tchiowa. Todos os direitos reservados.</span><span>Desenvolvido por <a href="https://www.jpmtechsolutions.com/" target="_blank" rel="noopener noreferrer">JPM Tech Solutions</a></span></div>
