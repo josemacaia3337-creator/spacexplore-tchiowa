@@ -31,7 +31,7 @@ export default async function DashboardPage({
   const returnPath = returnQuery ? `/dashboard?${returnQuery}` : "/dashboard";
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
-  if (!user) redirect(`/login?next=${encodeURIComponent(returnPath)}`);
+  if (!user) redirect(`/signup?next=${encodeURIComponent(returnPath)}`);
 
   const [{ data: profile }, { data: memberships }] = await Promise.all([
     supabase.from("profiles").select("display_name").eq("id", user.id).maybeSingle(),

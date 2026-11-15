@@ -119,7 +119,7 @@ export default function NasaPowerWorkspace({
               </article>;
             })}
           </div>
-          <p className="nasa-provenance">Coordenadas: {result?.location?.latitude}, {result?.location?.longitude} · Período: {result?.requestedPeriod?.start}–{result?.requestedPeriod?.end} · Fuso: {result.timeStandard}</p>
+          <p className="nasa-provenance">Coordenadas: {result?.location?.latitude}, {result?.location?.longitude} · Período: {result?.requestedPeriod?.start}–{result?.requestedPeriod?.end} · Fuso: {result?.timeStandard}</p>
           <p className="nasa-provenance">Obtido em: {result?.retrievedAt ? new Date(result.retrievedAt).toLocaleString("pt-PT") : "—"}. Os valores apresentados são médias das observações diárias válidas. A precipitação apresentada é uma média diária, não o acumulado do período.</p>
         </div>
       )}
