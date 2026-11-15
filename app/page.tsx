@@ -13,11 +13,11 @@ type ClimateResult = {
 };
 const LABELS: Record<string,string> = {T2M:"Temperatura média",T2M_MAX:"Temperatura máxima",T2M_MIN:"Temperatura mínima",PRECTOTCORR:"Precipitação",RH2M:"Humidade relativa"};
 const slides = [
- {image:"https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=2400&q=90",eyebrow:"OBSERVAÇÃO DA TERRA",title:"A Terra vista com precisão estratégica.",copy:"Monitorização orbital e leitura territorial para decisões baseadas em evidências."},
- {image:"https://images.unsplash.com/photo-1534088568595-a066f410bcda?auto=format&fit=crop&w=2400&q=90",eyebrow:"INTELIGÊNCIA CLIMÁTICA",title:"Interpretar o clima antes do impacto.",copy:"Dados meteorológicos, séries históricas e análise ambiental por localização e período."},
- {image:"https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=2400&q=90",eyebrow:"AGRICULTURA DE PRECISÃO",title:"Ciência aplicada ao campo e à colheita.",copy:"Diagnóstico do solo, saúde da vegetação e produtividade agrícola orientada por dados."},
- {image:"https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&w=2400&q=90",eyebrow:"MONITORIZAÇÃO AMBIENTAL",title:"Vigilância contínua dos recursos naturais.",copy:"Acompanhamento de bacias hídricas, uso da terra e indicadores ecológicos em tempo real."},
- {image:"https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=2400&q=90&sat=-65",eyebrow:"ENGENHARIA DE DADOS",title:"Dados complexos. Decisões claras.",copy:"Tecnologia geoespacial e análise integrada para transformar telemetria em inteligência acionável."}
+ {image:"https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1920&auto=format&fit=crop",eyebrow:"OBSERVAÇÃO DA TERRA",title:"A Terra vista com precisão estratégica.",copy:"Monitorização orbital e leitura territorial para decisões baseadas em evidências."},
+ {image:"https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=1920&auto=format&fit=crop",eyebrow:"INTELIGÊNCIA CLIMÁTICA",title:"Interpretar o clima antes do impacto.",copy:"Dados meteorológicos, séries históricas e análise ambiental por localização e período."},
+ {image:"https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=1920&auto=format&fit=crop",eyebrow:"AGRICULTURA DE PRECISÃO",title:"Ciência aplicada ao campo e à colheita.",copy:"Diagnóstico do solo, saúde da vegetação e produtividade agrícola orientada por dados."},
+ {image:"https://images.unsplash.com/photo-1574943320219-553eb213f72d?q=80&w=1920&auto=format&fit=crop",eyebrow:"MONITORIZAÇÃO AMBIENTAL",title:"Vigilância contínua dos recursos naturais.",copy:"Acompanhamento de bacias hídricas, uso da terra e indicadores ecológicos em tempo real."},
+ {image:"https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?q=80&w=1920&auto=format&fit=crop",eyebrow:"ENGENHARIA DE DADOS",title:"Dados complexos. Decisões claras.",copy:"Tecnologia geoespacial e análise integrada para transformar telemetria em inteligência acionável."}
 ];
 
 export default function Home() {
@@ -25,6 +25,7 @@ export default function Home() {
  const [result,setResult]=useState<ClimateResult|null>(null),[loading,setLoading]=useState(false),[farmName,setFarmName]=useState("");
  const [menuOpen,setMenuOpen]=useState(false),[activeSlide,setActiveSlide]=useState(0);
  useEffect(()=>{const p=new URLSearchParams(window.location.search),farm=p.get("farm"),lat=p.get("latitude"),lon=p.get("longitude");if(farm)setFarmName(farm);if(lat&&Number.isFinite(Number(lat))&&Number(lat)>=-90&&Number(lat)<=90)setLatitude(lat);if(lon&&Number.isFinite(Number(lon))&&Number(lon)>=-180&&Number(lon)<=180)setLongitude(lon)},[]);
+ useEffect(()=>{slides.forEach((slide)=>{const image=new window.Image();image.src=slide.image})},[]);
  useEffect(()=>{
   const motion=window.matchMedia("(prefers-reduced-motion: reduce)");
   if(motion.matches)return;
