@@ -51,6 +51,7 @@ export default function BoundaryEditor({ farmId, latitude, longitude, initialGeo
         setError("");
       };
       map.on("click", clickHandler);
+      setMapReady(true);
       window.setTimeout(() => map?.invalidateSize(), 100);
     }).catch(() => setError("Não foi possível carregar o mapa. Verifique a ligação."));
     return () => {
@@ -84,14 +85,12 @@ export default function BoundaryEditor({ farmId, latitude, longitude, initialGeo
         marker.bindTooltip(`Ponto ${index + 1}`);
         marker.on("dragend", () => {
           const next = marker.getLatLng();
-          setPoints((current) => {
-            const updated = current.map((point, i) => i === index ? [next.lat, next.lng] as Position : point);
-            const ring = updated.map(([lat, lng]) => [lng, lat]);
-            ring.push([...ring[0]]);
-            setGeometry(updated.length >= 3 ? { type: "Polygon", coordinates: [ring] } : null);
-            setArea(null);
-            return updated;
-          });
+          const updated = points.map((point, i) => i === index ? [next.lat, next.lng] as Position : point);
+          const ring = updated.map(([lat, lng]) => [lng, lat]);
+          if (ring.length) ring.push([...ring[0]]);
+          setPoints(updated);
+          setGeometry(updated.length >= 3 ? { type: "Polygon", coordinates: [ring] } : null);
+          setArea(null);
         });
         marker.addTo(layerGroup);
       });
