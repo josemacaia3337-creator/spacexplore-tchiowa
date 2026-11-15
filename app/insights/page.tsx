@@ -17,7 +17,7 @@ type Farm = {
   currentCrop: string;
 };
 
-type ClimateResponse = {
+type AgriculturalRecord = { id:string; record_type:string; title:string; description:string|null; occurred_at:string; crop:string|null; observation_status:string|null; input_name:string|null; input_quantity:number|null; input_unit:string|null; yield_quantity:number|null; yield_unit:string|null; source:string; };\n\ntype ClimateResponse = {
   fillValue?: number;
   parameters?: Record<string, { units?: string }>;
   data?: { properties?: { parameter?: Record<string, Record<string, number>> } };
@@ -30,7 +30,7 @@ const END = "20251231";
 export default function InsightsPage() {
   const [farms, setFarms] = useState<Farm[]>([]);
   const [farmId, setFarmId] = useState("");
-  const [climate, setClimate] = useState<ClimateResponse | null>(null);
+  const [climate, setClimate] = useState<ClimateResponse | null>(null);\n  const [records, setRecords] = useState<AgriculturalRecord[]>([]);\n  const [recordsLoading, setRecordsLoading] = useState(false);\n  const [recordsError, setRecordsError] = useState("");
   const [loading, setLoading] = useState(false);
   const [loaded, setLoaded] = useState(false);
   const [error, setError] = useState("");
@@ -63,7 +63,7 @@ export default function InsightsPage() {
     return () => { active = false; };
   }, []);
 
-  const farm = farms.find((item) => item.id === farmId);
+  const farm = farms.find((item) => item.id === farmId);\n\n  useEffect(() => {\n    if (!farmId) { setRecords([]); return; }\n    let active = true;\n    async function loadRecords() {\n      setRecordsLoading(true); setRecordsError("");\n      try {\n        const response = await fetch(`/api/farms/${farmId}/records`, { cache: "no-store" });\n        const payload = await response.json();\n        if (!response.ok) throw new Error(payload.error ?? "Não foi possível carregar o histórico.");\n        if (active) setRecords(payload.records ?? []);\n      } catch (caught) {\n        if (active) setRecordsError(caught instanceof Error ? caught.message : "Erro ao carregar histórico.");\n      } finally { if (active) setRecordsLoading(false); }\n    }\n    loadRecords();\n    return () => { active = false; };\n  }, [farmId]);
   const readiness = useMemo(() => farm ? assessFarmReadiness(farm) : [], [farm]);
   const parameterData = climate?.data?.properties?.parameter;
   const metrics = useMemo(() => parameterData ? analyzeClimate({
@@ -129,6 +129,13 @@ export default function InsightsPage() {
         <div className="section-heading"><div><span className="eyebrow">01 / PROFILE COMPLETENESS</span><h2>Farm data readiness</h2></div><span className="status-tag">{readiness.filter((item) => item.status === "provided").length} / {readiness.length} PROVIDED</span></div>
         <p className="section-copy">This is a completeness check, not a farm quality score. A missing value is not assumed or inferred from location.</p>
         <div className="readiness-grid">{readiness.map((item) => <article className="readiness-card" key={item.label}><div className="farm-card-top"><strong>{item.label}</strong><span className={item.status === "provided" ? "readiness-provided" : "readiness-missing"}>{item.status === "provided" ? "PROVIDED" : "MISSING"}</span></div><p>{item.detail}</p></article>)}</div>
+      </section>}
+
+      {farm && <section className="workspace">
+        <div className="section-heading"><div><span className="eyebrow">02 / FIELD HISTORY</span><h2>Atividade agrícola registada</h2></div><span className="status-tag">{records.length} REGISTOS</span></div>
+        <p className="section-copy">Registos introduzidos por membros autorizados desta exploração. São apresentados como histórico declarado/observado; não constituem validação automática nem diagnóstico.</p>
+        {recordsLoading ? <p className="section-copy">A carregar histórico…</p> : recordsError ? <div className="notice error">{recordsError}</div> : records.length ? <div className="evidence-list">{records.slice(0,8).map((record) => <article className="farm-card" key={record.id}><div className="farm-card-top"><span className="eyebrow">{record.record_type.replaceAll("_"," ").toUpperCase()}</span><span className="status-tag">{record.occurred_at}</span></div><h3>{record.title}</h3>{record.crop && <p>Cultura: {record.crop}</p>}{record.description && <p>{record.description}</p>}<small>Origem: {record.source.replaceAll("_"," ")}{record.yield_quantity !== null ? ` · Produção registada: ${record.yield_quantity} ${record.yield_unit ?? ""}` : ""}</small></article>)}</div> : <div className="empty-state"><strong>Sem registos agrícolas.</strong><p>Adicione plantios, observações, tratamentos ou resultados no histórico da exploração.</p><Link href={`/farms/${farm.id}/records`}>ABRIR HISTÓRICO AGRÍCOLA ↗</Link></div>}
+        <Link href={`/farms/${farm.id}/records`}>CONSULTAR HISTÓRICO COMPLETO ↗</Link>
       </section>}
 
       {loaded && <section className="workspace">
