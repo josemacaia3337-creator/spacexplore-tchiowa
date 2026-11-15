@@ -27,7 +27,8 @@ export default async function DashboardPage({
     const value = query[key];
     if (typeof value === "string") returnParams.set(key, value);
   }
-  const returnPath = returnParams.size ? `/dashboard?${returnParams.toString()}` : "/dashboard";
+  const returnQuery = returnParams.toString();
+  const returnPath = returnQuery ? `/dashboard?${returnQuery}` : "/dashboard";
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect(`/login?next=${encodeURIComponent(returnPath)}`);

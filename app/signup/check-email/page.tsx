@@ -1,8 +1,9 @@
 import Link from "next/link";
+import { safeAuthReturnPath } from "@/lib/auth-redirect";
 
 export default async function CheckEmailPage({ searchParams }: { searchParams: Promise<{ next?: string }> }) {
   const { next } = await searchParams;
-  const returnPath = next?.startsWith("/dashboard") && !next.startsWith("//") ? next : "/dashboard";
+  const returnPath = safeAuthReturnPath(next);
   return (
     <main className="auth-shell">
       <Link className="auth-brand" href="/">◉ SPACEXPLORE <b>TCHIOWA</b></Link>
@@ -19,7 +20,7 @@ export default async function CheckEmailPage({ searchParams }: { searchParams: P
           utilize o seu email e palavra-passe para iniciar sessão.
         </p>
         <Link className="primary-button auth-button-link" href={`/login?next=${encodeURIComponent(returnPath)}`}>IR PARA INICIAR SESSÃO</Link>
-        <p className="auth-foot">Ainda não tem conta? <Link href="/signup">Criar conta</Link></p>
+        <p className="auth-foot">Ainda não tem conta? <Link href={`/signup?next=${encodeURIComponent(returnPath)}`}>Criar conta</Link></p>
       </section>
     </main>
   );

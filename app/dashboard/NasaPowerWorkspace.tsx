@@ -109,7 +109,7 @@ export default function NasaPowerWorkspace({
           <div className="nasa-results-heading"><h3>Indicadores ambientais</h3><span>FONTE · NASA POWER DAILY API</span></div>
           <div className="nasa-metric-grid">
             {Object.entries(observations).map(([key, values]) => {
-              const fill = result.fillValue ?? -999;
+              const fill = result?.fillValue ?? -999;
               const valid = Object.values(values).filter((value) => Number.isFinite(value) && value !== fill && value > -900);
               const average = valid.length ? valid.reduce((sum, value) => sum + value, 0) / valid.length : null;
               return <article className="nasa-metric" key={key}>
@@ -119,8 +119,8 @@ export default function NasaPowerWorkspace({
               </article>;
             })}
           </div>
-          <p className="nasa-provenance">Coordenadas: {result.location?.latitude}, {result.location?.longitude} · Período: {result.requestedPeriod?.start}–{result.requestedPeriod?.end} · Fuso: {result.timeStandard}</p>
-          <p className="nasa-provenance">Obtido em: {result.retrievedAt ? new Date(result.retrievedAt).toLocaleString("pt-PT") : "—"}. Os valores apresentados são médias das observações diárias válidas. A precipitação apresentada é uma média diária, não o acumulado do período.</p>
+          <p className="nasa-provenance">Coordenadas: {result?.location?.latitude}, {result?.location?.longitude} · Período: {result?.requestedPeriod?.start}–{result?.requestedPeriod?.end} · Fuso: {result.timeStandard}</p>
+          <p className="nasa-provenance">Obtido em: {result?.retrievedAt ? new Date(result.retrievedAt).toLocaleString("pt-PT") : "—"}. Os valores apresentados são médias das observações diárias válidas. A precipitação apresentada é uma média diária, não o acumulado do período.</p>
         </div>
       )}
       <p className="nasa-science-note">Nota científica: os dados NASA POWER são estimativas em grelha para contexto regional, não medições diretas nos limites de uma propriedade. Dados históricos não constituem previsões e não substituem medições de campo ou validação agronómica.</p>
