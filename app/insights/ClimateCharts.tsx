@@ -5,6 +5,7 @@ import { useMemo } from "react";
 type Props = {
   parameters: Record<string, Record<string, number>>;
   fillValue: number;
+  periodLabel: string;
 };
 
 type MonthValue = { month: string; value: number | null; days: number };
@@ -61,13 +62,13 @@ function TrendChart({ title, unit, values, description }: {
   </article>;
 }
 
-export default function ClimateCharts({ parameters, fillValue }: Props) {
+export default function ClimateCharts({ parameters, fillValue, periodLabel }: Props) {
   const temperature = useMemo(() => monthlySeries(parameters.T2M, fillValue, "mean"), [parameters, fillValue]);
   const precipitation = useMemo(() => monthlySeries(parameters.PRECTOTCORR, fillValue, "sum"), [parameters, fillValue]);
   return <div className="climate-charts">
-    <div className="section-heading"><div><span className="eyebrow">03 / MONTHLY PATTERNS</span><h2>Variação ao longo do ano</h2></div><span className="status-tag">DAILY DATA · MONTHLY AGGREGATION</span></div>
+    <div className="section-heading"><div><span className="eyebrow">03 / MONTHLY PATTERNS</span><h2>Padrão mensal do período</h2></div><span className="status-tag">{periodLabel}</span></div>
     <p className="section-copy">Temperatura: média dos valores diários válidos em cada mês. Precipitação: soma dos valores diários válidos em cada mês. Meses sem dados permanecem em branco; não são interpolados.</p>
-    <TrendChart title="Temperatura média do ar" unit="°C" values={temperature} description="Média mensal de T2M; não representa uma medição dentro do terreno." />
-    <TrendChart title="Precipitação corrigida" unit="mm" values={precipitation} description="Acumulação mensal de PRECTOTCORR; não equivale à água disponível no solo." />
+    <TrendChart title="Temperatura média do ar" unit="°C" values={temperature} description="Média mensal de T2M ao longo do período selecionado; não representa uma medição dentro do terreno." />
+    <TrendChart title="Precipitação corrigida" unit="mm" values={precipitation} description="Acumulação mensal de PRECTOTCORR ao longo do período selecionado; não equivale à água disponível no solo." />
   </div>;
 }
