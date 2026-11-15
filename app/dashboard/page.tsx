@@ -49,7 +49,7 @@ export default async function DashboardPage({
     <main className="dashboard-shell">
       <aside className="dashboard-sidebar">
         <Link className="brand dashboard-brand" href="/">
-          <img src="/spacexplore.png" alt="SpaceXplore Tchiowa" className="workspace-brand-image" />
+          <img src="/spacexplore-brand.svg" alt="SpaceXplore Tchiowa" className="workspace-brand-image" />
         </Link>
         <div className="sidebar-caption">ESPAÇO DE TRABALHO</div>
         <nav className="dashboard-nav" aria-label="Navegação principal">
