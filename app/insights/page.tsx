@@ -24,7 +24,6 @@ type ClimateResponse = {
   error?: string;
 };
 
-const FARM_KEY = "spacexplore-tchiowa-farms-v1";
 const START = "20250101";
 const END = "20251231";
 
@@ -37,16 +36,31 @@ export default function InsightsPage() {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    try {
-      const stored = localStorage.getItem(FARM_KEY);
-      if (stored) {
-        const parsed = JSON.parse(stored) as Farm[];
+    let active = true;
+    async function loadFarms() {
+      try {
+        const response = await fetch("/api/farms", { cache: "no-store" });
+        const payload = await response.json();
+        if (!response.ok) throw new Error(payload.error ?? "Could not load farm profiles.");
+        const parsed = (payload.farms ?? []).map((farm: {
+          id: string; name: string; latitude: number; longitude: number;
+          area_hectares: number | null; soil_texture: string | null; soil_ph: number | null;
+          organic_matter_pct: number | null; drainage_class: string | null; current_crop: string | null;
+        }) => ({
+          id: farm.id, name: farm.name, latitude: farm.latitude, longitude: farm.longitude,
+          areaHa: farm.area_hectares, soilTexture: farm.soil_texture ?? "",
+          soilPh: farm.soil_ph, organicMatter: farm.organic_matter_pct,
+          drainage: farm.drainage_class ?? "", currentCrop: farm.current_crop ?? ""
+        })) as Farm[];
+        if (!active) return;
         setFarms(parsed);
         if (parsed.length) setFarmId(parsed[0].id);
+      } catch (caught) {
+        if (active) setError(caught instanceof Error ? caught.message : "Could not load farm profiles.");
       }
-    } catch {
-      setError("Farm profiles could not be read from this browser.");
     }
+    loadFarms();
+    return () => { active = false; };
   }, []);
 
   const farm = farms.find((item) => item.id === farmId);
@@ -88,7 +102,7 @@ export default function InsightsPage() {
     <main className="shell">
       <header className="topbar">
         <Link className="brand" href="/"><span className="brand-mark">S</span><span>SPACEXPLORE <b>TCHIOWA</b></span></Link>
-        <nav className="top-nav"><Link href="/farms">FARM MANAGEMENT ↗</Link><Link href="/crops">CROP INTELLIGENCE ↗</Link><Link href="/rotation">ROTATION ENGINE ↗</Link></nav>
+        <nav className="top-nav"><Link href="/farms">GESTÃO DE EXPLORAÇÕES ↗</Link><Link href="/crops">INTELIGÊNCIA DE CULTURAS ↗</Link><Link href="/rotation">MOTOR DE ROTAÇÃO ↗</Link></nav>
       </header>
 
       <section className="farm-hero">
@@ -98,16 +112,16 @@ export default function InsightsPage() {
       </section>
 
       <section className="workspace">
-        <div className="section-heading"><div><span className="eyebrow">ANALYSIS SUBJECT</span><h2>Select a farm</h2></div><span className="status-tag">EVIDENCE-FIRST</span></div>
+        <div className="section-heading"><div><span className="eyebrow">OBJETO DE ANÁLISE</span><h2>Selecione uma exploração</h2></div><span className="status-tag">EVIDENCE-FIRST</span></div>
         {farms.length ? <>
-          <label className="rotation-farm-select">REGISTERED PROPERTY
+          <label className="rotation-farm-select">EXPLORAÇÃO REGISTADA
             <select value={farmId} onChange={(event) => { setFarmId(event.target.value); setClimate(null); setLoaded(false); }}>
               {farms.map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}
             </select>
           </label>
-          {farm && <div className="rotation-context"><strong>{farm.name}</strong><span>Coordinates: {farm.latitude}, {farm.longitude}</span><span>Period: 2025 calendar year</span><p>NASA POWER provides gridded regional context, not measurements taken directly inside this farm.</p></div>}
-          <button className="primary-button" onClick={loadAnalysis} disabled={!farm || loading}>{loading ? "ANALYSING CLIMATE DATA…" : "LOAD FARM INTELLIGENCE ↗"}</button>
-        </> : <div className="empty-state"><strong>No farm profile available.</strong><p>Register a farm before requesting a combined analysis.</p><Link href="/farms">OPEN FARM MANAGEMENT ↗</Link></div>}
+          {farm && <div className="rotation-context"><strong>{farm.name}</strong><span>Coordenadas: {farm.latitude}, {farm.longitude}</span><span>Período: Ano civil de 2025</span><p>NASA POWER provides gridded regional context, not measurements taken directly inside this farm.</p></div>}
+          <button className="primary-button" onClick={loadAnalysis} disabled={!farm || loading}>{loading ? "A ANALISAR DADOS CLIMÁTICOS…" : "CARREGAR ANÁLISE DA EXPLORAÇÃO ↗"}</button>
+        </> : <div className="empty-state"><strong>Nenhuma exploração disponível.</strong><p>Registe uma exploração antes de solicitar uma análise integrada.</p><Link href="/farms">ABRIR GESTÃO DE EXPLORAÇÕES ↗</Link></div>}
         {error && <div className="notice error" role="alert">{error}</div>}
       </section>
 
