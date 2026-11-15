@@ -15,7 +15,7 @@ const MONTHS = ["JAN", "FEV", "MAR", "ABR", "MAI", "JUN", "JUL", "AGO", "SET", "
 function monthlySeries(series: Record<string, number> | undefined, fillValue: number, mode: "mean" | "sum"): MonthValue[] {
   const buckets = Array.from({ length: 12 }, () => ({ total: 0, count: 0 }));
   Object.entries(series ?? {}).forEach(([date, raw]) => {
-    if (!/^\\d{8}$/.test(date) || !Number.isFinite(raw) || raw <= -900 || raw === fillValue) return;
+    if (!/^\d{8}$/.test(date) || !Number.isFinite(raw) || raw <= -900 || raw === fillValue) return;
     const month = Number(date.slice(4, 6)) - 1;
     if (month < 0 || month > 11) return;
     buckets[month].total += raw;
