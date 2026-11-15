@@ -541,3 +541,8 @@ footer{display:flex;justify-content:space-between;padding:0 0 30px;color:#879188
 .brand-logo-fallback{display:flex;flex-direction:column;gap:2px;color:#f2f6fb;font:600 10px var(--font-dm-sans),sans-serif;letter-spacing:.16em;white-space:nowrap}
 .brand-logo-fallback b{color:#a6d9ff;font-weight:700}
 .brand-logo-fallback small{font:7px var(--font-dm-mono),monospace;letter-spacing:.17em;color:#91a2b7}
+
+.footer-credit-line{margin:16px 0 0;color:#91a2b7;font-size:10px;line-height:1.8}
+.footer-credit-line a{color:#d8eafa;text-decoration:none;border-bottom:1px solid #a6d9ff55;transition:color var(--sx-motion),border-color var(--sx-motion)}
+.footer-credit-line a:hover{color:#a6d9ff;border-color:#a6d9ff}
+.footer-credit-line a:focus-visible{outline:2px solid #a6d9ff;outline-offset:4px}
