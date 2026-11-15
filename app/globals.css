@@ -546,3 +546,5 @@ footer{display:flex;justify-content:space-between;padding:0 0 30px;color:#879188
 .footer-credit-line a{color:#d8eafa;text-decoration:none;border-bottom:1px solid #a6d9ff55;transition:color var(--sx-motion),border-color var(--sx-motion)}
 .footer-credit-line a:hover{color:#a6d9ff;border-color:#a6d9ff}
 .footer-credit-line a:focus-visible{outline:2px solid #a6d9ff;outline-offset:4px}
+
+.auth-success{padding:12px;background:#eef6ec;border-left:3px solid #66834e;color:#365c35;font-size:12px;line-height:1.6}
