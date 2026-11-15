@@ -1233,7 +1233,7 @@ html,body{background:#030712;color:#f8fafc}
 .sidebar-signout:hover{border-color:#8e5a65;color:#ffb8c0}
 .dashboard-main{min-width:0;max-width:1500px;padding:0 clamp(18px,4vw,64px);width:100%;margin:0 auto}
 .dashboard-topline{height:76px;border-bottom:1px solid #1c2b3d;display:flex;align-items:center;justify-content:flex-end;gap:12px;color:#91a6bd;font:9px var(--font-dm-mono),monospace;letter-spacing:.1em}
-.dashboard-header-brand{display:none;margin-right:auto}
+.dashboard-header-brand{display:block;margin-right:auto}
 .dashboard-header-brand img{display:block;width:190px;height:42px;object-fit:contain;object-position:left center}
 .account-chip{display:flex;align-items:center;gap:8px;border:1px solid #24466a;padding:9px 12px;color:#b9dcfa;background:#0a1b2e;border-radius:999px;white-space:nowrap}
 .account-chip i{width:7px;height:7px;border-radius:50%;background:#62d3a6;box-shadow:0 0 0 4px #62d3a61c}
