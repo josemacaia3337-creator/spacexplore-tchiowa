@@ -73,7 +73,6 @@ export default function InsightsPage() {
   const completion=readiness.length?Math.round(completed/readiness.length*100):0;
   const parameterData=climate?.data?.properties?.parameter;
   const metrics=useMemo(()=>parameterData?analyzeClimate({parameters:parameterData,fillValue:climate?.fillValue,start:toApiDate(periodStart),end:toApiDate(periodEnd)}):[],[parameterData,climate?.fillValue,periodStart,periodEnd]);
-  const parameterData=climate?.data?.properties?.parameter;
   const comparisonMetrics=useMemo(()=>{
     const series=comparisonClimate?.data?.properties?.parameter;
     return series?analyzeClimate({parameters:series,fillValue:comparisonClimate?.fillValue,start:toApiDate(previousYearDate(periodStart)),end:toApiDate(previousYearDate(periodEnd))}):[];
