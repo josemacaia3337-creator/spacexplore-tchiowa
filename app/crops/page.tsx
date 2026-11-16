@@ -17,7 +17,7 @@ export default function CropsPage() {
     <main className="shell">
       <header className="topbar">
         <Link className="brand" href="/"><span className="brand-mark">S</span><span>SPACEXPLORE <b>TCHIOWA</b></span></Link>
-        <nav className="top-nav"><Link href="/farms">GESTÃO DE EXPLORAÇÕES ↗</Link><Link href="/">EXPLORADOR CLIMÁTICO ↗</Link><Link href="/rotation">MOTOR DE ROTAÇÃO ↗</Link></nav>
+        <nav className="top-nav"><Link href="/farms">GESTÃO DE EXPLORAÇÕES ↗</Link><Link href="/">EXPLORADOR CLIMÁTICO ↗</Link><Link href="/rotation">MOTOR DE ROTAÇÃO ↗</Link></nav><Link className="analytics-settings-link" href="/dashboard#account-settings" aria-label="Configurações" title="Configurações">⚙</Link>
       </header>
       <section className="farm-hero">
         <span className="eyebrow">03 / INTELIGÊNCIA DE CULTURAS</span>
