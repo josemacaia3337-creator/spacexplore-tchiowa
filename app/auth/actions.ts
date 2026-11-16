@@ -78,7 +78,8 @@ export async function signUp(formData: FormData) {
 
 export async function requestPasswordReset(formData: FormData) {
   const email = String(formData.get("email") ?? "").trim().toLowerCase();
-  if (!email || !/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email)) {
+  const emailParts = email.split("@");
+  if (emailParts.length !== 2 || !emailParts[0] || !emailParts[1]?.includes(".") || emailParts[1].startsWith(".") || emailParts[1].endsWith(".")) {
     redirect("/forgot-password?error=Introduza%20um%20endereço%20de%20email%20válido.");
   }
 
