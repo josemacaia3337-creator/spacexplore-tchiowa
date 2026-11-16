@@ -41,7 +41,7 @@ export default async function DashboardPage({
   const name = profile?.display_name || user.user_metadata?.display_name || user.email?.split("@")[0] || "utilizador";
   const totalArea = (farms ?? []).reduce((sum, farm) => sum + Number(farm.area_hectares ?? 0), 0);
   const metrics = [
-    { label: "Organizações", value: String(organizationIds.length), note: "Espaços de trabalho ativos", href: "/organizations" },
+    { label: "Organizações", value: String(organizationIds.length), note: "Espaços de trabalho ativos", href: "/dashboard#organizations" },
     { label: "Explorações", value: String(farms?.length ?? 0), note: "Registos na nuvem", href: "/farms" },
     { label: "Área registada", value: totalArea.toLocaleString("pt-PT", { maximumFractionDigits: 2 }), note: "Hectares informados", href: "/farms" },
     { label: "Conta", value: "Ativa", note: "Sessão autenticada", href: "/dashboard#account-settings" },
@@ -66,8 +66,8 @@ export default async function DashboardPage({
               <span>{metric.label}</span>
               <strong>{metric.value}</strong>
               <small>{metric.note}</small>
-            </article>
-          ))}
+            </Link>
+          ))
         </section>
 
         <NasaPowerWorkspace
@@ -87,7 +87,7 @@ export default async function DashboardPage({
           farmName={typeof query.gpmFarm === "string" ? query.gpmFarm : ""}
         />
 
-        <section className="dashboard-section">
+        <section className="dashboard-section" id="organizations">
           <div className="dashboard-section-heading">
             <div><span className="eyebrow">ESPAÇOS AUTORIZADOS</span><h2>As minhas organizações</h2></div>
           </div>
