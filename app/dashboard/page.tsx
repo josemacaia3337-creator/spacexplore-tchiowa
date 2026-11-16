@@ -67,7 +67,7 @@ export default async function DashboardPage({
               <strong>{metric.value}</strong>
               <small>{metric.note}</small>
             </Link>
-          ))
+          ))}
         </section>
 
         <NasaPowerWorkspace
