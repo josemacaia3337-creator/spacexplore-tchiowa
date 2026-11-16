@@ -90,13 +90,17 @@ export default async function DashboardPage({
 
   const organizationIds = memberships.map((membership) => membership.organization_id);
   const farmsResult = organizationIds.length
-    ? await supabase.from("farms").select("id, area_hectares").in("organization_id", organizationIds).catch((caught: unknown) => {
-        logServerError("DASHBOARD_FARMS_QUERY_UNAVAILABLE", caught, { component: "dashboard" });
-        return null;
-      })
+    ? await (async () => {
+        try {
+          return await supabase.from("farms").select("id, area_hectares").in("organization_id", organizationIds);
+        } catch (caught) {
+          logServerError("DASHBOARD_FARMS_QUERY_UNAVAILABLE", caught, { component: "dashboard" });
+          return null;
+        }
+      })()
     : null;
   if (farmsResult?.error) logServerError("DASHBOARD_FARMS_QUERY_FAILED", farmsResult.error, { component: "dashboard" });
-  const farms = farmsResult?.data ?? [];
+  const farms: { id: string; area_hectares: number | null }[] = (farmsResult?.data ?? []) as { id: string; area_hectares: number | null }[];
   const farmQueryFailed = organizationIds.length > 0 && farmsResult === null;
   const dataUnavailable = Boolean(profileResult.error || membershipResult.error || farmsResult?.error || farmQueryFailed);
 
