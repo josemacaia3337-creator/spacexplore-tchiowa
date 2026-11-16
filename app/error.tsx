@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import Link from "next/link";
 
 export default function AppError({
   error,
@@ -25,7 +26,7 @@ export default function AppError({
         <h1>Esta área encontrou <em>uma dificuldade.</em></h1>
         <p className="auth-copy">A plataforma continua disponível. Pode tentar carregar esta área novamente ou regressar à página pública.</p>
         <button className="primary-button" onClick={() => reset()}>TENTAR NOVAMENTE ↗</button>
-        <a className="auth-back" href="/">Voltar à plataforma pública</a>
+        <Link className="auth-back" href="/">Voltar à plataforma pública</Link>
       </section>
     </main>
   );
