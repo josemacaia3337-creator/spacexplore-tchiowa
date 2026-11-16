@@ -32,7 +32,7 @@ export default async function FarmsPage({searchParams}:{searchParams:Promise<{sa
     <main className="shell">
       <header className="topbar">
         <Link className="brand" href="/dashboard"><span className="brand-mark">S</span><span>SPACEXPLORE <b>TCHIOWA</b></span></Link>
-        <nav className="top-nav"><Link href="/dashboard">PAINEL ↗</Link><Link href="/crops">CULTURAS ↗</Link><Link href="/rotation">ROTAÇÃO ↗</Link><Link href="/insights">ANÁLISES ↗</Link><Link href="/monitoring">MONITORIZAÇÃO ↗</Link></nav>
+        <nav className="top-nav"><Link href="/dashboard">PAINEL ↗</Link><Link href="/crops">CULTURAS ↗</Link><Link href="/rotation">ROTAÇÃO ↗</Link><Link href="/insights">ANÁLISES ↗</Link><Link href="/monitoring">MONITORIZAÇÃO ↗</Link></nav><Link className="analytics-settings-link" href="/dashboard#account-settings" aria-label="Configurações" title="Configurações">⚙</Link>
       </header>
 
       <section className="farm-hero">
