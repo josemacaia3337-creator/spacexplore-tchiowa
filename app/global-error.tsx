@@ -26,7 +26,7 @@ export default function GlobalError({
           <h1 style={{ fontSize: "32px", lineHeight: 1.15 }}>A plataforma está a recuperar.</h1>
           <p style={{ color: "#c2ceda", lineHeight: 1.6 }}>Ocorreu uma dificuldade inesperada. Os dados protegidos continuam resguardados. Tente novamente ou regresse à página pública.</p>
           <button onClick={() => reset()} style={{ padding: "13px 18px", border: 0, borderRadius: "8px", background: "#b9d8f2", color: "#102238", fontWeight: 700, cursor: "pointer" }}>TENTAR NOVAMENTE</button>
-          <p><a href="/" style={{ color: "#b9d8f2" }}>Voltar à plataforma pública</a></p>
+          <p><button onClick={() => window.location.assign("/")} style={{ padding: 0, border: 0, background: "transparent", color: "#b9d8f2", cursor: "pointer", textDecoration: "underline" }}>Voltar à plataforma pública</button></p>
         </main>
       </body>
     </html>
