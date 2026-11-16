@@ -87,9 +87,9 @@ jobs:
           VALIDATED_SHA: ${{ github.event.pull_request.head.sha }}
         run: |
           set -euo pipefail
-          CURRENT_SHA="$(gh pr view "$PR_NUMBER" --json headRefOid --jq '.headRefOid')"
+          CURRENT_SHA="$(gh pr view "$PR_NUMBER" --repo "$GITHUB_REPOSITORY" --json headRefOid --jq '.headRefOid')"
           if [ "$CURRENT_SHA" != "$VALIDATED_SHA" ]; then
             echo "::error::PR head changed after validation. Refusing to merge."
             exit 1
           fi
-          gh pr merge "$PR_NUMBER" --squash --delete-branch
+          gh pr merge "$PR_NUMBER" --repo "$GITHUB_REPOSITORY" --squash --delete-branch
