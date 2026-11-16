@@ -9,7 +9,6 @@ export async function updateSession(request: NextRequest) {
 
   if (!url || !key) {
     logServerError("SUPABASE_MIDDLEWARE_CONFIGURATION_MISSING", new Error("Supabase public environment variables are missing"), {
-      route: request.nextUrl.pathname,
     });
     return response;
   }
@@ -27,10 +26,10 @@ export async function updateSession(request: NextRequest) {
 
     const { error } = await supabase.auth.getClaims();
     if (error) {
-      logServerError("SUPABASE_SESSION_REFRESH_FAILED", error, { route: request.nextUrl.pathname });
+      logServerError("SUPABASE_SESSION_REFRESH_FAILED", error, { component: "middleware" });
     }
   } catch (error) {
-    logServerError("SUPABASE_MIDDLEWARE_UNAVAILABLE", error, { route: request.nextUrl.pathname });
+    logServerError("SUPABASE_MIDDLEWARE_UNAVAILABLE", error, { component: "middleware" });
   }
 
   // Middleware is deliberately non-blocking for public routes. Protected pages
