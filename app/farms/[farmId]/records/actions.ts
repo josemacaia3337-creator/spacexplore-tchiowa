@@ -20,6 +20,8 @@ export async function createAgriculturalRecord(formData:FormData) {
   const date=get(formData,"occurred_at");
   const description=get(formData,"description");
   const crop=get(formData,"crop");
+  const plotId=get(formData,"plot_id");
+  const cropCycleId=get(formData,"crop_cycle_id");
   const status=get(formData,"observation_status");
   const inputName=get(formData,"input_name");
   const inputQuantity=numberOrNull(get(formData,"input_quantity"));
@@ -36,8 +38,10 @@ export async function createAgriculturalRecord(formData:FormData) {
 
   const {data:farm,error:farmError}=await supabase.from("farms").select("id,organization_id").eq("id",farmId).single();
   if(farmError||!farm) redirect("/farms?error=Exploração%20não%20encontrada%20ou%20sem%20permissão.");
+  if(plotId){const {data:plot}=await supabase.from("farm_plots").select("id").eq("id",plotId).eq("farm_id",farmId).maybeSingle();if(!plot)redirect(`/farms/${farmId}/records?error=Talhão%20inválido%20para%20esta%20fazenda.`);}
+  if(cropCycleId){if(!plotId)redirect(`/farms/${farmId}/records?error=Selecione%20o%20talhão%20associado%20ao%20ciclo.`);const {data:cycle}=await supabase.from("farm_crop_cycles").select("id").eq("id",cropCycleId).eq("plot_id",plotId).eq("farm_id",farmId).maybeSingle();if(!cycle)redirect(`/farms/${farmId}/records?error=Ciclo%20de%20cultura%20inválido%20para%20este%20talhão.`);}
   const {error}=await supabase.from("agricultural_records").insert({
-    farm_id:farm.id, organization_id:farm.organization_id, record_type:type, title,
+    farm_id:farm.id, organization_id:farm.organization_id, record_type:type, title, plot_id:plotId||null, crop_cycle_id:cropCycleId||null,
     description:description||null, occurred_at:date||new Date().toISOString().slice(0,10),
     crop:crop||null, observation_status:status||null, input_name:inputName||null,
     input_quantity:inputQuantity, input_unit:inputUnit||null,
