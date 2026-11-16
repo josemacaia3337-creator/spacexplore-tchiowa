@@ -1,20 +1,10 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { signOut } from "@/app/auth/actions";
 import { createOrganization } from "@/app/organizations/actions";
 import NasaPowerWorkspace from "@/app/dashboard/NasaPowerWorkspace";
 import NasaGpmWorkspace from "@/app/dashboard/NasaGpmWorkspace";
-
-const navigation = [
-  { href: "/dashboard#nasa-power", label: "NASA POWER", code: "01" },
-  { href: "/dashboard#nasa-gpm", label: "NASA GPM", code: "02" },
-  { href: "/farms", label: "Explorações", code: "03" },
-  { href: "/crops", label: "Culturas", code: "04" },
-  { href: "/rotation", label: "Rotação", code: "05" },
-  { href: "/insights", label: "Análises", code: "06" },
-  { href: "/monitoring", label: "Monitorização", code: "07" },
-];
+import DashboardNavigation from "@/app/dashboard/DashboardNavigation";
 
 export default async function DashboardPage({
   searchParams,
@@ -36,7 +26,7 @@ export default async function DashboardPage({
   if (!user) redirect(`/signup?next=${encodeURIComponent(returnPath)}`);
 
   const [{ data: profile }, { data: memberships }] = await Promise.all([
-    supabase.from("profiles").select("display_name").eq("id", user.id).maybeSingle(),
+    supabase.from("profiles").select("display_name, avatar_path, preferences").eq("id", user.id).maybeSingle(),
     supabase.from("memberships")
       .select("organization_id, role, organizations(name,slug)")
       .eq("user_id", user.id)
@@ -59,36 +49,11 @@ export default async function DashboardPage({
 
   return (
     <main className="dashboard-shell">
-      <aside className="dashboard-sidebar">
-        <Link className="brand dashboard-brand" href="/">
-          <img src="/spacexplore-brand.svg" alt="SpaceXplore Tchiowa" className="workspace-brand-image" />
-        </Link>
-        <div className="sidebar-caption">ESPAÇO DE TRABALHO</div>
-        <nav className="dashboard-nav" aria-label="Navegação principal">
-          <span className="nav-group-label">PLATAFORMA</span>
-          {navigation.map((item) => (
-            <Link href={item.href} key={item.href}>
-              <span className="nav-code">{item.code}</span>{item.label}
-            </Link>
-          ))}
-          <span className="nav-group-label nav-group-spaced">CONTA</span>
-          <Link href="/dashboard" aria-current="page"><span className="nav-code">06</span>Visão geral</Link>
-        </nav>
-        <div className="sidebar-bottom">
-          <span className="sidebar-caption">NASA SPACE APPS · 2026</span>
-          <form action={signOut}><button className="sidebar-signout">TERMINAR SESSÃO ↗</button></form>
-        </div>
-      </aside>
-
+      <DashboardNavigation displayName={name} avatarPath={profile?.avatar_path ?? null} />
       <section className="dashboard-main">
-        <header className="dashboard-topline">
-          <span>ESPAÇO PESSOAL <span className="breadcrumb-separator">/</span> VISÃO GERAL</span>
-          <span className="account-chip"><i /> CONTA ATIVA</span>
-        </header>
-
         <section className="dashboard-welcome">
           <span className="eyebrow">BEM-VINDO À SPACEXPLORE</span>
-          <h1>Olá, <em>{name}</em></h1>
+          <h1>Olá, <span className="dashboard-greeting-name">{name}</span></h1>
           <p>O seu centro de operações agrícolas. Organize propriedades, acompanhe informação ambiental e explore os seus dados num só lugar.</p>
         </section>
 
