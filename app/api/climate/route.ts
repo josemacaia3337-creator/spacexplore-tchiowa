@@ -6,7 +6,7 @@ const ALLOWED_PARAMETERS = ["T2M", "T2M_MAX", "T2M_MIN", "PRECTOTCORR", "RH2M"] 
 const DEFAULT_PARAMETERS = ALLOWED_PARAMETERS.join(",");
 
 function validDate(value: string): boolean {
-  if (!/^\\d{8}$/.test(value)) return false;
+  if (value.length !== 8 || !Array.from(value).every((character) => character >= "0" && character <= "9")) return false;
   const year = Number(value.slice(0, 4));
   const month = Number(value.slice(4, 6));
   const day = Number(value.slice(6, 8));
