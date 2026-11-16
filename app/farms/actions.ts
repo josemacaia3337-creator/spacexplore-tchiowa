@@ -35,6 +35,30 @@ export async function createFarm(formData: FormData) {
   const soilSource = value(formData,"soil_data_source");
   const soilObservedAt = value(formData,"soil_observed_at");
   const notes = value(formData,"notes");
+  const rawBoundary = value(formData,"boundary_geojson");
+  let boundaryGeometry: import("@/types/supabase").Json | null = null;
+  if (rawBoundary) {
+    if (rawBoundary.length > 200000) redirect("/farms?error=O%20desenho%20da%20delimitação%20é%20demasiado%20grande.");
+    let parsed: { type?: string; coordinates?: unknown };
+    try {
+      parsed = JSON.parse(rawBoundary) as { type?: string; coordinates?: unknown };
+    } catch {
+      redirect("/farms?error=A%20delimitação%20não%20está%20num%20formato%20válido.");
+    }
+    const rings = parsed.coordinates;
+    if (parsed.type !== "Polygon" || !Array.isArray(rings) || !Array.isArray(rings[0]) || rings[0].length < 4) {
+      redirect("/farms?error=Desenhe%20um%20polígono%20válido%20com%20pelo%20menos%20três%20pontos.");
+    }
+    const ring = rings[0] as unknown[];
+    const positions = ring.map((point) => Array.isArray(point) ? point.map(Number) : []);
+    if (positions.some((point) => point.length !== 2 || !Number.isFinite(point[0]) || !Number.isFinite(point[1]) || point[0] < -180 || point[0] > 180 || point[1] < -90 || point[1] > 90)) {
+      redirect("/farms?error=O%20polígono%20contém%20coordenadas%20inválidas.");
+    }
+    const first = positions[0];
+    const last = positions[positions.length - 1];
+    if (first[0] !== last[0] || first[1] !== last[1]) redirect("/farms?error=O%20polígono%20deve%20estar%20fechado.");
+    boundaryGeometry = parsed as import("@/types/supabase").Json;
+  }
 
   if (name.length < 2 || name.length > 120) redirect("/farms?error=O%20nome%20deve%20ter%20entre%202%20e%20120%20caracteres.");
   if (!organizationId) redirect("/farms?error=Selecione%20uma%20organização.");
@@ -49,7 +73,7 @@ export async function createFarm(formData: FormData) {
   if (drainage && !drainageClasses.includes(drainage)) redirect("/farms?error=Classe%20de%20drenagem%20inválida.");
   if (soilObservedAt && !/^\d{4}-\d{2}-\d{2}$/.test(soilObservedAt)) redirect("/farms?error=Data%20de%20observação%20inválida.");
 
-  const { error } = await supabase.from("farms").insert({
+  const { data: farm, error } = await supabase.from("farms").insert({
     organization_id: organizationId,
     name,
     location_label: location || null,
@@ -65,11 +89,22 @@ export async function createFarm(formData: FormData) {
     soil_observed_at: soilObservedAt || null,
     notes: notes || null,
     created_by: user.id,
-  });
-  if (error) redirect("/farms?error=Não%20foi%20possível%20guardar%20a%20exploração.%20Verifique%20as%20suas%20permissões.");
+  }).select("id").single();
+  if (error || !farm) redirect("/farms?error=Não%20foi%20possível%20guardar%20a%20fazenda.%20Verifique%20as%20suas%20permissões.");
+
+  if (boundaryGeometry) {
+    const { error: boundarySaveError } = await supabase.rpc("save_farm_boundary", {
+      p_farm_id: farm.id,
+      p_geojson: boundaryGeometry,
+    });
+    if (boundarySaveError) {
+      const message = encodeURIComponent("A fazenda foi criada, mas a delimitação não foi guardada. Pode corrigir os limites no editor do mapa.");
+      redirect(`/farms/${farm.id}/boundary?error=${message}`);
+    }
+  }
   revalidatePath("/farms");
   revalidatePath("/dashboard");
-  redirect("/farms?saved=1");
+  redirect(boundaryGeometry ? "/farms?saved=1&mapped=1" : "/farms?saved=1&needsBoundary=1");
 }
 
 

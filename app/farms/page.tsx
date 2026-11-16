@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { createFarm, updateFarm, deleteFarm } from "./actions";
+import { updateFarm, deleteFarm } from "./actions";
+import FarmRegistrationForm from "./FarmRegistrationForm";
 
 const soilLabels: Record<string,string> = {
   sandy:"Arenoso", loamy_sand:"Franco-arenoso", loam:"Franco", silty:"Siltoso",
@@ -12,7 +13,7 @@ const drainageLabels: Record<string,string> = {
   poor:"Mal drenado", unknown:"Não avaliado",
 };
 
-export default async function FarmsPage({searchParams}:{searchParams:Promise<{saved?:string;deleted?:string;updated?:string;error?:string}>}) {
+export default async function FarmsPage({searchParams}:{searchParams:Promise<{saved?:string;mapped?:string;needsBoundary?:string;deleted?:string;updated?:string;error?:string}>}) {
   const params=await searchParams;
   const supabase=await createClient();
   const {data:{user}}=await supabase.auth.getUser();
@@ -44,44 +45,14 @@ export default async function FarmsPage({searchParams}:{searchParams:Promise<{sa
         <div className="section-heading"><div><span className="eyebrow">GESTÃO DE PROPRIEDADES</span><h2>Nova exploração</h2></div><span className="status-tag">SINCRONIZADO COM A NUVEM</span></div>
         <p className="section-copy">Os dados são guardados na base de dados e ficam disponíveis aos membros autorizados da organização. Informação do solo deve ser fornecida pelo agricultor, observação de campo ou laboratório — nunca inferida apenas pelas coordenadas.</p>
 
-        {params.saved&&<p className="form-message" role="status">Exploração guardada com sucesso na nuvem.</p>}
+        {params.saved&&<p className="form-message" role="status">{params.mapped ? "Fazenda e delimitação geográfica guardadas com sucesso." : "Fazenda guardada com sucesso na nuvem."}</p>}{params.needsBoundary&&<p className="notice">A fazenda foi guardada. Pode concluir a delimitação no mapa a partir do cartão da propriedade.</p>}
         {params.deleted&&<p className="form-message" role="status">Exploração removida.</p>}
         {params.updated&&<p className="form-message" role="status">Exploração atualizada com sucesso.</p>}
         {params.error&&<p className="auth-error" role="alert">{params.error}</p>}
         {membershipError&&<p className="auth-error" role="alert">Não foi possível consultar as suas organizações.</p>}
 
         {canManage&&memberships?.length ? (
-          <form className="farm-form" action={createFarm}>
-            <div className="form-section-title">ORGANIZAÇÃO E LOCALIZAÇÃO</div>
-            <div className="form-grid">
-              <label>ORGANIZAÇÃO *
-                <select name="organization_id" required defaultValue={organizationIds.length===1?organizationIds[0]:""}>
-                  {organizationIds.length!==1&&<option value="">Selecione uma organização</option>}
-                  {(memberships??[]).filter(m=>["owner","admin","manager"].includes(m.role)).map(m=>{
-                    const org=(m.organizations as {name:string;slug:string}[]|null)?.[0];
-                    return <option key={m.organization_id} value={m.organization_id}>{org?.name??"Organização"}</option>;
-                  })}
-                </select>
-              </label>
-              <label>NOME DA EXPLORAÇÃO *<input name="name" minLength={2} maxLength={120} required placeholder="Ex.: Fazenda Maiombe"/></label>
-              <label>LOCALIDADE<input name="location_label" defaultValue="Cabinda, Angola" placeholder="Município, comuna ou localidade"/></label>
-              <label>ÁREA (HECTARES)<input name="area_hectares" type="number" min="0.01" step="any" placeholder="Opcional"/></label>
-              <label>LATITUDE *<input name="latitude" type="number" min="-90" max="90" step="any" defaultValue="-5.55" required/></label>
-              <label>LONGITUDE *<input name="longitude" type="number" min="-180" max="180" step="any" defaultValue="12.19" required/></label>
-              <label>CULTURA ATUAL / PRINCIPAL<input name="current_crop" placeholder="Ex.: mandioca, milho"/></label>
-            </div>
-            <div className="form-section-title">PERFIL DO SOLO <span>INFORMAÇÃO DECLARADA OU MEDIDA</span></div>
-            <div className="form-grid">
-              <label>TEXTURA DO SOLO<select name="soil_texture" defaultValue=""><option value="">Não informado</option><option value="sandy">Arenoso</option><option value="loamy_sand">Franco-arenoso</option><option value="loam">Franco</option><option value="silty">Siltoso</option><option value="clay_loam">Franco-argiloso</option><option value="clay">Argiloso</option><option value="unknown">Desconhecido / não analisado</option></select></label>
-              <label>pH DO SOLO (0–14)<input name="soil_ph" type="number" min="0" max="14" step="0.1" placeholder="Opcional"/></label>
-              <label>MATÉRIA ORGÂNICA (%)<input name="organic_matter_pct" type="number" min="0" max="100" step="0.1" placeholder="Opcional"/></label>
-              <label>DRENAGEM<select name="drainage_class" defaultValue=""><option value="">Não informado</option><option value="well_drained">Bem drenado</option><option value="moderate">Moderadamente drenado</option><option value="poor">Mal drenado</option><option value="unknown">Desconhecido / não avaliado</option></select></label>
-              <label>FONTE DA INFORMAÇÃO DO SOLO<input name="soil_data_source" placeholder="Ex.: observação do agricultor, laboratório"/></label>
-              <label>DATA DA OBSERVAÇÃO / AMOSTRAGEM<input name="soil_observed_at" type="date"/></label>
-            </div>
-            <label className="full-label">NOTAS ADICIONAIS<textarea name="notes" rows={3} placeholder="Contexto, método de medição, laboratório, limitações ou outras observações."/></label>
-            <button className="primary-button" type="submit">GUARDAR EXPLORAÇÃO ↗</button>
-          </form>
+          <FarmRegistrationForm organizations={(memberships??[]).filter(m=>["owner","admin","manager"].includes(m.role)).map(m=>({id:m.organization_id,name:((m.organizations as {name:string;slug:string}[]|null)?.[0]?.name??"Organização")}))} defaultOrganizationId={organizationIds.length===1?organizationIds[0]:""} />
         ) : (
           <div className="empty-state"><strong>{memberships?.length?"A sua função não permite criar explorações.":"Ainda não pertence a uma organização."}</strong><p>{memberships?.length?"Peça a um proprietário ou administrador que lhe atribua uma função de gestão.":"Crie primeiro uma organização no seu painel de trabalho."}</p><Link href="/dashboard">IR PARA O PAINEL ↗</Link></div>
         )}

@@ -1159,3 +1159,14 @@ html,body{background:#030712;color:#f8fafc}
 .nasa-gpm-empty{margin-top:15px;padding:14px;background:#0b1710;border:1px solid #34503b;border-radius:8px;color:#c2d2c1;font-size:12px;line-height:1.7}
 @media(max-width:850px){.gpm-public-section{padding-left:24px;padding-right:24px}.gpm-public-form,.nasa-gpm-form{grid-template-columns:repeat(2,minmax(0,1fr))}.nasa-gpm-metadata{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:700px){.gpm-public-section{padding:35px 18px}.gpm-public-heading{flex-direction:column}.gpm-public-form,.nasa-gpm-form{grid-template-columns:repeat(2,minmax(0,1fr));padding:13px}.nasa-gpm-workspace{padding:17px}.nasa-gpm-result-head{align-items:flex-start;flex-direction:column}.nasa-gpm-result-controls{grid-template-columns:1fr}.nasa-gpm-metadata{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+
+/* Farm registry onboarding: one guided registration + map boundary workflow. */
+.farm-registration-map{height:390px;width:100%;margin:14px 0 0;border:1px solid var(--line);background:#e9eee6;z-index:0}
+.farm-map-instructions{margin:8px 0 12px}
+.farm-registration-toolbar{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin:12px 0 20px}
+.farm-registration-toolbar button{border:1px solid var(--line);background:#fff;color:var(--green);padding:11px 13px;cursor:pointer;font:9px var(--font-dm-mono),monospace;letter-spacing:.06em}
+.farm-registration-toolbar button.primary{background:var(--green);border-color:var(--green);color:#fff}
+.farm-registration-toolbar button:disabled{opacity:.45;cursor:not-allowed}
+.farm-map-point-count{margin-left:auto;color:var(--muted);font:9px var(--font-dm-mono),monospace;letter-spacing:.06em}
+@media(max-width:760px){.farm-registration-map{height:320px}.farm-registration-toolbar{align-items:stretch}.farm-registration-toolbar button{flex:1 1 42%}.farm-map-point-count{width:100%;margin:4px 0 0;text-align:right}}
