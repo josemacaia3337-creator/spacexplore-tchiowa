@@ -59,13 +59,30 @@ export default async function DashboardPage({
   }
   if (!user) redirect(`/signup?next=${encodeURIComponent(returnPath)}`);
 
-  const [profileResult, membershipResult] = await Promise.all([
+  const queryResults = await Promise.all([
     supabase.from("profiles").select("display_name, avatar_path, preferences").eq("id", user.id).maybeSingle(),
     supabase.from("memberships")
       .select("organization_id, role, organizations(name,slug)")
       .eq("user_id", user.id)
       .eq("status", "active"),
-  ]);
+  ]).catch((caught: unknown) => {
+    logServerError("DASHBOARD_DATA_QUERIES_UNAVAILABLE", caught, { component: "dashboard" });
+    return null;
+  });
+  if (!queryResults) {
+    return (
+      <main className="auth-shell">
+        <section className="auth-card" role="alert">
+          <span className="eyebrow">DADOS TEMPORARIAMENTE INDISPONÍVEIS</span>
+          <h1>A área de trabalho está <em>a recuperar.</em></h1>
+          <p className="auth-copy">A sessão foi verificada, mas não foi possível carregar os dados da conta. Nenhuma informação privada foi exposta. Tente novamente dentro de instantes.</p>
+          <Link className="primary-button" href="/dashboard">TENTAR NOVAMENTE ↗</Link>
+          <Link className="auth-back" href="/">Voltar à plataforma pública</Link>
+        </section>
+      </main>
+    );
+  }
+  const [profileResult, membershipResult] = queryResults;
   if (profileResult.error) logServerError("DASHBOARD_PROFILE_QUERY_FAILED", profileResult.error, { route: "/dashboard" });
   if (membershipResult.error) logServerError("DASHBOARD_MEMBERSHIP_QUERY_FAILED", membershipResult.error, { route: "/dashboard" });
   const profile = profileResult.data;
@@ -73,11 +90,15 @@ export default async function DashboardPage({
 
   const organizationIds = memberships.map((membership) => membership.organization_id);
   const farmsResult = organizationIds.length
-    ? await supabase.from("farms").select("id, area_hectares").in("organization_id", organizationIds)
+    ? await supabase.from("farms").select("id, area_hectares").in("organization_id", organizationIds).catch((caught: unknown) => {
+        logServerError("DASHBOARD_FARMS_QUERY_UNAVAILABLE", caught, { component: "dashboard" });
+        return null;
+      })
     : null;
-  if (farmsResult?.error) logServerError("DASHBOARD_FARMS_QUERY_FAILED", farmsResult.error, { route: "/dashboard" });
+  if (farmsResult?.error) logServerError("DASHBOARD_FARMS_QUERY_FAILED", farmsResult.error, { component: "dashboard" });
   const farms = farmsResult?.data ?? [];
-  const dataUnavailable = Boolean(profileResult.error || membershipResult.error || farmsResult?.error);
+  const farmQueryFailed = organizationIds.length > 0 && farmsResult === null;
+  const dataUnavailable = Boolean(profileResult.error || membershipResult.error || farmsResult?.error || farmQueryFailed);
 
   const name = profile?.display_name || user.user_metadata?.display_name || user.email?.split("@")[0] || "utilizador";
   const totalArea = (farms ?? []).reduce((sum, farm) => sum + Number(farm.area_hectares ?? 0), 0);
