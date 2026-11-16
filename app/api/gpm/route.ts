@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { logServerError } from "@/lib/server-logger";
 
 const PMM_ENDPOINT = "https://pmmpublisher.pps.eosdis.nasa.gov/opensearch";
 const MAX_WINDOW_DAYS = 60;
@@ -33,10 +34,19 @@ function safePreviewUrl(value: string | undefined): string | null {
 }
 
 export async function GET(request: NextRequest) {
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) {
-    return NextResponse.json({ error: "Inicia sessão para consultar dados NASA GPM." }, { status: 401 });
+  try {
+    const supabase = await createClient();
+    const { data: { user }, error } = await supabase.auth.getUser();
+    if (error) {
+      logServerError("SUPABASE_AUTH_LOOKUP_FAILED", error, { route: "/api/gpm", provider: "supabase-auth" });
+      return NextResponse.json({ error: "O serviço de autenticação está temporariamente indisponível. Tente novamente." }, { status: 503 });
+    }
+    if (!user) {
+      return NextResponse.json({ error: "Inicia sessão para consultar dados NASA GPM." }, { status: 401 });
+    }
+  } catch (error) {
+    logServerError("SUPABASE_AUTH_UNAVAILABLE", error, { route: "/api/gpm", provider: "supabase-auth" });
+    return NextResponse.json({ error: "Não foi possível verificar a sessão neste momento. Tente novamente." }, { status: 503 });
   }
 
   const params = request.nextUrl.searchParams;
@@ -90,7 +100,7 @@ export async function GET(request: NextRequest) {
     });
   } catch (error) {
     const detail = error instanceof Error ? { name: error.name, message: error.message } : { message: String(error) };
-    console.error("[NASA_GPM_UPSTREAM_FETCH_FAILED]", { endpoint: PMM_ENDPOINT, detail });
+    logServerError("NASA_GPM_UPSTREAM_FETCH_FAILED", error, { route: "/api/gpm", endpoint: PMM_ENDPOINT, timeoutMs: 20000 });
     return NextResponse.json({
       error: "A ligação ao serviço NASA GPM falhou ou excedeu o tempo limite. Tente novamente.",
       diagnostic: "upstream_fetch_failed",
@@ -98,7 +108,7 @@ export async function GET(request: NextRequest) {
   }
 
   if (!response.ok) {
-    console.error("[NASA_GPM_UPSTREAM_HTTP_ERROR]", { status: response.status, statusText: response.statusText });
+    logServerError("NASA_GPM_UPSTREAM_HTTP_ERROR", new Error("NASA GPM returned a non-success status"), { route: "/api/gpm", upstreamStatus: response.status, statusText: response.statusText });
     return NextResponse.json({ error: `NASA GPM Publisher devolveu HTTP ${response.status}.` }, { status: 502 });
   }
 
@@ -107,7 +117,7 @@ export async function GET(request: NextRequest) {
     payload = await response.json() as PmmResponse;
   } catch (error) {
     const detail = error instanceof Error ? { name: error.name, message: error.message } : { message: String(error) };
-    console.error("[NASA_GPM_INVALID_UPSTREAM_JSON]", { contentType: response.headers.get("content-type"), detail });
+    logServerError("NASA_GPM_INVALID_UPSTREAM_JSON", error, { route: "/api/gpm", contentType: response.headers.get("content-type") });
     return NextResponse.json({
       error: "O serviço NASA GPM respondeu num formato inesperado. Tente novamente mais tarde.",
       diagnostic: "invalid_upstream_response",
@@ -149,7 +159,7 @@ export async function GET(request: NextRequest) {
     }, { headers: { "Cache-Control": "private, no-store" } });
   } catch (error) {
     const detail = error instanceof Error ? { name: error.name, message: error.message } : { message: String(error) };
-    console.error("[NASA_GPM_RESPONSE_PROCESSING_FAILED]", detail);
+    logServerError("NASA_GPM_RESPONSE_PROCESSING_FAILED", error, { route: "/api/gpm" });
     return NextResponse.json({ error: "Não foi possível processar a resposta do serviço NASA GPM." }, { status: 502 });
   }
 }
