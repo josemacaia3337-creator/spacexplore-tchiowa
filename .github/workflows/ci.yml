@@ -1,24 +1,71 @@
 name: CI
 
 on:
-  push:
-    branches: [principal]
   pull_request:
-    branches: [principal]
+    branches: [main]
+    types: [opened, synchronize, reopened, ready_for_review]
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: spacexplore-ci-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 
 jobs:
   validate:
+    name: TypeScript, lint and production build
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
-      - name: Checkout
+      - name: Checkout exact commit
         uses: actions/checkout@v4
-      - name: Setup Node.js
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+
+      - name: Setup Node.js 22
         uses: actions/setup-node@v4
         with:
           node-version: 22
+
       - name: Install dependencies
-        run: npm install
-      - name: Lint
+        run: npm install --no-audit --no-fund
+
+      - name: TypeScript validation
+        run: npx tsc --noEmit
+
+      - name: ESLint validation
         run: npm run lint
-      - name: Build
+
+      - name: Next.js production build
         run: npm run build
+        env:
+          NEXT_TELEMETRY_DISABLED: 1
+
+  auto-merge:
+    name: Merge validated pull request
+    needs: validate
+    if: >-
+      github.event_name == 'pull_request' &&
+      github.event.pull_request.draft == false &&
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      github.event.pull_request.base.ref == 'main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Merge only the exact commit that passed validation
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          VALIDATED_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+          CURRENT_SHA="$(gh pr view "$PR_NUMBER" --json headRefOid --jq '.headRefOid')"
+          if [ "$CURRENT_SHA" != "$VALIDATED_SHA" ]; then
+            echo "::error::PR head changed after validation. Refusing to merge."
+            exit 1
+          fi
+          gh pr merge "$PR_NUMBER" --squash --delete-branch
