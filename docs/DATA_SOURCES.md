@@ -20,9 +20,21 @@ This document tracks candidate datasets. A dataset is not considered integrated 
 These are candidates only; do not present them as integrated until implemented and validated.
 
 - **SMAP:** soil-moisture observations/products. Product selection, spatial resolution, temporal coverage, and access method must be evaluated.
-- **GPM:** satellite precipitation products. Select an appropriate product and document its resolution and limitations.
+- **GPM / IMERG:** NASA PMM Publisher `precip_1d` (IMERG Late Run, 1-day accumulation). The API documents a rolling 60-day availability window and regional preview products. The current app integration displays the official NASA regional preview and metadata; it does not yet sample the underlying GeoTIFF pixel at the exact coordinate. Treat the preview as regional context, not a point measurement.
 - **ECOSTRESS:** evapotranspiration and thermal information. Check product availability, coverage, and processing requirements.
 - **Harmonized Landsat and Sentinel-2 (HLS):** vegetation and land-surface observations. Requires geospatial processing and careful interpretation.
+
+## NASA GPM / IMERG — Phase 2 integration
+
+- Provider: NASA Global Precipitation Measurement (GPM) mission / Precipitation Processing System (PPS).
+- API: https://pmmpublisher.pps.eosdis.nasa.gov/opensearch
+- NASA API documentation: https://gpm.nasa.gov/precip-apps/doc
+- Product: `precip_1d` — IMERG Late Run 1-day precipitation accumulation.
+- Unit: millimetres (mm) accumulated over one day.
+- Spatial grid: 0.1° (approximately 10 km); PMM Publisher returns regional preview products for the region containing the requested latitude/longitude.
+- Temporal availability: rolling 60-day window in PMM Publisher.
+- Important limitation: current UI presents a regional PNG preview and source metadata. It does not yet extract the numerical raster cell at the exact coordinate. Do not label the regional preview as a point-level value or infer rainfall amount from image colour.
+- Late Run is not instantaneous; the newest daily observation may not yet be available. Empty dates must be reported as unavailable, never replaced with sample data.
 
 ## Provenance requirements
 
