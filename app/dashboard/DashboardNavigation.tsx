@@ -54,11 +54,14 @@ export default function DashboardNavigation({ displayName, avatarPath }: Props) 
   }, [avatarPath, supabase]);
 
   useEffect(() => {
+    if (window.location.hash === "#account-settings") setSettingsOpen(true);
+    const openSettingsFromHash = () => { if (window.location.hash === "#account-settings") setSettingsOpen(true); };
+    window.addEventListener("hashchange", openSettingsFromHash);
     const closeOnEscape = (event: KeyboardEvent) => {
       if (event.key === "Escape") { setMobileOpen(false); setSettingsOpen(false); }
     };
     window.addEventListener("keydown", closeOnEscape);
-    return () => window.removeEventListener("keydown", closeOnEscape);
+    return () => { window.removeEventListener("keydown", closeOnEscape); window.removeEventListener("hashchange", openSettingsFromHash); };
   }, []);
 
   useEffect(() => {
