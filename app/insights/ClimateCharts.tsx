@@ -67,7 +67,7 @@ function TrendChart({ title, unit, values, description }: {
 export default function ClimateCharts({ parameters, fillValue, periodLabel }: Props) {
   const { locale, t } = useLocale();
   const months = MONTHS[locale];
-  const temperature = useMemo(() => monthlySeries(parameters.T2M, fillValue, "mean", months), [parameters, fillValue]);
+  const temperature = useMemo(() => monthlySeries(parameters.T2M, fillValue, "mean", months), [parameters, fillValue, months]);
   const precipitation = useMemo(() => monthlySeries(parameters.PRECTOTCORR, fillValue, "sum", months), [parameters, fillValue]);
   return <div className="climate-charts">
     <div className="section-heading"><div><span className="eyebrow">03 / {t("analytics.monthly").toUpperCase()}</span><h2>{t("analytics.monthly")}</h2></div><span className="status-tag">{periodLabel}</span></div>
