@@ -32,6 +32,7 @@ function monthlySeries(series: Record<string, number> | undefined, fillValue: nu
 function TrendChart({ title, unit, values, description }: {
   title: string; unit: string; values: MonthValue[]; description: string;
 }) {
+  const { t } = useLocale();
   const available = values.map((item) => item.value).filter((value): value is number => value !== null);
   if (!available.length) return <article className="climate-chart"><h3>{title}</h3><p>{t("analytics.noChart")}</p></article>;
   const min = Math.min(0, ...available);
@@ -54,16 +55,18 @@ function TrendChart({ title, unit, values, description }: {
       <path d={path} className="climate-trend-line" />
       {points.map((point) => point.y === null ? null : <g key={point.month}>
         <circle cx={point.x} cy={point.y} r="4" className="climate-trend-point" />
-        <title>{point.month}: {point.value?.toFixed(1)} {unit}; {point.days} {t("analytics.days")} validos</title>
+        <title>{point.month}: {point.value?.toFixed(1)} {unit}; {point.days} {t("analytics.days")}</title>
       </g>)}
       {points.map((point) => <text key={point.month} x={point.x} y="178" textAnchor="middle" className="climate-axis-label">{point.month}</text>)}
     </svg>
     <p>{description}</p>
-    <div className="climate-month-values">{values.map((item) => <span key={item.month}><b>{item.month}</b>{item.value === null ? "—" : item.value.toFixed(1)}<small>{item.days} dias</small></span>)}</div>
+    <div className="climate-month-values">{values.map((item) => <span key={item.month}><b>{item.month}</b>{item.value === null ? "—" : item.value.toFixed(1)}<small>{item.days} {t("analytics.days")}</small></span>)}</div>
   </article>;
 }
 
-export default function ClimateCharts({ parameters, fillValue, periodLabel }: Props) {\n  const { locale, t } = useLocale();\n  const months = MONTHS[locale];
+export default function ClimateCharts({ parameters, fillValue, periodLabel }: Props) {
+  const { locale, t } = useLocale();
+  const months = MONTHS[locale];
   const temperature = useMemo(() => monthlySeries(parameters.T2M, fillValue, "mean", months), [parameters, fillValue]);
   const precipitation = useMemo(() => monthlySeries(parameters.PRECTOTCORR, fillValue, "sum", months), [parameters, fillValue]);
   return <div className="climate-charts">
