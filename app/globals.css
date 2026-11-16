@@ -1075,3 +1075,38 @@ html,body{background:#030712;color:#f8fafc}
  .climate-metric>small,.insight-metric-grid .metric>small{font-size:11px}
  .climate-provenance{font-size:11px;overflow-wrap:anywhere}
 }
+
+
+/* Phase 1 — NASA POWER workspace inside the authenticated dashboard */
+.nasa-power-workspace{padding:clamp(20px,3vw,32px);background:linear-gradient(145deg,#0c1928,#08111d);border:1px solid var(--sx-hairline);border-radius:14px}
+.nasa-power-workspace .dashboard-section-heading{align-items:flex-start}
+.nasa-power-workspace .dashboard-section-heading h2{margin-top:7px;color:#f8fafc;font-size:clamp(26px,3vw,36px)}
+.nasa-power-workspace .status-tag{white-space:nowrap;color:#a8d8ff;border-color:#29415d}
+.nasa-workspace-copy{max-width:760px;margin:0 0 22px;color:#a9bacd;font-size:13px;line-height:1.75}
+.nasa-farm-context{margin:0 0 16px;color:#b8c9da;font-size:12px;line-height:1.6}
+.nasa-farm-context strong{color:#fff}
+.nasa-query-form{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;padding:18px;background:#0a1421;border:1px solid #29415d;border-radius:10px}
+.nasa-query-form label{display:flex;flex-direction:column;gap:8px;min-width:0;color:#9cb3ca;font:9px var(--font-dm-mono),monospace;letter-spacing:.1em}
+.nasa-query-form input{width:100%;min-width:0;min-height:43px;padding:10px 11px;background:#101e2e;border:1px solid #29415d;border-radius:6px;color:#f8fafc;color-scheme:dark;font:13px var(--font-dm-sans),sans-serif;outline:none}
+.nasa-query-form input:focus{border-color:#4b9be3;box-shadow:0 0 0 2px #1677d222}
+.nasa-query-form button{grid-column:1/-1;min-height:46px;margin-top:4px;padding:12px 16px;border:1px solid #367fe0;border-radius:7px;background:#0b3d91;color:#fff;cursor:pointer;font:600 9px var(--font-dm-mono),monospace;letter-spacing:.1em}
+.nasa-query-form button:hover{background:#1255b5}
+.nasa-query-form button:disabled{opacity:.6;cursor:wait}
+.nasa-query-status,.nasa-query-error{margin:16px 0 0;padding:12px 14px;border-radius:7px;font-size:12px;line-height:1.6}
+.nasa-query-status{background:#0d2237;color:#b7dfff;border:1px solid #244b70}
+.nasa-query-error{background:#321c22;color:#ffc5bb;border:1px solid #75433f}
+.nasa-results{margin-top:24px}
+.nasa-results-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:13px}
+.nasa-results-heading h3{margin:0;color:#f8fafc;font-size:20px}
+.nasa-results-heading span{color:#8ba5bf;font:8px var(--font-dm-mono),monospace;letter-spacing:.1em}
+.nasa-metric-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:9px}
+.nasa-metric{display:flex;flex-direction:column;justify-content:space-between;gap:12px;min-width:0;min-height:126px;padding:14px;background:#0b1420;border:1px solid #29415d;border-radius:8px}
+.nasa-metric>span{color:#cbd5e1;font-size:11px;line-height:1.5}
+.nasa-metric strong{color:#f8fafc;font-size:clamp(19px,2.3vw,27px);font-weight:600;letter-spacing:-.04em;overflow-wrap:anywhere}
+.nasa-metric strong small{color:#94a3b8;font-size:10px;font-weight:400;letter-spacing:0}
+.nasa-metric>small{color:#829ab2;font-size:9px;line-height:1.5}
+.nasa-provenance{margin:13px 0 0;color:#94a3b8;font-size:11px;line-height:1.7;overflow-wrap:anywhere}
+.nasa-science-note{margin:18px 0 0;padding:13px 15px;background:#0b1725;border-left:3px solid #367fe0;color:#9eb0c4;font-size:11px;line-height:1.7}
+.climate-access-note{margin:16px 0 0;padding:13px 15px;background:rgba(15,35,58,.7);border-left:3px solid #2994ee;color:#cbd5e1;font-size:12px;line-height:1.7}
+@media(max-width:1050px){.nasa-metric-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:700px){.nasa-power-workspace{padding:17px}.nasa-query-form{grid-template-columns:repeat(2,minmax(0,1fr));padding:13px}.nasa-metric-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.nasa-metric:last-child{grid-column:1/-1}.nasa-results-heading{align-items:flex-start;flex-direction:column}.nasa-results-heading span{line-height:1.5}}

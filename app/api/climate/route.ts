@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { createClient } from "@/lib/supabase/server";
 
 const ALLOWED_PARAMETERS = ["T2M", "T2M_MAX", "T2M_MIN", "PRECTOTCORR", "RH2M"] as const;
 const DEFAULT_PARAMETERS = ALLOWED_PARAMETERS.join(",");
@@ -15,6 +16,12 @@ function validDate(value: string): boolean {
 }
 
 export async function GET(request: NextRequest) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) {
+    return NextResponse.json({ error: "Inicia sessão para consultar dados NASA POWER." }, { status: 401 });
+  }
+
   const { searchParams } = new URL(request.url);
   const latitude = Number(searchParams.get("latitude") ?? "-5.55");
   const longitude = Number(searchParams.get("longitude") ?? "12.19");
