@@ -99,7 +99,6 @@ export async function GET(request: NextRequest) {
       signal: AbortSignal.timeout(20000),
     });
   } catch (error) {
-    const detail = error instanceof Error ? { name: error.name, message: error.message } : { message: String(error) };
     logServerError("NASA_GPM_UPSTREAM_FETCH_FAILED", error, { route: "/api/gpm", endpoint: PMM_ENDPOINT, timeoutMs: 20000 });
     return NextResponse.json({
       error: "A ligação ao serviço NASA GPM falhou ou excedeu o tempo limite. Tente novamente.",
