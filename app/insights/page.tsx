@@ -27,7 +27,7 @@ export default function InsightsPage() {
   const [loading,setLoading]=useState(false);
   const [loaded,setLoaded]=useState(false);
   const [error,setError]=useState("");
-  const [range,setRange]=useState("90");
+  const [range,setRange]=useState("custom");
   const [periodStart,setPeriodStart]=useState("2025-10-03");
   const [periodEnd,setPeriodEnd]=useState("2025-12-31");
 
