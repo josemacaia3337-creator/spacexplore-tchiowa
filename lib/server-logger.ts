@@ -1,5 +1,3 @@
-import "server-only";
-
 type LogContext = Record<string, string | number | boolean | null>;
 
 export function logServerError(event: string, error: unknown, context: LogContext = {}) {
