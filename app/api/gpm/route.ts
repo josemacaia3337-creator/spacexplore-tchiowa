@@ -115,7 +115,6 @@ export async function GET(request: NextRequest) {
   try {
     payload = await response.json() as PmmResponse;
   } catch (error) {
-    const detail = error instanceof Error ? { name: error.name, message: error.message } : { message: String(error) };
     logServerError("NASA_GPM_INVALID_UPSTREAM_JSON", error, { route: "/api/gpm", contentType: response.headers.get("content-type") });
     return NextResponse.json({
       error: "O serviço NASA GPM respondeu num formato inesperado. Tente novamente mais tarde.",
@@ -157,7 +156,6 @@ export async function GET(request: NextRequest) {
       items,
     }, { headers: { "Cache-Control": "private, no-store" } });
   } catch (error) {
-    const detail = error instanceof Error ? { name: error.name, message: error.message } : { message: String(error) };
     logServerError("NASA_GPM_RESPONSE_PROCESSING_FAILED", error, { route: "/api/gpm" });
     return NextResponse.json({ error: "Não foi possível processar a resposta do serviço NASA GPM." }, { status: 502 });
   }
