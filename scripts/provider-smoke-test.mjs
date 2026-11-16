@@ -3,7 +3,7 @@ const timeoutMs = 20000;
 async function checkProvider(name, url, validate) {
   try {
     const response = await fetch(url, {
-      headers: { Accept: "application/json" },
+      headers: { Accept: "application/activity+json, application/json" },
       signal: AbortSignal.timeout(timeoutMs),
       cache: "no-store",
     });
