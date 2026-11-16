@@ -75,7 +75,7 @@ export default function DashboardNavigation({ displayName, avatarPath }: Props) 
     };
     void loadPreferences();
     return () => { active = false; };
-  }, [supabase]);
+  }, [supabase, setLocale]);
 
   const closeDrawer = () => setMobileOpen(false);
   const saveProfile = async (event: FormEvent<HTMLFormElement>) => {
@@ -148,7 +148,7 @@ export default function DashboardNavigation({ displayName, avatarPath }: Props) 
         <button className="mobile-menu-trigger" type="button" aria-label={mobileOpen ? "Fechar menu" : "Abrir menu"} aria-expanded={mobileOpen} onClick={() => setMobileOpen(!mobileOpen)}><Icon name={mobileOpen ? "close" : "menu"} /></button>
         <Link href="/dashboard" className="dashboard-header-brand"><img src="/spacexplore-brand.svg" alt="SpaceXplore Tchiowa" /></Link>
         <span className="account-chip"><i />{t("nav.active")}</span>
-        <button className="dashboard-header-settings" type="button" aria-label="Abrir perfil e configurações" onClick={() => setSettingsOpen(true)}><Icon name="settings" /></button>
+        <button id="account-settings" className="dashboard-header-settings" type="button" aria-label="Abrir perfil e configurações" onClick={() => setSettingsOpen(true)}><Icon name="settings" /></button>
       </header>
 
       {settingsOpen && (
