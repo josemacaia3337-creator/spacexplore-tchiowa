@@ -5,17 +5,18 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { signOut } from "@/app/auth/actions";
 import { createClient } from "@/lib/supabase/client";
+import { useLocale, type Locale } from "@/lib/i18n/LocaleProvider";
 
 type Props = { displayName: string; avatarPath: string | null };
 
-const platformLinks = [
-  { href: "/dashboard#nasa-power", label: "NASA POWER", code: "PW" },
-  { href: "/dashboard#nasa-gpm", label: "NASA GPM", code: "GP" },
-  { href: "/monitoring", label: "Monitorização", code: "MO" },
-  { href: "/farms", label: "Explorações", code: "EX" },
-  { href: "/crops", label: "Culturas", code: "CU" },
-  { href: "/rotation", label: "Rotação", code: "RO" },
-  { href: "/insights", label: "Análises", code: "AN" },
+const platformLinkDefinitions = [
+  { href: "/dashboard#nasa-power", labelKey: "nav.power", code: "PW" },
+  { href: "/dashboard#nasa-gpm", labelKey: "nav.gpm", code: "GP" },
+  { href: "/monitoring", labelKey: "nav.monitoring", code: "MO" },
+  { href: "/farms", labelKey: "nav.farms", code: "EX" },
+  { href: "/crops", labelKey: "nav.crops", code: "CU" },
+  { href: "/rotation", labelKey: "nav.rotation", code: "RO" },
+  { href: "/insights", labelKey: "nav.insights", code: "AN" },
 ];
 
 function Icon({ name }: { name: "menu" | "close" | "settings" | "collapse" }) {
@@ -26,6 +27,8 @@ function Icon({ name }: { name: "menu" | "close" | "settings" | "collapse" }) {
 }
 
 export default function DashboardNavigation({ displayName, avatarPath }: Props) {
+  const { locale, setLocale, t } = useLocale();
+  const platformLinks = platformLinkDefinitions.map((item) => ({ ...item, label: t(item.labelKey) }));
   const pathname = usePathname();
   const router = useRouter();
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -65,9 +68,10 @@ export default function DashboardNavigation({ displayName, avatarPath }: Props) 
       if (!user) return;
       const { data } = await supabase.from("profiles").select("preferences").eq("id", user.id).maybeSingle();
       if (!active) return;
-      const preferences = (data?.preferences ?? {}) as { compact_dashboard?: boolean; show_field_hints?: boolean };
+      const preferences = (data?.preferences ?? {}) as { compact_dashboard?: boolean; show_field_hints?: boolean; language?: Locale };
       setCompact(Boolean(preferences.compact_dashboard));
       setFieldHints(preferences.show_field_hints !== false);
+      if (preferences.language === "pt" || preferences.language === "en" || preferences.language === "fr" || preferences.language === "es") setLocale(preferences.language);
     };
     void loadPreferences();
     return () => { active = false; };
@@ -79,12 +83,12 @@ export default function DashboardNavigation({ displayName, avatarPath }: Props) 
     setSaving(true); setMessage(""); setError("");
     try {
       const { data: { user }, error: userError } = await supabase.auth.getUser();
-      if (userError || !user) throw new Error("A sessão expirou. Inicie sessão novamente.");
+      if (userError || !user) throw new Error(t("settings.sessionExpired"));
       let nextAvatarPath = avatarPath;
       if (file) {
         const allowed = ["image/jpeg", "image/png", "image/webp"];
-        if (!allowed.includes(file.type)) throw new Error("Utilize uma imagem JPG, PNG ou WebP.");
-        if (file.size > 2 * 1024 * 1024) throw new Error("A imagem deve ter no máximo 2 MB.");
+        if (!allowed.includes(file.type)) throw new Error(t("settings.imageType"));
+        if (file.size > 2 * 1024 * 1024) throw new Error(t("settings.imageSize"));
         const extension = file.type === "image/png" ? "png" : file.type === "image/webp" ? "webp" : "jpg";
         nextAvatarPath = `${user.id}/avatar.${extension}`;
         const { error: uploadError } = await supabase.storage.from("profile-avatars").upload(nextAvatarPath, file, { upsert: true, contentType: file.type, cacheControl: "3600" });
@@ -94,15 +98,15 @@ export default function DashboardNavigation({ displayName, avatarPath }: Props) 
         id: user.id,
         display_name: name.trim(),
         avatar_path: nextAvatarPath,
-        preferences: { compact_dashboard: compact, show_field_hints: fieldHints },
+        preferences: { compact_dashboard: compact, show_field_hints: fieldHints, language: locale },
         updated_at: new Date().toISOString(),
       }, { onConflict: "id" });
       if (updateError) throw updateError;
       setAvatar(nextAvatarPath ? `${supabase.storage.from("profile-avatars").getPublicUrl(nextAvatarPath).data.publicUrl}?v=${Date.now()}` : null);
-      setFile(null); setMessage("Perfil e preferências guardados.");
+      setFile(null); setMessage(t("settings.saved"));
       router.refresh();
     } catch (caught) {
-      setError(caught instanceof Error ? caught.message : "Não foi possível guardar as alterações.");
+      setError(caught instanceof Error ? caught.message : t("settings.saveError"));
     } finally {
       setSaving(false);
     }
@@ -118,53 +122,59 @@ export default function DashboardNavigation({ displayName, avatarPath }: Props) 
           <button className="sidebar-collapse-button" type="button" aria-label={collapsed ? "Expandir menu" : "Recolher menu"} onClick={() => setCollapsed(!collapsed)}><Icon name="collapse" /></button>
           <button className="mobile-drawer-close" type="button" aria-label="Fechar menu" onClick={closeDrawer}><Icon name="close" /></button>
         </div>
-        <div className="sidebar-caption">ESPAÇO DE TRABALHO</div>
+        <div className="sidebar-caption">{t("nav.workspace")}</div>
         <nav className="dashboard-nav" aria-label="Navegação principal">
-          <span className="nav-group-label">PLATAFORMA / WORKSPACE</span>
+          <span className="nav-group-label">{t("nav.platform")}</span>
           {platformLinks.map((item) => (
             <Link href={item.href} key={item.href} onClick={closeDrawer} aria-current={pathname === item.href.split("#")[0] && item.href !== "/dashboard#nasa-power" && item.href !== "/dashboard#nasa-gpm" ? "page" : undefined}>
               <span className="nav-code">{item.code}</span><span className="nav-link-label">{item.label}</span>
             </Link>
           ))}
-          <span className="nav-group-label nav-group-spaced">CONTA & SISTEMA</span>
-          <Link href="/dashboard" onClick={closeDrawer} aria-current={pathname === "/dashboard" ? "page" : undefined}><span className="nav-code">OV</span><span className="nav-link-label">Visão geral</span></Link>
-          <button className="dashboard-settings-link" type="button" onClick={() => { setSettingsOpen(true); closeDrawer(); }}><span className="nav-code"><Icon name="settings" /></span><span className="nav-link-label">Configurações</span></button>
+          <span className="nav-group-label nav-group-spaced">{t("nav.account")}</span>
+          <Link href="/dashboard" onClick={closeDrawer} aria-current={pathname === "/dashboard" ? "page" : undefined}><span className="nav-code">OV</span><span className="nav-link-label">{t("nav.overview")}</span></Link>
+          <button className="dashboard-settings-link" type="button" onClick={() => { setSettingsOpen(true); closeDrawer(); }}><span className="nav-code"><Icon name="settings" /></span><span className="nav-link-label">{t("nav.settings")}</span></button>
         </nav>
         <div className="sidebar-bottom">
           <div className="sidebar-user">
             {avatar ? <img src={avatar} alt="" /> : <span>{displayName.trim().slice(0,1).toUpperCase()}</span>}
-            <div><strong>{displayName}</strong><small>Conta pessoal</small></div>
+            <div><strong>{displayName}</strong><small>{t("nav.personal")}</small></div>
           </div>
           <span className="sidebar-caption">NASA SPACE APPS · 2026</span>
-          <form action={signOut}><button className="sidebar-signout"><span className="nav-code">↗</span><span className="nav-link-label">TERMINAR SESSÃO</span></button></form>
+          <form action={signOut}><button className="sidebar-signout"><span className="nav-code">↗</span><span className="nav-link-label">{t("nav.signout")}</span></button></form>
         </div>
       </aside>
       {mobileOpen && <button className="dashboard-drawer-backdrop" aria-label="Fechar menu" onClick={closeDrawer} />}
       <header className="dashboard-topline">
         <button className="mobile-menu-trigger" type="button" aria-label={mobileOpen ? "Fechar menu" : "Abrir menu"} aria-expanded={mobileOpen} onClick={() => setMobileOpen(!mobileOpen)}><Icon name={mobileOpen ? "close" : "menu"} /></button>
         <Link href="/dashboard" className="dashboard-header-brand"><img src="/spacexplore-brand.svg" alt="SpaceXplore Tchiowa" /></Link>
-        <span className="account-chip"><i /> CONTA ATIVA</span>
+        <span className="account-chip"><i />{t("nav.active")}</span>
         <button className="dashboard-header-settings" type="button" aria-label="Abrir perfil e configurações" onClick={() => setSettingsOpen(true)}><Icon name="settings" /></button>
       </header>
 
       {settingsOpen && (
         <div className="profile-modal-backdrop" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setSettingsOpen(false); }}>
           <section className="profile-modal" role="dialog" aria-modal="true" aria-labelledby="profile-modal-title">
-            <div className="profile-modal-heading"><div><span className="eyebrow">CONTA & SISTEMA</span><h2 id="profile-modal-title">Perfil e preferências</h2></div><button type="button" className="profile-modal-close" aria-label="Fechar" onClick={() => setSettingsOpen(false)}><Icon name="close" /></button></div>
+            <div className="profile-modal-heading"><div><span className="eyebrow">{t("nav.account")}</span><h2 id="profile-modal-title">Perfil e preferências</h2></div><button type="button" className="profile-modal-close" aria-label="Fechar" onClick={() => setSettingsOpen(false)}><Icon name="close" /></button></div>
             <form onSubmit={saveProfile} className="profile-settings-form">
               <div className="profile-avatar-editor">
                 <div className="profile-avatar-preview">{previewUrl ? <img src={previewUrl} alt="Pré-visualização do avatar" /> : avatar ? <img src={avatar} alt="Avatar atual" /> : <span>{name.trim().slice(0,1).toUpperCase() || "U"}</span>}</div>
-                <label className="avatar-upload-button">ALTERAR FOTOGRAFIA<input type="file" accept="image/png,image/jpeg,image/webp" onChange={(event) => setFile(event.target.files?.[0] ?? null)} /></label>
-                <small>JPG, PNG ou WebP · máximo 2 MB</small>
+                <label className="avatar-upload-button">{t("settings.photo")}<input type="file" accept="image/png,image/jpeg,image/webp" onChange={(event) => setFile(event.target.files?.[0] ?? null)} /></label>
+                <small>{t("settings.photoHelp")}</small>
               </div>
-              <label className="profile-field">NOME COMPLETO<input value={name} onChange={(event) => setName(event.target.value)} minLength={2} maxLength={120} required /></label>
-              <div className="profile-preferences"><span className="eyebrow">PREFERÊNCIAS DA CONTA</span>
-                <label><span><strong>Interface compacta</strong><small>Reduz espaços entre cartões no painel.</small></span><input type="checkbox" checked={compact} onChange={(event) => setCompact(event.target.checked)} /></label>
-                <label><span><strong>Ajuda contextual</strong><small>Mostrar explicações junto das ferramentas agrícolas.</small></span><input type="checkbox" checked={fieldHints} onChange={(event) => setFieldHints(event.target.checked)} /></label>
+              <label className="profile-field">{t("settings.fullName")}<input value={name} onChange={(event) => setName(event.target.value)} minLength={2} maxLength={120} required /></label>
+              <label className="profile-field">{t("settings.language")}
+                <select value={locale} onChange={(event) => setLocale(event.target.value as Locale)}>
+                  <option value="pt">Português</option><option value="en">English</option><option value="fr">Français</option><option value="es">Español</option>
+                </select>
+                <small>{t("settings.languageHelp")}</small>
+              </label>
+              <div className="profile-preferences"><span className="eyebrow">{t("settings.preferences")}</span>
+                <label><span><strong>{t("settings.compact")}</strong><small>{t("settings.compactHelp")}</small></span><input type="checkbox" checked={compact} onChange={(event) => setCompact(event.target.checked)} /></label>
+                <label><span><strong>{t("settings.hints")}</strong><small>{t("settings.hintsHelp")}</small></span><input type="checkbox" checked={fieldHints} onChange={(event) => setFieldHints(event.target.checked)} /></label>
               </div>
               {error && <p className="auth-error" role="alert">{error}</p>}
               {message && <p className="form-message" role="status">{message}</p>}
-              <div className="profile-modal-actions"><button type="button" className="profile-cancel" onClick={() => setSettingsOpen(false)}>CANCELAR</button><button className="profile-save" type="submit" disabled={saving}>{saving ? "A GUARDAR…" : "GUARDAR ALTERAÇÕES"}</button></div>
+              <div className="profile-modal-actions"><button type="button" className="profile-cancel" onClick={() => setSettingsOpen(false)}>{t("settings.cancel")}</button><button className="profile-save" type="submit" disabled={saving}>{saving ? t("settings.saving") : t("settings.save")}</button></div>
             </form>
           </section>
         </div>
