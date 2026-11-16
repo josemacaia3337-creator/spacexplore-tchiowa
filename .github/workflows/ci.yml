@@ -6,6 +6,9 @@ on:
     types: [opened, synchronize, reopened, ready_for_review]
   push:
     branches: [main]
+  schedule:
+    - cron: "15 6 * * *"
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -44,6 +47,27 @@ jobs:
         run: npm run build
         env:
           NEXT_TELEMETRY_DISABLED: 1
+
+
+  provider-health:
+    name: NASA provider smoke checks (non-blocking)
+    needs: validate
+    continue-on-error: true
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout validated revision
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+
+      - name: Setup Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Check NASA POWER and GPM endpoints
+        run: node scripts/provider-smoke-test.mjs
 
   auto-merge:
     name: Merge validated pull request

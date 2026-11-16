@@ -5,6 +5,8 @@ import { createOrganization } from "@/app/organizations/actions";
 import NasaPowerWorkspace from "@/app/dashboard/NasaPowerWorkspace";
 import NasaGpmWorkspace from "@/app/dashboard/NasaGpmWorkspace";
 import DashboardNavigation from "@/app/dashboard/DashboardNavigation";
+import type { User } from "@supabase/supabase-js";
+import { logServerError } from "@/lib/server-logger";
 
 export default async function DashboardPage({
   searchParams,
@@ -21,22 +23,86 @@ export default async function DashboardPage({
   }
   const returnQuery = returnParams.toString();
   const returnPath = returnQuery ? `/dashboard?${returnQuery}` : "/dashboard";
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  let supabase: Awaited<ReturnType<typeof createClient>>;
+  let user: User | null = null;
+  try {
+    supabase = await createClient();
+    const authResult = await supabase.auth.getUser();
+    if (authResult.error) {
+      logServerError("DASHBOARD_AUTH_LOOKUP_FAILED", authResult.error, { route: "/dashboard" });
+      return (
+        <main className="auth-shell">
+          <section className="auth-card" role="alert">
+            <span className="eyebrow">ACESSO TEMPORARIAMENTE INDISPONÍVEL</span>
+            <h1>Estamos a verificar <em>a sua sessão.</em></h1>
+            <p className="auth-copy">O serviço de autenticação não respondeu como esperado. Os seus dados permanecem protegidos. Aguarde um momento e tente novamente.</p>
+            <Link className="primary-button" href="/dashboard">TENTAR NOVAMENTE ↗</Link>
+            <Link className="auth-back" href="/">Voltar à plataforma pública</Link>
+          </section>
+        </main>
+      );
+    }
+    user = authResult.data.user;
+  } catch (caught) {
+    logServerError("DASHBOARD_AUTH_UNAVAILABLE", caught, { route: "/dashboard" });
+    return (
+      <main className="auth-shell">
+        <section className="auth-card" role="alert">
+          <span className="eyebrow">ACESSO TEMPORARIAMENTE INDISPONÍVEL</span>
+          <h1>Estamos a verificar <em>a sua sessão.</em></h1>
+          <p className="auth-copy">Não foi possível contactar o serviço de autenticação. A plataforma pública continua disponível. Tente novamente dentro de instantes.</p>
+          <Link className="primary-button" href="/dashboard">TENTAR NOVAMENTE ↗</Link>
+          <Link className="auth-back" href="/">Voltar à plataforma pública</Link>
+        </section>
+      </main>
+    );
+  }
   if (!user) redirect(`/signup?next=${encodeURIComponent(returnPath)}`);
 
-  const [{ data: profile }, { data: memberships }] = await Promise.all([
+  const queryResults = await Promise.all([
     supabase.from("profiles").select("display_name, avatar_path, preferences").eq("id", user.id).maybeSingle(),
     supabase.from("memberships")
       .select("organization_id, role, organizations(name,slug)")
       .eq("user_id", user.id)
       .eq("status", "active"),
-  ]);
+  ]).catch((caught: unknown) => {
+    logServerError("DASHBOARD_DATA_QUERIES_UNAVAILABLE", caught, { component: "dashboard" });
+    return null;
+  });
+  if (!queryResults) {
+    return (
+      <main className="auth-shell">
+        <section className="auth-card" role="alert">
+          <span className="eyebrow">DADOS TEMPORARIAMENTE INDISPONÍVEIS</span>
+          <h1>A área de trabalho está <em>a recuperar.</em></h1>
+          <p className="auth-copy">A sessão foi verificada, mas não foi possível carregar os dados da conta. Nenhuma informação privada foi exposta. Tente novamente dentro de instantes.</p>
+          <Link className="primary-button" href="/dashboard">TENTAR NOVAMENTE ↗</Link>
+          <Link className="auth-back" href="/">Voltar à plataforma pública</Link>
+        </section>
+      </main>
+    );
+  }
+  const [profileResult, membershipResult] = queryResults;
+  if (profileResult.error) logServerError("DASHBOARD_PROFILE_QUERY_FAILED", profileResult.error, { route: "/dashboard" });
+  if (membershipResult.error) logServerError("DASHBOARD_MEMBERSHIP_QUERY_FAILED", membershipResult.error, { route: "/dashboard" });
+  const profile = profileResult.data;
+  const memberships = membershipResult.data ?? [];
 
-  const organizationIds = (memberships ?? []).map((membership) => membership.organization_id);
-  const { data: farms } = organizationIds.length
-    ? await supabase.from("farms").select("id, area_hectares").in("organization_id", organizationIds)
-    : { data: [] as { id: string; area_hectares: number | null }[] };
+  const organizationIds = memberships.map((membership) => membership.organization_id);
+  const farmsResult = organizationIds.length
+    ? await (async () => {
+        try {
+          return await supabase.from("farms").select("id, area_hectares").in("organization_id", organizationIds);
+        } catch (caught) {
+          logServerError("DASHBOARD_FARMS_QUERY_UNAVAILABLE", caught, { component: "dashboard" });
+          return null;
+        }
+      })()
+    : null;
+  if (farmsResult?.error) logServerError("DASHBOARD_FARMS_QUERY_FAILED", farmsResult.error, { component: "dashboard" });
+  const farms: { id: string; area_hectares: number | null }[] = (farmsResult?.data ?? []) as { id: string; area_hectares: number | null }[];
+  const farmQueryFailed = organizationIds.length > 0 && farmsResult === null;
+  const dataUnavailable = Boolean(profileResult.error || membershipResult.error || farmsResult?.error || farmQueryFailed);
 
   const name = profile?.display_name || user.user_metadata?.display_name || user.email?.split("@")[0] || "utilizador";
   const totalArea = (farms ?? []).reduce((sum, farm) => sum + Number(farm.area_hectares ?? 0), 0);
@@ -59,6 +125,7 @@ export default async function DashboardPage({
 
         {created && <p className="form-message" role="status">Organização criada com sucesso.</p>}
         {error && <p className="auth-error" role="alert">{error}</p>}
+        {dataUnavailable && <p className="auth-error" role="status">Alguns dados da conta não estão disponíveis neste momento. A área de trabalho continua acessível; tente atualizar a página mais tarde.</p>}
 
         <section className="dashboard-metrics" aria-label="Indicadores da conta">
           {metrics.map((metric) => (
