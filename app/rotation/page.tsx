@@ -41,7 +41,7 @@ export default function RotationPage() {
     <main className="shell">
       <header className="topbar">
         <Link className="brand" href="/"><span className="brand-mark">S</span><span>SPACEXPLORE <b>TCHIOWA</b></span></Link>
-        <nav className="top-nav"><Link href="/farms">GESTÃO DE EXPLORAÇÕES ↗</Link><Link href="/crops">INTELIGÊNCIA DE CULTURAS ↗</Link></nav>
+        <nav className="top-nav"><Link href="/farms">GESTÃO DE EXPLORAÇÕES ↗</Link><Link href="/crops">INTELIGÊNCIA DE CULTURAS ↗</Link></nav><Link className="analytics-settings-link" href="/dashboard#account-settings" aria-label="Configurações" title="Configurações">⚙</Link>
       </header>
       <section className="farm-hero">
         <span className="eyebrow">04 / INTELIGÊNCIA DE ROTAÇÃO</span>
