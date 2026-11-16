@@ -52,7 +52,7 @@ export default function Home() {
  return <main className="public-site">
   <header className="public-header">
    <Link className="public-brand" href="/" aria-label="SpaceXplore Tchiowa — página inicial"><Image src="/spacexplore-brand.svg" alt="SpaceXplore Tchiowa" width={230} height={54} className="brand-logo-image" priority/></Link>
-   <div className="public-header-right"><button className={"menu-trigger "+(menuOpen?"is-open":"")} type="button" aria-label={menuOpen?"Fechar navegação":"Abrir navegação"} aria-expanded={menuOpen} aria-controls="public-menu" onClick={()=>setMenuOpen(!menuOpen)}><i aria-hidden="true"><b></b><b></b><b></b></i></button></div>
+   <div className="public-header-right"><Link className="analytics-settings-link" href="/dashboard#account-settings" aria-label="Configurações da conta" title="Configurações da conta">⚙</Link><button className={"menu-trigger "+(menuOpen?"is-open":"")} type="button" aria-label={menuOpen?"Fechar navegação":"Abrir navegação"} aria-expanded={menuOpen} aria-controls="public-menu" onClick={()=>setMenuOpen(!menuOpen)}><i aria-hidden="true"><b></b><b></b><b></b></i></button></div>
    {menuOpen&&<div className="public-menu-backdrop" onClick={closeMenu}/>}
    <nav id="public-menu" className={"public-menu "+(menuOpen?"is-open":"")} aria-label="Menu principal" aria-hidden={!menuOpen}>
     <div className="public-menu-heading"><span>NAVEGAR NA PLATAFORMA</span><span>01 — 07</span></div>
