@@ -68,7 +68,7 @@ export default function ClimateCharts({ parameters, fillValue, periodLabel }: Pr
   const { locale, t } = useLocale();
   const months = MONTHS[locale];
   const temperature = useMemo(() => monthlySeries(parameters.T2M, fillValue, "mean", months), [parameters, fillValue, months]);
-  const precipitation = useMemo(() => monthlySeries(parameters.PRECTOTCORR, fillValue, "sum", months), [parameters, fillValue]);
+  const precipitation = useMemo(() => monthlySeries(parameters.PRECTOTCORR, fillValue, "sum", months), [parameters, fillValue, months]);
   return <div className="climate-charts">
     <div className="section-heading"><div><span className="eyebrow">03 / {t("analytics.monthly").toUpperCase()}</span><h2>{t("analytics.monthly")}</h2></div><span className="status-tag">{periodLabel}</span></div>
     <p className="section-copy">{t("analytics.monthlyHint")}</p>
