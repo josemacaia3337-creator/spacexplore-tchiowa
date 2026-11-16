@@ -119,8 +119,8 @@ export default function DashboardNavigation({ displayName, avatarPath }: Props) 
           <Link className="brand dashboard-brand" href="/dashboard" onClick={closeDrawer}>
             <img src="/spacexplore-brand.svg" alt="SpaceXplore Tchiowa" className="workspace-brand-image" />
           </Link>
-          <button className="sidebar-collapse-button" type="button" aria-label={collapsed ? "Expandir menu" : "Recolher menu"} onClick={() => setCollapsed(!collapsed)}><Icon name="collapse" /></button>
-          <button className="mobile-drawer-close" type="button" aria-label="Fechar menu" onClick={closeDrawer}><Icon name="close" /></button>
+          <button className="sidebar-collapse-button" type="button" aria-label={collapsed ? t("nav.overview") : t("nav.workspace")} onClick={() => setCollapsed(!collapsed)}><Icon name="collapse" /></button>
+          <button className="mobile-drawer-close" type="button" aria-label={t("settings.cancel")} onClick={closeDrawer}><Icon name="close" /></button>
         </div>
         <div className="sidebar-caption">{t("nav.workspace")}</div>
         <nav className="dashboard-nav" aria-label="Navegação principal">
@@ -145,16 +145,16 @@ export default function DashboardNavigation({ displayName, avatarPath }: Props) 
       </aside>
       {mobileOpen && <button className="dashboard-drawer-backdrop" aria-label="Fechar menu" onClick={closeDrawer} />}
       <header className="dashboard-topline">
-        <button className="mobile-menu-trigger" type="button" aria-label={mobileOpen ? "Fechar menu" : "Abrir menu"} aria-expanded={mobileOpen} onClick={() => setMobileOpen(!mobileOpen)}><Icon name={mobileOpen ? "close" : "menu"} /></button>
+        <button className="mobile-menu-trigger" type="button" aria-label={mobileOpen ? t("settings.cancel") : t("nav.workspace")} aria-expanded={mobileOpen} onClick={() => setMobileOpen(!mobileOpen)}><Icon name={mobileOpen ? "close" : "menu"} /></button>
         <Link href="/dashboard" className="dashboard-header-brand"><img src="/spacexplore-brand.svg" alt="SpaceXplore Tchiowa" /></Link>
         <span className="account-chip"><i />{t("nav.active")}</span>
-        <button id="account-settings" className="dashboard-header-settings" type="button" aria-label="Abrir perfil e configurações" onClick={() => setSettingsOpen(true)}><Icon name="settings" /></button>
+        <button id="account-settings" className="dashboard-header-settings" type="button" aria-label={t("nav.settings")} onClick={() => setSettingsOpen(true)}><Icon name="settings" /></button>
       </header>
 
       {settingsOpen && (
         <div className="profile-modal-backdrop" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setSettingsOpen(false); }}>
           <section className="profile-modal" role="dialog" aria-modal="true" aria-labelledby="profile-modal-title">
-            <div className="profile-modal-heading"><div><span className="eyebrow">{t("nav.account")}</span><h2 id="profile-modal-title">Perfil e preferências</h2></div><button type="button" className="profile-modal-close" aria-label="Fechar" onClick={() => setSettingsOpen(false)}><Icon name="close" /></button></div>
+            <div className="profile-modal-heading"><div><span className="eyebrow">{t("nav.account")}</span><h2 id="profile-modal-title">{t("settings.title")}</h2></div><button type="button" className="profile-modal-close" aria-label="Fechar" onClick={() => setSettingsOpen(false)}><Icon name="close" /></button></div>
             <form onSubmit={saveProfile} className="profile-settings-form">
               <div className="profile-avatar-editor">
                 <div className="profile-avatar-preview">{previewUrl ? <img src={previewUrl} alt="Pré-visualização do avatar" /> : avatar ? <img src={avatar} alt="Avatar atual" /> : <span>{name.trim().slice(0,1).toUpperCase() || "U"}</span>}</div>
