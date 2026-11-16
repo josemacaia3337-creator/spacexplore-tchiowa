@@ -17,9 +17,8 @@ function validDate(value: string): boolean {
 }
 
 export async function GET(request: NextRequest) {
-  let supabase;
   try {
-    supabase = await createClient();
+    const supabase = await createClient();
     const { data: { user }, error } = await supabase.auth.getUser();
     if (error) {
       logServerError("SUPABASE_AUTH_LOOKUP_FAILED", error, { route: "/api/climate", provider: "supabase-auth" });
