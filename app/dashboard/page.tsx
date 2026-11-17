@@ -16,6 +16,7 @@ export default async function DashboardPage({
   const error = typeof query.error === "string" ? query.error : undefined;
   const created = typeof query.created === "string" ? query.created : undefined;
   const returnParams = new URLSearchParams();
+  for (const key of ["climate", "latitude", "longitude", "start", "end", "farm"] as const) {
     const value = query[key];
     if (typeof value === "string") returnParams.set(key, value);
   }
