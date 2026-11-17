@@ -30,8 +30,16 @@ export async function signIn(formData: FormData) {
   const next = safeAuthReturnPath(formData.get("next"));
   if (!email || !password) redirect(`/login?error=Preencha%20todos%20os%20campos.&next=${encodeURIComponent(next)}`);
 
-  const supabase = await safeCreateAuthClient("AUTH_SIGN_IN_CLIENT_UNAVAILABLE");
-  if (!supabase) redirect(`/login?error=O%20serviço%20de%20autenticação%20está%20temporariamente%20indisponível.&next=${encodeURIComponent(next)}`);
+  let supabase: SupabaseServerClient;
+  try {
+    supabase = await createClient();
+  } catch (error) {
+    const requestId = logServerError("AUTH_SIGN_IN_CLIENT_UNAVAILABLE", error, {
+      area: "supabase-auth",
+      action: "sign-in",
+    });
+    redirect(`/login?error=Não%20foi%20possível%20inicializar%20a%20ligação%20de%20autenticação.%20Consulte%20o%20diagnóstico.&diagnostic=${encodeURIComponent(requestId)}&next=${encodeURIComponent(next)}`);
+  }
   const result = await safeAuthOperation("AUTH_SIGN_IN_FAILED", () => supabase.auth.signInWithPassword({ email, password }));
   if (!result) redirect(`/login?error=Não%20foi%20possível%20contactar%20o%20serviço%20de%20autenticação.&next=${encodeURIComponent(next)}`);
   if (result.error) {
