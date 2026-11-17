@@ -10,7 +10,15 @@ async function checkProvider(name, url, validate) {
     if (!response.ok) {
       throw new Error(`HTTP ${response.status} ${response.statusText}`);
     }
-    const payload = await response.json();
+    const contentType = response.headers.get("content-type") ?? "unknown";
+    const body = await response.text();
+    let payload;
+    try {
+      payload = JSON.parse(body);
+    } catch {
+      const preview = body.slice(0, 180).replace(/\\s+/g, " ").trim();
+      throw new Error(`Expected a JSON response but received ${contentType}. Response preview: ${preview || "(empty)"}`);
+    }
     validate(payload);
     console.log(JSON.stringify({
       event: "PROVIDER_SMOKE_TEST_PASSED",
