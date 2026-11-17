@@ -1,26 +1,13 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
+import { getSupabasePublicConfig } from "@/lib/supabase/config";
 import { logServerError } from "@/lib/server-logger";
 
 export async function updateSession(request: NextRequest) {
   let response = NextResponse.next({ request });
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  // Keep compatibility with Vercel environments that still define the legacy anon key.
-  const key =
-    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ??
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-
-  if (!url || !key) {
-    logServerError(
-      "SUPABASE_MIDDLEWARE_CONFIGURATION_MISSING",
-      new Error(
-        "Set NEXT_PUBLIC_SUPABASE_URL and either NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY or NEXT_PUBLIC_SUPABASE_ANON_KEY."
-      )
-    );
-    return response;
-  }
 
   try {
+    const { url, key } = getSupabasePublicConfig();
     const supabase = createServerClient(url, key, {
       cookies: {
         getAll: () => request.cookies.getAll(),
@@ -44,12 +31,12 @@ export async function updateSession(request: NextRequest) {
       });
     }
   } catch (error) {
+    // Public pages remain reachable if Auth is unavailable; protected server pages
+    // independently verify the user before returning private data.
     logServerError("SUPABASE_MIDDLEWARE_UNAVAILABLE", error, {
       component: "middleware",
     });
   }
 
-  // Middleware is deliberately non-blocking for public routes. Protected pages
-  // still verify the user server-side and fail closed if identity cannot be checked.
   return response;
 }
