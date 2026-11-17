@@ -1,13 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
 
-function isCalendarDate(value: string) {
- if (value.length !== 10 || value[4] !== "-" || value[7] !== "-") return false;
- const [year,month,day]=value.split("-").map(Number);
- const date=new Date(Date.UTC(year,month-1,day));
- return date.getUTCFullYear()===year&&date.getUTCMonth()===month-1&&date.getUTCDate()===day;
-}
-import Link from "next/link";
 import Image from "next/image";
 
 const slides = [
@@ -21,9 +14,8 @@ const slides = [
 export default function Home() {
  const [latitude,setLatitude]=useState("-5.55"),[longitude,setLongitude]=useState("12.19"),[start,setStart]=useState("20250101"),[end,setEnd]=useState("20251231");
  const [farmName,setFarmName]=useState(""),[formError,setFormError]=useState("");
- const [gpmLatitude,setGpmLatitude]=useState("-5.55"),[gpmLongitude,setGpmLongitude]=useState("12.19"),[gpmStart,setGpmStart]=useState(""),[gpmEnd,setGpmEnd]=useState(""),[gpmError,setGpmError]=useState("");
  const [menuOpen,setMenuOpen]=useState(false),[activeSlide,setActiveSlide]=useState(0);
- useEffect(()=>{const p=new URLSearchParams(window.location.search),farm=p.get("farm"),lat=p.get("latitude"),lon=p.get("longitude"),initialStart=p.get("start"),initialEnd=p.get("end"),gLat=p.get("gpmLatitude"),gLon=p.get("gpmLongitude"),gStart=p.get("gpmStart"),gEnd=p.get("gpmEnd");if(farm)setFarmName(farm);if(lat&&Number.isFinite(Number(lat))&&Number(lat)>=-90&&Number(lat)<=90)setLatitude(lat);if(lon&&Number.isFinite(Number(lon))&&Number(lon)>=-180&&Number(lon)<=180)setLongitude(lon);if(initialStart&&/^[0-9]{8}$/.test(initialStart))setStart(initialStart);if(initialEnd&&/^[0-9]{8}$/.test(initialEnd))setEnd(initialEnd);if(gLat&&Number.isFinite(Number(gLat))&&Number(gLat)>=-90&&Number(gLat)<=90)setGpmLatitude(gLat);if(gLon&&Number.isFinite(Number(gLon))&&Number(gLon)>=-180&&Number(gLon)<=180)setGpmLongitude(gLon);const yesterday=new Date();yesterday.setUTCDate(yesterday.getUTCDate()-1);const defaultEnd=yesterday.toISOString().slice(0,10);const defaultStartDate=new Date(yesterday);defaultStartDate.setUTCDate(defaultStartDate.getUTCDate()-6);setGpmStart(gStart&&isCalendarDate(gStart)?gStart:defaultStartDate.toISOString().slice(0,10));setGpmEnd(gEnd&&isCalendarDate(gEnd)?gEnd:defaultEnd)},[]);
+ useEffect(()=>{const p=new URLSearchParams(window.location.search),farm=p.get("farm"),lat=p.get("latitude"),lon=p.get("longitude"),initialStart=p.get("start"),initialEnd=p.get("end");if(farm)setFarmName(farm);if(lat&&Number.isFinite(Number(lat))&&Number(lat)>=-90&&Number(lat)<=90)setLatitude(lat);if(lon&&Number.isFinite(Number(lon))&&Number(lon)>=-180&&Number(lon)<=180)setLongitude(lon);if(initialStart&&/^[0-9]{8}$/.test(initialStart))setStart(initialStart);if(initialEnd&&/^[0-9]{8}$/.test(initialEnd))setEnd(initialEnd)},[]);
  useEffect(()=>{slides.forEach((slide)=>{const image=new window.Image();image.src=slide.image})},[]);
  useEffect(()=>{
   const motion=window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -47,7 +39,6 @@ export default function Home() {
   return()=>{document.body.style.overflow=previous;window.removeEventListener("keydown",onKeyDown)};
  },[menuOpen]);
  function requestClimate(){const lat=Number(latitude),lon=Number(longitude);if(!latitude.trim()||!longitude.trim()||!Number.isFinite(lat)||lat < -90||lat > 90||!Number.isFinite(lon)||lon < -180||lon > 180){setFormError("Indique coordenadas válidas: latitude entre -90 e 90 e longitude entre -180 e 180.");return}if(!/^[0-9]{8}$/.test(start)||!/^[0-9]{8}$/.test(end)||start>end){setFormError("Indique datas válidas no formato AAAAMMDD e confirme a ordem do período.");return}const query=new URLSearchParams({climate:"1",latitude:latitude.trim(),longitude:longitude.trim(),start:start.trim(),end:end.trim()});if(farmName)query.set("farm",farmName);window.location.assign("/dashboard?"+query.toString())}
- function requestGpm(){const lat=Number(gpmLatitude),lon=Number(gpmLongitude);if(!gpmLatitude.trim()||!gpmLongitude.trim()||!Number.isFinite(lat)||lat < -90||lat > 90||!Number.isFinite(lon)||lon < -180||lon > 180){setGpmError("Indique coordenadas válidas: latitude entre -90 e 90 e longitude entre -180 e 180.");return}if(!isCalendarDate(gpmStart)||!isCalendarDate(gpmEnd)||gpmStart>gpmEnd){setGpmError("Selecione datas válidas e confirme a ordem do período.");return}const today=new Date();today.setUTCHours(0,0,0,0);const first=new Date(gpmStart+"T00:00:00Z"),last=new Date(gpmEnd+"T00:00:00Z"),oldest=new Date(today);oldest.setUTCDate(oldest.getUTCDate()-59);if(first<oldest||last>today){setGpmError("O NASA GPM Publisher disponibiliza esta consulta diária numa janela móvel dos últimos 60 dias. Não selecione datas futuras.");return}if(Math.floor((last.getTime()-first.getTime())/86400000)+1>60){setGpmError("O período máximo desta consulta é de 60 dias.");return}const query=new URLSearchParams({gpm:"1",gpmLatitude:gpmLatitude.trim(),gpmLongitude:gpmLongitude.trim(),gpmStart,gpmEnd});if(farmName)query.set("gpmFarm",farmName);window.location.assign("/dashboard?"+query.toString())}
  const closeMenu=()=>setMenuOpen(false);
  return <main className="public-site">
   <header className="public-header">
@@ -56,7 +47,7 @@ export default function Home() {
    {menuOpen&&<div className="public-menu-backdrop" onClick={closeMenu}/>}
    <nav id="public-menu" className={"public-menu "+(menuOpen?"is-open":"")} aria-label="Menu principal" aria-hidden={!menuOpen}>
     <div className="public-menu-heading"><span>NAVEGAR NA PLATAFORMA</span><span>01 — 07</span></div>
-    <a href="#plataforma" onClick={closeMenu}><small>01</small>A plataforma <b>↗</b></a><a href="#capacidades" onClick={closeMenu}><small>02</small>Capacidades <b>↗</b></a><a href="#clima" onClick={closeMenu}><small>03</small>NASA POWER <b>↗</b></a><a href="#gpm" onClick={closeMenu}><small>04</small>NASA GPM <b>↗</b></a>
+    <a href="#plataforma" onClick={closeMenu}><small>01</small>A plataforma <b>↗</b></a><a href="#capacidades" onClick={closeMenu}><small>02</small>Capacidades <b>↗</b></a><a href="#clima" onClick={closeMenu}><small>03</small>NASA POWER <b>↗</b></a>
     <Link href="/farms" onClick={closeMenu}><small>05</small>Propriedades agrícolas <b>↗</b></Link><Link href="/monitoring" onClick={closeMenu}><small>06</small>Monitorização <b>↗</b></Link><Link href="/insights" onClick={closeMenu}><small>07</small>Inteligência agrícola <b>↗</b></Link>
     <div className="public-menu-account"><Link href="/login" onClick={closeMenu}>INICIAR SESSÃO</Link><Link href="/signup" onClick={closeMenu}>CRIAR CONTA ↗</Link></div>
    </nav>
@@ -76,7 +67,6 @@ export default function Home() {
    <p className="climate-access-note">A consulta completa é realizada no espaço privado. Ao continuar, poderá criar uma conta ou iniciar sessão; a localização e o período selecionados serão preservados no seu dashboard.</p>
    <p className="climate-disclaimer">Nota científica: o NASA POWER disponibiliza dados ambientais em grelha para contexto regional, não medições diretas nos limites de uma propriedade. Dados históricos não constituem previsões. O pH, a textura e os nutrientes do solo exigem medições ou fontes validadas específicas.</p>
   </section>
-  <section className="gpm-public-section" id="gpm"><div className="gpm-public-heading"><div><span className="public-section-label">05 / PRECIPITAÇÃO POR SATÉLITE</span><h2>NASA GPM · IMERG</h2><p>Explore estimativas diárias de precipitação acumulada por satélite para a região que inclui as coordenadas selecionadas.</p></div><span className="data-source-badge">NASA GPM · IMERG</span></div><div className="gpm-public-form"><label>LATITUDE<input value={gpmLatitude} onChange={e=>setGpmLatitude(e.target.value)} inputMode="decimal"/></label><label>LONGITUDE<input value={gpmLongitude} onChange={e=>setGpmLongitude(e.target.value)} inputMode="decimal"/></label><label>DATA INICIAL<input type="date" value={gpmStart} onChange={e=>setGpmStart(e.target.value)}/></label><label>DATA FINAL<input type="date" value={gpmEnd} onChange={e=>setGpmEnd(e.target.value)}/></label><button type="button" onClick={requestGpm}>CONSULTAR PRECIPITAÇÃO ↗</button></div>{gpmError&&<div className="climate-error" role="alert">{gpmError}</div>}<p className="gpm-public-note">Produto: IMERG Late Run · acumulação de 1 dia · unidade: mm · grelha de 0,1° (aproximadamente 10 km). O serviço público PMM Publisher disponibiliza esta coleção numa janela móvel de 60 dias; a atualização não é instantânea.</p><p className="gpm-public-note">A consulta completa abre no espaço privado. A localização e o período selecionados seguem consigo durante a criação de conta ou início de sessão.</p></section>
   <section className="public-intro" id="capacidades"><div className="intro-label"><span>01 / A NOSSA VISÃO</span><span>CIÊNCIA APLICADA À AGRICULTURA</span></div><div className="intro-grid"><h2>Dados que revelam.<br/><em>Conhecimento que orienta.</em></h2><p>O SpaceXplore Tchiowa é uma plataforma de inteligência agrícola que aproxima dados ambientais, observação da Terra e informação de campo. O nosso propósito é tornar informação complexa mais acessível, organizada e útil para compreender os contextos agrícolas e apoiar decisões fundamentadas.</p></div></section>
   <section className="capability-section"><div className="capability-heading"><span>02 / CAPACIDADES</span><p>Uma visão integrada do território, dos dados e da atividade agrícola.</p></div><div className="capability-grid">
    <article className="capability-card"><span className="capability-number">01</span><div className="capability-icon" aria-hidden="true"><svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="11" /><circle cx="16" cy="16" r="4"/><path d="M16 1v5M16 26v5M1 16h5M26 16h5"/></svg></div><h3>Inteligência ambiental</h3><p>Explore indicadores climáticos e ambientais, conhecendo a origem, o período e o contexto de cada conjunto de dados.</p><span className="capability-tag">DADOS · AMBIENTE</span></article>
@@ -90,7 +80,7 @@ export default function Home() {
   <footer className="public-footer">
    <div className="footer-compact-top">
     <div className="footer-compact-brand"><Link className="public-brand" href="/" aria-label="SpaceXplore Tchiowa — início"><Image src="/spacexplore-brand.svg" alt="SpaceXplore Tchiowa" width={230} height={54} className="brand-logo-image" priority/></Link><span>Observação da Terra &amp; Inteligência Agrícola</span></div>
-    <nav className="footer-compact-nav" aria-label="Navegação do rodapé"><a href="#plataforma">Plataforma</a><a href="#clima">NASA POWER</a><a href="#gpm">NASA GPM</a><Link href="/monitoring">Monitorização</Link><Link href="/login">Entrar</Link></nav>
+    <nav className="footer-compact-nav" aria-label="Navegação do rodapé"><a href="#plataforma">Plataforma</a><a href="#clima">NASA POWER</a><Link href="/monitoring">Monitorização</Link><Link href="/login">Entrar</Link></nav>
    </div>
    <div className="footer-compact-bottom"><span>© 2026 SpaceXplore Tchiowa. Todos os direitos reservados.</span><span>Desenvolvido por <a href="https://www.jpmtechsolutions.com/" target="_blank" rel="noopener noreferrer">JPM Tech Solutions</a></span></div>
   </footer>
