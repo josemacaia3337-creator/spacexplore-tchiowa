@@ -57,7 +57,7 @@ export default async function DashboardPage({
       </main>
     );
   }
-  if (!user) redirect(`/signup?next=${encodeURIComponent(returnPath)}`);
+  if (!user) redirect(`/login?next=${encodeURIComponent(returnPath)}`);
 
   const queryResults = await Promise.all([
     supabase.from("profiles").select("display_name, avatar_path, preferences").eq("id", user.id).maybeSingle(),
