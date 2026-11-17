@@ -11,7 +11,6 @@ type Props = { displayName: string; avatarPath: string | null };
 
 const platformLinkDefinitions = [
   { href: "/dashboard#nasa-power", labelKey: "nav.power", code: "PW" },
-  { href: "/dashboard#nasa-gpm", labelKey: "nav.gpm", code: "GP" },
   { href: "/monitoring", labelKey: "nav.monitoring", code: "MO" },
   { href: "/farms", labelKey: "nav.farms", code: "EX" },
   { href: "/crops", labelKey: "nav.crops", code: "CU" },
@@ -129,7 +128,7 @@ export default function DashboardNavigation({ displayName, avatarPath }: Props) 
         <nav className="dashboard-nav" aria-label="Navegação principal">
           <span className="nav-group-label">{t("nav.platform")}</span>
           {platformLinks.map((item) => (
-            <Link href={item.href} key={item.href} onClick={closeDrawer} aria-current={pathname === item.href.split("#")[0] && item.href !== "/dashboard#nasa-power" && item.href !== "/dashboard#nasa-gpm" ? "page" : undefined}>
+            <Link href={item.href} key={item.href} onClick={closeDrawer} aria-current={pathname === item.href.split("#")[0] && item.href !== "/dashboard#nasa-power" ? "page" : undefined}>
               <span className="nav-code">{item.code}</span><span className="nav-link-label">{item.label}</span>
             </Link>
           ))}

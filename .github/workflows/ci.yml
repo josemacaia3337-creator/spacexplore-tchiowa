@@ -50,7 +50,7 @@ jobs:
 
 
   provider-health:
-    name: NASA provider smoke checks (non-blocking)
+    name: NASA POWER smoke check (non-blocking)
     needs: validate
     continue-on-error: true
     runs-on: ubuntu-latest
@@ -66,6 +66,6 @@ jobs:
         with:
           node-version: 22
 
-      - name: Check NASA POWER and GPM endpoints
+      - name: Check NASA POWER endpoint
         run: node scripts/provider-smoke-test.mjs
 

@@ -1,38 +1,42 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
+import { getSupabasePublicConfig } from "@/lib/supabase/config";
 import { logServerError } from "@/lib/server-logger";
 
 export async function updateSession(request: NextRequest) {
   let response = NextResponse.next({ request });
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const key = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
-
-  if (!url || !key) {
-    logServerError("SUPABASE_MIDDLEWARE_CONFIGURATION_MISSING", new Error("Supabase public environment variables are missing"), {
-    });
-    return response;
-  }
 
   try {
-    const supabase = createServerClient(url, key, { cookies: {
-      getAll: () => request.cookies.getAll(),
-      setAll(cookiesToSet, headers) {
-        cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value));
-        response = NextResponse.next({ request });
-        cookiesToSet.forEach(({ name, value, options }) => response.cookies.set(name, value, options));
-        Object.entries(headers).forEach(([name, value]) => response.headers.set(name, value));
+    const { url, key } = getSupabasePublicConfig();
+    const supabase = createServerClient(url, key, {
+      cookies: {
+        getAll: () => request.cookies.getAll(),
+        setAll(cookiesToSet, headers) {
+          cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value));
+          response = NextResponse.next({ request });
+          cookiesToSet.forEach(({ name, value, options }) =>
+            response.cookies.set(name, value, options)
+          );
+          Object.entries(headers).forEach(([name, value]) =>
+            response.headers.set(name, value)
+          );
+        },
       },
-    }});
+    });
 
     const { error } = await supabase.auth.getClaims();
     if (error) {
-      logServerError("SUPABASE_SESSION_REFRESH_FAILED", error, { component: "middleware" });
+      logServerError("SUPABASE_SESSION_REFRESH_FAILED", error, {
+        component: "middleware",
+      });
     }
   } catch (error) {
-    logServerError("SUPABASE_MIDDLEWARE_UNAVAILABLE", error, { component: "middleware" });
+    // Public pages remain reachable if Auth is unavailable; protected server pages
+    // independently verify the user before returning private data.
+    logServerError("SUPABASE_MIDDLEWARE_UNAVAILABLE", error, {
+      component: "middleware",
+    });
   }
 
-  // Middleware is deliberately non-blocking for public routes. Protected pages
-  // still verify the user server-side and fail closed if identity cannot be checked.
   return response;
 }
