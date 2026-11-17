@@ -3,7 +3,6 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { createOrganization } from "@/app/organizations/actions";
 import NasaPowerWorkspace from "@/app/dashboard/NasaPowerWorkspace";
-import NasaGpmWorkspace from "@/app/dashboard/NasaGpmWorkspace";
 import DashboardNavigation from "@/app/dashboard/DashboardNavigation";
 import type { User } from "@supabase/supabase-js";
 import { logServerError } from "@/lib/server-logger";
@@ -17,7 +16,6 @@ export default async function DashboardPage({
   const error = typeof query.error === "string" ? query.error : undefined;
   const created = typeof query.created === "string" ? query.created : undefined;
   const returnParams = new URLSearchParams();
-  for (const key of ["climate", "latitude", "longitude", "start", "end", "farm", "gpm", "gpmLatitude", "gpmLongitude", "gpmStart", "gpmEnd", "gpmFarm"] as const) {
     const value = query[key];
     if (typeof value === "string") returnParams.set(key, value);
   }
@@ -144,14 +142,6 @@ export default async function DashboardPage({
           initialStart={typeof query.start === "string" ? query.start : "20250101"}
           initialEnd={typeof query.end === "string" ? query.end : "20251231"}
           farmName={typeof query.farm === "string" ? query.farm : ""}
-        />
-        <NasaGpmWorkspace
-          autoRun={query.gpm === "1"}
-          initialLatitude={typeof query.gpmLatitude === "string" ? query.gpmLatitude : "-5.55"}
-          initialLongitude={typeof query.gpmLongitude === "string" ? query.gpmLongitude : "12.19"}
-          initialStart={typeof query.gpmStart === "string" ? query.gpmStart : new Date(Date.now() - 8 * 86400000).toISOString().slice(0, 10)}
-          initialEnd={typeof query.gpmEnd === "string" ? query.gpmEnd : new Date(Date.now() - 86400000).toISOString().slice(0, 10)}
-          farmName={typeof query.gpmFarm === "string" ? query.gpmFarm : ""}
         />
 
         <section className="dashboard-section" id="organizations">
