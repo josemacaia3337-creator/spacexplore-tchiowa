@@ -5,31 +5,48 @@ import { logServerError } from "@/lib/server-logger";
 export async function updateSession(request: NextRequest) {
   let response = NextResponse.next({ request });
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const key = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
+  // Keep compatibility with Vercel environments that still define the legacy anon key.
+  const key =
+    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ??
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
   if (!url || !key) {
-    logServerError("SUPABASE_MIDDLEWARE_CONFIGURATION_MISSING", new Error("Supabase public environment variables are missing"), {
-    });
+    logServerError(
+      "SUPABASE_MIDDLEWARE_CONFIGURATION_MISSING",
+      new Error(
+        "Set NEXT_PUBLIC_SUPABASE_URL and either NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY or NEXT_PUBLIC_SUPABASE_ANON_KEY."
+      )
+    );
     return response;
   }
 
   try {
-    const supabase = createServerClient(url, key, { cookies: {
-      getAll: () => request.cookies.getAll(),
-      setAll(cookiesToSet, headers) {
-        cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value));
-        response = NextResponse.next({ request });
-        cookiesToSet.forEach(({ name, value, options }) => response.cookies.set(name, value, options));
-        Object.entries(headers).forEach(([name, value]) => response.headers.set(name, value));
+    const supabase = createServerClient(url, key, {
+      cookies: {
+        getAll: () => request.cookies.getAll(),
+        setAll(cookiesToSet, headers) {
+          cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value));
+          response = NextResponse.next({ request });
+          cookiesToSet.forEach(({ name, value, options }) =>
+            response.cookies.set(name, value, options)
+          );
+          Object.entries(headers).forEach(([name, value]) =>
+            response.headers.set(name, value)
+          );
+        },
       },
-    }});
+    });
 
     const { error } = await supabase.auth.getClaims();
     if (error) {
-      logServerError("SUPABASE_SESSION_REFRESH_FAILED", error, { component: "middleware" });
+      logServerError("SUPABASE_SESSION_REFRESH_FAILED", error, {
+        component: "middleware",
+      });
     }
   } catch (error) {
-    logServerError("SUPABASE_MIDDLEWARE_UNAVAILABLE", error, { component: "middleware" });
+    logServerError("SUPABASE_MIDDLEWARE_UNAVAILABLE", error, {
+      component: "middleware",
+    });
   }
 
   // Middleware is deliberately non-blocking for public routes. Protected pages
